@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         >
                             {" "}
                             {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
-                            <div className="flex bg-[#FFFDFB] w-full min-h-full max-w-[500px] ">
+                            <div className="flex flex-col bg-[#FFFDFB] w-full min-h-full max-w-[500px] ">
                                 {children}
                             </div>
                         </body>
