@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@font-face{
+  font-family: 'NotoSansKR';
+  src: url('/fonts/NotoSansKR.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer base {
+  body{
+    background: var(--background);
+    color: #212121;
+    font-family: 'Pretendard';
+  }
+}
+
+
+/* 복사 금지 스타일 지정*/
+html, body {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  touch-action: manipulation; /* 터치 이벤트 제어 */
+}
