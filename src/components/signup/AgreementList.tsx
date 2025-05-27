@@ -28,7 +28,7 @@ export default function AgreementList({
   allChecked,
 }: AgreementListProps) {
   return (
-    <div className="flex flex-col w-full max-w-[400px]">
+    <div className="flex flex-col w-full max-w-[350px]">
       {/* 전체 동의 */}
       <div
         className={`flex items-center mb-[16px] cursor-pointer rounded-lg transition-colors
@@ -65,7 +65,7 @@ export default function AgreementList({
       </div>
 
       {/* 개별 약관 */}
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 space-y-2 w-full flex flex-col ">
         {agreements.map(a => (
           <li
             key={a.id}
@@ -107,7 +107,7 @@ export default function AgreementList({
                 [{a.required ? '필수' : '선택'}]
               </span>
             </span>
-            <button type="button" className="font-pretendard font-normal text-[13px] leading-[145%] tracking-[-0.03em] underline underline-offset-0 decoration-solid decoration-[0px] text-[#D9D9D9]" tabIndex={-1}>
+            <button type="button" className="flex justify-end font-pretendard font-normal text-[13px] leading-[145%] tracking-[-0.03em] underline underline-offset-0 decoration-solid decoration-[0px] text-[#D9D9D9] " tabIndex={-1}>
               보기
             </button>
           </li>

@@ -11,8 +11,9 @@ export default function LoginPage() {
   const [pw, setPw] = useState('');
 const isFilled = id.trim() !== '' && pw.trim() !== '';
   return (
+    <div className='mt-auto mb-auto'>
     <DefaultBody hasHeader={0} >
-      <div className="flex flex-col items-center justify-center w-full h-full bg-[#FFFDFB]">
+      <div className="flex flex-col items-center justify-center  w-full h-full bg-[#FFFDFB] ">
         {/* 로고/타이틀 */}
         <h1 className="flex text-[48px] font-bold text-[#19C419] mb-[54px] tracking-widest">프링</h1>
 
@@ -75,5 +76,6 @@ const isFilled = id.trim() !== '' && pw.trim() !== '';
         </div>
       </div>
     </DefaultBody>
+    </div>
   );
 }

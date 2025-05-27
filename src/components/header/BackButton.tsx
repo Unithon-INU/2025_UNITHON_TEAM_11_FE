@@ -28,7 +28,7 @@ const BackButton: React.FC<BackProps> = ({ onClick }) => {
             aria-label="뒤로가기"
         >
             <img
-                src="asset/back.svg"
+                src="/asset/back.svg"
                 alt="뒤로가기"
                 className="w-[24px] h-[24px] mr-[12px]"
             />
