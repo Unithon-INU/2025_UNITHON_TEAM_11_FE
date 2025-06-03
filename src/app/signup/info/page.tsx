@@ -22,6 +22,7 @@ export default function SignUpInfoPage() {
   const [id, setId] = useState('');
   const isIdValid = id.trim() !== '' && /^[a-zA-Z0-9_]{4,20}$/.test(id);
   const [pw, setPw] = useState('');
+  const [pwCheck, setPwCheck] = useState('');
   const isPwValid = pw.trim() !== '' && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(pw);
     const isFilled = isEmailValid && isIdValid && isPwValid;
 
@@ -47,23 +48,26 @@ export default function SignUpInfoPage() {
             </h1>
             
         <div className="flex w-full max-w-[350px]  flex-col  jusgap-2">
-            <p className='font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]'>이메일 주소</p>
+            <p className='mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]'>이메일 주소</p>
           <DefaultInput
                 type="email"
                 placeholder="이메일 주소 입력"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+                showCheckButton={true}
+
                 />
 
-            <p className="mt-4 font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">아이디 입력</p>
+            <p className="mt-4 mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">아이디 입력</p>
             <DefaultInput
                 type="text"
                 placeholder="아이디 입력"
                 value={id}
                 onChange={e => setId(e.target.value)}
+                showCheckButton={true}
                 />
 
-            <p className="mt-4 font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">비밀번호 입력</p>
+            <p className="mt-[32px] mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">비밀번호 입력</p>
             <DefaultInput
                 type="password"
                 placeholder="비밀번호 입력(8자 이상 영문, 숫자 혼용)"
@@ -71,19 +75,45 @@ export default function SignUpInfoPage() {
                 onChange={e => setPw(e.target.value)}
                 />
 
-                <div className='flex flex-row '>
-                    <div className='flex'>
-                        <p className='flex'>8자 이상</p>
+                <div className='flex flex-row font-pretendard mt-[8px] mb-[12px] font-medium not-italic text-[13px] leading-[135%] tracking-[-0.03em] text-[#9F9F9F]'>
+                    <div className='flex flex-row'>
+                        <p className='flex mr-[5px]'>8자 이상</p>
+                       
+                        <svg
+                          className="w-[20.3px] h-[19.02px]"
+                          viewBox="4 1 20 20"
+                          fill="none"
+                          stroke="#9F9F9F"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="5 11 9 15 15 7" />
+                        </svg>
+        
+       
                     </div>
                     <div className='flex ml-[8px]'>
-                        <p className='flex'>영문, 숫자 혼용</p>
+                        <p className='flex mr-[5px]'>영문, 숫자 혼용</p>
+                         <svg
+                          className="w-[20.3px] h-[19.02px]"
+                          viewBox="4 1 20 20"
+                          fill="none"
+                          stroke="#9F9F9F"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="5 11 9 15 15 7" />
+                        </svg>
+        
                     </div>
                 </div>
             <DefaultInput
                 type="password"
                 placeholder="비밀번호 확인"
-                value={pw}
-                onChange={e => setPw(e.target.value)}
+                value={pwCheck}
+                onChange={e => setPwCheck(e.target.value)}
                 />
 
       
