@@ -5,19 +5,26 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+ build-and-deploy:
     runs-on: ubuntu-latest
 
-    container: pandoc/latex
+    # ✅ Node.js 환경으로 변경
+    container: node:20
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Install mustache (to update the date)
-        run: apk add ruby && gem install mustache
-      - name: creates output
-        run: sh ./build.sh
-      - name: Pushes to another repository
-        id: push_directory
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build  # ⚙️ next.config.ts의 output 설정 반드시 확인
+
+      - name: Verify output directory
+        run: ls -la output  # 디렉토리 생성 확인
+
+      - name: Push to repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
@@ -26,7 +33,6 @@ jobs:
           destination-github-username: yereong
           destination-repository-name: 2025_UNITHON_TEAM_11_FE
           user-email: ${{ secrets.EMAIL }}
-          commit-message: ${{ github.event.commits[0].message }}
+          commit-message: "chore: automated deployment $(date +'%Y-%m-%d %H:%M')"
           target-branch: main
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY
+          github-server: github.com
