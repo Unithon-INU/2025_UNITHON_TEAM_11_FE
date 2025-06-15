@@ -4,12 +4,15 @@ import React, { useState } from 'react';
 import DefaultBody from '@/components/defaultBody';
 import DefaultInput from '@/components/DefaultInput';
 import CommonButton from '@/components/CommonButton';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
-const isFilled = id.trim() !== '' && pw.trim() !== '';
+  const isFilled = id.trim() !== '' && pw.trim() !== ''; 
+  const router = useRouter();
+  
   return (
     <div className='mt-auto mb-auto'>
     <DefaultBody hasHeader={0} >
@@ -57,7 +60,7 @@ const isFilled = id.trim() !== '' && pw.trim() !== '';
         </form>
 
         {/* 회원가입 */}
-        <button className="mt-[24px] mb-[40px] text-[#bdbdbd] text-[15px] underline bg-transparent border-none">
+        <button className="mt-[24px] mb-[40px] text-[#bdbdbd] text-[15px] underline bg-transparent border-none" onClick={() => router.push('/signup')}>
           이메일로 회원가입
         </button>
 
