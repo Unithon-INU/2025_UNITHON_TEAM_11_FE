@@ -2,6 +2,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 import type { Viewport } from 'next'
 import Script from 'next/script';
+import { UserProvider } from '@/context/UserContext';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -24,9 +25,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         >
                             {" "}
                             {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
+                            <UserProvider>
                             <div className="flex flex-col  bg-[#FFFDFB] w-full min-h-full max-w-[500px] ">
                                 {children}
                             </div>
+                            </UserProvider>
                         </body>
                    
         </html>

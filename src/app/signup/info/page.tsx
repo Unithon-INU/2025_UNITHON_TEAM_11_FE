@@ -1,29 +1,88 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/header/Header';
 import CommonButton from '@/components/CommonButton';
 import DefaultBody from '@/components/defaultBody';
 import DefaultInput from '@/components/DefaultInput';
 import { GetEmail } from '@/api/getEmail';
-const agreementIds = ['terms', 'policy', 'privacy', 'marketing', 'selective'];
-const requiredIds = ['terms', 'policy', 'privacy'];
+import { GetId } from '@/api/getId';
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function SignUpInfoPage() {
  
-
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [emailOk, setEmailOk] = useState(false);
   const isEmailValid = email.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isEmailFilled = email.trim() !== '';
   const [id, setId] = useState('');
   const [idOk, setIdOk] = useState(false);
+  const [emailCheckMessage, setEmailCheckMessage] = useState('');
+  const [IdCheckMessage, setIdCheckMessage] = useState('');
 
   const isIdValid = id.trim() !== '' && /^[a-zA-Z0-9_]{4,20}$/.test(id);
   const [pw, setPw] = useState('');
   const [pwCheck, setPwCheck] = useState('');
   const isPwValid = pw.trim() !== '' && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(pw);
-  const isFilled = isEmailValid && isIdValid && isPwValid && idOk && emailOk;
+  const [pwCheckMessage, setPwCheckMessage] = useState('');
+  const [pwCheckOk, setPwCheckOk] = useState(false);
+  const isFilled = isEmailValid && isIdValid && idOk && emailOk && pwCheckOk;
+  const { setUserInfo } = useUser();
+
+  useEffect(() => {
+  if (pwCheck.trim() === '') {
+    setPwCheckMessage('');
+    setPwCheckOk(false);
+    return;
+  }
   
+  if (pw === pwCheck) {
+    setPwCheckMessage('비밀번호가 일치합니다!');
+    setPwCheckOk(true);
+  } else {
+    setPwCheckMessage('비밀번호가 일치하지 않습니다.');
+    setPwCheckOk(false);
+  }
+}, [pw, pwCheck]);
+
+ const handleEmailCheck = async () => {
+  if (!isEmailValid) {
+    setEmailCheckMessage('올바른 이메일 형식이 아닙니다');
+    setEmailOk(false);
+    return;
+  }
+  try {
+    await GetEmail(email);
+    setEmailOk(true);
+    setEmailCheckMessage('사용가능한 이메일 주소입니다');
+  } catch (error) {
+    setEmailOk(false);
+    setEmailCheckMessage('중복된 이메일 주소입니다');
+  }
+};
+
+
+ const handleIdCheck = async () => {
+  try {
+    await GetId(id);
+    setIdOk(true);
+    setIdCheckMessage('사용가능한 아이디입니다');
+  } catch (error) {
+    setIdOk(false);
+    setIdCheckMessage('중복된 아이디입니다');
+  }
+};
+
+  const handleSave = () => {
+    setUserInfo( prev=> ({ 
+      ...prev,
+      email:email,
+      id: id,
+      password:pw})   
+    );
+    console.log('업데이트됨');
+    router.push('/signup/profile')
+  };
 
   return (
     <>
@@ -51,9 +110,14 @@ export default function SignUpInfoPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 showCheckButton={true}
-
+                onCheck={()=>handleEmailCheck()}
                 />
-                
+                {emailCheckMessage && (
+                  <p className={`mt-2 font-pretendard text-[13px] leading-[135%] tracking-[-0.03em] ${emailOk ? 'text-[#4BE42C]' : 'text-[#FF6B2C]'}`}>
+                    {emailCheckMessage}
+                  </p>
+                )}
+
             <p className="mt-4 mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">아이디 입력</p>
             <DefaultInput
                 type="text"
@@ -61,7 +125,13 @@ export default function SignUpInfoPage() {
                 value={id}
                 onChange={e => setId(e.target.value)}
                 showCheckButton={true}
+                onCheck={()=>handleIdCheck()}
                 />
+                 {IdCheckMessage && (
+                    <p className={`mt-2 font-pretendard text-[13px] leading-[135%] tracking-[-0.03em] ${idOk ? 'text-[#4BE42C]' : 'text-[#FF6B2C]'}`}>
+                      {IdCheckMessage}
+                    </p>
+                  )}
 
             <p className="mt-[32px] mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">비밀번호 입력</p>
             <DefaultInput
@@ -73,13 +143,13 @@ export default function SignUpInfoPage() {
 
                 <div className='flex flex-row font-pretendard mt-[8px] mb-[12px] font-medium not-italic text-[13px] leading-[135%] tracking-[-0.03em] text-[#9F9F9F]'>
                     <div className='flex flex-row'>
-                        <p className='flex mr-[5px]'>8자 이상</p>
+                        <p className={`flex mr-[5px] ${pw.length >= 8 ? 'text-[#4BE42C]' : 'text-[#9F9F9F]'}`}>8자 이상</p>
                        
                         <svg
                           className="w-[20.3px] h-[19.02px]"
                           viewBox="4 1 20 20"
                           fill="none"
-                          stroke="#9F9F9F"
+                          stroke={pw.length >= 8 ? "#4BE42C" : "#9F9F9F"}
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -90,12 +160,12 @@ export default function SignUpInfoPage() {
        
                     </div>
                     <div className='flex ml-[8px]'>
-                        <p className='flex mr-[5px]'>영문, 숫자 혼용</p>
+                        <p className={`flex mr-[5px] ${/(?=.*[a-zA-Z])(?=.*\d)/.test(pw) ? 'text-[#4BE42C]' : 'text-[#9F9F9F]'}`}>영문, 숫자 혼용</p>
                          <svg
                           className="w-[20.3px] h-[19.02px]"
                           viewBox="4 1 20 20"
                           fill="none"
-                          stroke="#9F9F9F"
+                          stroke={/(?=.*[a-zA-Z])(?=.*\d)/.test(pw) ? "#4BE42C" : "#9F9F9F"}
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -111,7 +181,11 @@ export default function SignUpInfoPage() {
                 value={pwCheck}
                 onChange={e => setPwCheck(e.target.value)}
                 />
-
+            {pwCheckMessage && (
+              <p className={`mt-2 font-pretendard text-[13px] leading-[135%] tracking-[-0.03em] ${pwCheckOk ? 'text-[#4BE42C]' : 'text-[#FF6B2C]'}`}>
+                {pwCheckMessage}
+              </p>
+            )}
       
 
          
@@ -120,7 +194,8 @@ export default function SignUpInfoPage() {
                 <CommonButton
                     type="button"
                     disabled={!isFilled}    
-                    animate={isFilled}>
+                    animate={isFilled}
+                    onClick={handleSave}>
                         다음
                 </CommonButton>
             </div>
