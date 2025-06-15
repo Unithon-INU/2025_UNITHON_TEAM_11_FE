@@ -5,28 +5,28 @@ on:
     branches: ['main']
 
 jobs:
-  sync-fork:
+  sync:
+    name: Sync forked repo
     runs-on: ubuntu-latest
 
-    # ✅ 권한 설정 (필수)
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout source repo
+      - name: Checkout main
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # 전체 커밋 히스토리 가져오기
+        with: 
+          token: ${{ secrets.AUTO_ACTIONS }}
+          fetch-depth: 0
+          ref: main
 
-      - name: Configure Git
+      - name: Add remote-url
         run: |
-          git config --global user.email "${{ secrets.EMAIL }}"
-          git config --global user.name "GitHub Actions"
-
-      - name: Add fork as remote
-        run: git remote add fork https://github.com/yereong/2025_UNITHON_TEAM_11_FE.git
-
-      - name: Push to fork
-        run: git push --force fork main:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.AUTO_ACTIONS }}  # ⚠️ PAT 필요
+          git remote add forked-repo https://yereong:${{ secrets.AUTO_ACTIONS }}@github.com/yereong/2025_UNITHON_TEAM_11_FE
+          git config user.name yereong
+          git config user.email lily030624@gmail.com
+      
+      - name: Push changes to forked-repo 
+        run: |
+          git push -f forked-repo main
+      
+      - name: Clean up
+        run: |
+          git remote remove forked-repo
