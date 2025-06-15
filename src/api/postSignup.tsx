@@ -16,13 +16,15 @@ export const PostSignup = async (
     const formData = new FormData();
     const signupRequestDto = {
       email: email,
+      username: username,
       nickname: nickname,
+      password: password,
+      introduction: introduction
     };
 
-    formData.append(
-      "signupRequestDto",
-      JSON.stringify(signupRequestDto)
-    );
+   // Blob 대신 JSON 문자열 직접 사용
+    formData.append("signupRequestDto", JSON.stringify(signupRequestDto));
+
 
     if(profileImage){
     const userImage = profileImage;
@@ -33,7 +35,12 @@ export const PostSignup = async (
     // axios 요청 보내기
     const response: AxiosResponse<any> = await axios.post(
       `${apiUrl}/api/members/signup`,
-      formData, // JSON 문자열로 전송
+      formData,
+       {
+        headers: {
+          "Content-Type": "multipart/form-data", // JSON 형식으로 보내기 위해 Content-Type 설정
+        },
+      }
     );
     console.log(response.data);
     return response.data;

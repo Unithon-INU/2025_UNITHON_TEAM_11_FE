@@ -5,6 +5,7 @@ import DefaultBody from '@/components/defaultBody';
 import DefaultInput from '@/components/DefaultInput';
 import CommonButton from '@/components/CommonButton';
 import { useRouter } from 'next/navigation';
+import { PostLogin } from '@/api/postLogin';
 
 export default function LoginPage() {
   const [remember, setRemember] = useState(true);
@@ -13,6 +14,21 @@ export default function LoginPage() {
   const isFilled = id.trim() !== '' && pw.trim() !== ''; 
   const router = useRouter();
   
+  const handelLogin = async() => {
+     try {
+        const res = await PostLogin(id,pw);
+        console.log(res);
+        if(res.accessToken){
+          localStorage.setItem('accessToken', res.accessToken);
+        }
+        router.push('./main');
+        
+      }  catch (error: any) {
+      console.error("로그인 실패", error);
+      const message = error.response?.data?.message || "로그인 실패";
+      alert(message);
+    }
+  }
   return (
     <div className='mt-auto mb-auto'>
     <DefaultBody hasHeader={0} >
@@ -51,9 +67,10 @@ export default function LoginPage() {
           </div>
 
            <CommonButton
-                type="submit"
+                type="button"
                 disabled={!isFilled}
                 animate={isFilled}
+                onClick={()=> handelLogin()}
             >
                 로그인하기
             </CommonButton>
