@@ -1,38 +1,32 @@
-name: Deploy
+name: Sync Fork with Main
 
 on:
   push:
     branches: ['main']
 
 jobs:
-  build:
+  sync-fork:
     runs-on: ubuntu-latest
-    container: node:20
 
-    # ✅ 명시적 권한 설정
+    # ✅ 권한 설정 (필수)
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # 전체 커밋 히스토리 가져오기
 
-      - name: Install dependencies
-        run: npm install
+      - name: Configure Git
+        run: |
+          git config --global user.email "${{ secrets.EMAIL }}"
+          git config --global user.name "GitHub Actions"
 
-      - name: Build project
-        run: npm run build
+      - name: Add fork as remote
+        run: git remote add fork https://github.com/yereong/2025_UNITHON_TEAM_11_FE.git
 
-      - name: Push to destination repo
-        uses: cpina/github-action-push-to-another-repository@main
+      - name: Push to fork
+        run: git push --force fork main:main
         env:
-          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
-        with:
-          source-directory: 'output'  # ✅ 빌드 산출물 디렉토리
-          destination-github-username: yereong
-          destination-repository-name: 2025_UNITHON_TEAM_11_FE
-          user-email: ${{ secrets.EMAIL }}
-          commit-message: "chore: automated deployment $(date +'%Y-%m-%d %H:%M')"
-          target-branch: main
-          force: true  # ⚠️ 기존 파일 덮어쓰기
+          GITHUB_TOKEN: ${{ secrets.AUTO_ACTIONS }}  # ⚠️ PAT 필요
