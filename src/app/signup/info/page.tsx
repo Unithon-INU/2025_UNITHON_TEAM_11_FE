@@ -4,30 +4,26 @@ import Header from '@/components/header/Header';
 import CommonButton from '@/components/CommonButton';
 import DefaultBody from '@/components/defaultBody';
 import DefaultInput from '@/components/DefaultInput';
+import { GetEmail } from '@/api/getEmail';
 const agreementIds = ['terms', 'policy', 'privacy', 'marketing', 'selective'];
 const requiredIds = ['terms', 'policy', 'privacy'];
 
 export default function SignUpInfoPage() {
-  const [checked, setChecked] = useState<{ [key: string]: boolean }>({
-    terms: false,
-    policy: false,
-    privacy: false,
-    marketing: false,
-    selective: false,
-  });
+ 
 
   const [email, setEmail] = useState('');
+  const [emailOk, setEmailOk] = useState(false);
   const isEmailValid = email.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isEmailFilled = email.trim() !== '';
   const [id, setId] = useState('');
+  const [idOk, setIdOk] = useState(false);
+
   const isIdValid = id.trim() !== '' && /^[a-zA-Z0-9_]{4,20}$/.test(id);
   const [pw, setPw] = useState('');
   const [pwCheck, setPwCheck] = useState('');
   const isPwValid = pw.trim() !== '' && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(pw);
-    const isFilled = isEmailValid && isIdValid && isPwValid;
-
-
-  const requiredChecked = requiredIds.every(id => checked[id]);
+  const isFilled = isEmailValid && isIdValid && isPwValid && idOk && emailOk;
+  
 
   return (
     <>
@@ -57,7 +53,7 @@ export default function SignUpInfoPage() {
                 showCheckButton={true}
 
                 />
-
+                
             <p className="mt-4 mb-[8px] font-pretendard font-medium text-[15px] leading-[145%] tracking-[-0.03em]">아이디 입력</p>
             <DefaultInput
                 type="text"
@@ -123,7 +119,7 @@ export default function SignUpInfoPage() {
              <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[372px] bg-[#FFFDFB]  p-4 [box-shadow:0px_-1px_4px_0px_#00000008] rounded-[12px]">
                 <CommonButton
                     type="button"
-                    disabled={!requiredChecked}    
+                    disabled={!isFilled}    
                     animate={isFilled}>
                         다음
                 </CommonButton>

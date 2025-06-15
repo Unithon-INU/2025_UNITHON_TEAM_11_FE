@@ -55,7 +55,7 @@ const Header = ({ children }: HeaderProps) => {
       "
     >
       {/* 왼쪽: BackButton */}
-      <div className="flex items-center min-w-[30px]">
+      <div className="flex items-center min-w-[30px] ">
         {backButton}
       </div>
 

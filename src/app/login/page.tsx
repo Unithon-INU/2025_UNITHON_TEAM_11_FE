@@ -15,7 +15,7 @@ const isFilled = id.trim() !== '' && pw.trim() !== '';
     <DefaultBody hasHeader={0} >
       <div className="flex flex-col items-center justify-center  w-full h-full bg-[#FFFDFB] ">
         {/* 로고/타이틀 */}
-        <h1 className="flex text-[48px] font-bold text-[#19C419] mb-[54px] tracking-widest">프링</h1>
+        <img src="asset/logo.svg" alt="로고" className="w-[146px] mb-[24px]" />
 
         {/* 로그인 폼 */}
         <form className="flex w-full max-w-[350px] flex flex-col gap-2">
