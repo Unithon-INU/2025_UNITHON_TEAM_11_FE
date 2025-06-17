@@ -6,14 +6,16 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ProductSection from '@/components/home/ProductSection';
 import ProductTabs from '@/components/market/ProductTabs';
+import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
 
 export default function ProductDetailPage() {
   const router = useRouter();
 
   const rating = 4; // 예시 값 (API 연동 시 동적 할당 가능)
   const reviewCount = 1234;
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-   const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(3210); // 초기 좋아요 수
 
   const handleToggleLike = () => {
@@ -177,10 +179,13 @@ export default function ProductDetailPage() {
           <button className="w-[48px] h-[48px] flex items-center justify-center rounded-xl border border-[#E5E5E5]">
             <span className="text-[#4BE42C] text-2xl">♡</span>
           </button>
-          <button className="flex-1 h-[48px] bg-[#4BE42C] text-white text-[14px] font-medium rounded-xl">
+          <button className="flex-1 h-[48px] bg-[#4BE42C] text-white text-[14px] font-medium rounded-xl" onClick={() => setDrawerOpen(true)}>
             구매하기
           </button>
         </div>
+
+        <ProductOptionDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
+
       </div>
     </>
   );
