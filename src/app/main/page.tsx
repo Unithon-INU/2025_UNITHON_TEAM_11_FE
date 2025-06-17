@@ -33,10 +33,18 @@ export default function MainPage() {
           <CategoryChips />
 
           {/* 특가 농수산물 섹션 */}
-          <ProductSection />
+          <ProductSection
+            titleAccent="⏰ 특가"
+            titleRest="농수산물"
+            subtitle="좋은 가격에 살 수 있는 특가 농수산물"
+          />
 
           {/* 오늘 저녁 섹션 */}
-          <RecipeSection title="어떠세요?" />
+          <RecipeSection
+            titleAccent="🥘 오늘 저녁"
+            titleRest="어떠세요?"
+          />
+
 
           {/* 특별한 날 요리 */}
           <SpecialRecipeSection />
