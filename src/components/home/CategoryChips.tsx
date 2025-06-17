@@ -19,7 +19,7 @@ const CategoryChips = () => {
         {categories.map((category, index) => (
           <button
             key={index}
-            className="flex items-center gap-2 px-[16px] py-[13px] rounded-xl border border-[#EDE7DE] bg-white font-medium text-[14px] leading-[17px] tracking-[-0.03em] text-[#222222] whitespace-nowrap w-auto"
+            className="flex items-center gap-2 px-[16px] py-[13px] rounded-xl border border-[#EDE7DE]  font-medium text-[14px] leading-[17px] tracking-[-0.03em] text-[#222222] whitespace-nowrap w-auto"
           >
             <span>{category.icon}</span>
             {category.label}

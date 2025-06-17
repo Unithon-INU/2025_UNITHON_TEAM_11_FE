@@ -36,7 +36,7 @@ export default function MainPage() {
           <ProductSection />
 
           {/* 오늘 저녁 섹션 */}
-          <RecipeSection title="오늘 저녁 어떠세요?" />
+          <RecipeSection title="어떠세요?" />
 
           {/* 특별한 날 요리 */}
           <SpecialRecipeSection />
