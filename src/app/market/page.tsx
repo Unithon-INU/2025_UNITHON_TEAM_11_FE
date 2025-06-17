@@ -8,15 +8,17 @@ import { useRouter } from 'next/navigation';
 import { PostLogin } from '@/api/postLogin';
 import BottomNav from '@/components/BottonNav';
 import MarketCarousel from '@/components/market/MarketCarousel';
-import CategoryChips from '@/components/home/CategoryChips';
+import CategoryChips from '@/components/market/CategoryChips';
 import ProductSection from '@/components/home/ProductSection';
 import RecipeSection from '@/components/home/RecipeSection';
 import SearchBar from '@/components/home/SearchBar';
+import BottomBanner from '@/components/market/BottonBanner';
+import { useUser } from '@/context/UserContext';
 
-export default function MainPage() {
+export default function MarketPage() {
  
   const router = useRouter();
-  
+  const { userInfo } = useUser();
  
   return (
     <div className='mt-auto mb-auto'>
@@ -32,7 +34,21 @@ export default function MainPage() {
           <CategoryChips />
 
           {/* 추천 농수산물 섹션 */}
-          <ProductSection />
+          <ProductSection
+            titleAccent="🫰 추천"
+            titleRest="농수산품"
+            subtitle={`${userInfo.nickname || '고객'}님을 위해 추천하는 농수산품이에요.`}
+          />
+
+          {/* 자주 구매한 농수산품 섹션 */}
+          <ProductSection
+            titleAccent="🌟 자주 구매한"
+            titleRest="농수산품"
+            subtitle={`${userInfo.nickname || '고객'}님을 위해 추천하는 농수산품이에요.`}
+          />
+
+          {/* 하단 배너 섹션 */}
+          <BottomBanner />
 
 
       </div>
