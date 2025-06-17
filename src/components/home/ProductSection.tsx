@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
+import { useRouter } from 'next/navigation';
+
 
 type Product = {
   id: number;
@@ -54,6 +56,7 @@ const ProductSection = ({
     Object.fromEntries(initialProducts.map((p) => [p.id, p.isLiked]))
   );
 
+  const router = useRouter();
   const toggleLike = (id: number) => {
     setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
   };
@@ -77,7 +80,7 @@ const ProductSection = ({
       {/* 상품 리스트 */}
       <div className="flex gap-3 overflow-x-auto scrollbar-hide">
         {initialProducts.map((product) => (
-          <div key={product.id} className="min-w-[140px] shrink-0">
+          <button key={product.id} className="min-w-[140px] shrink-0" onClick={()=> router.push(`/market/details/${product.id}`)}>
             <div className="relative w-full aspect-[1/1] rounded-lg overflow-hidden bg-gray-100">
               <img
                 src={product.image}
@@ -108,7 +111,7 @@ const ProductSection = ({
               </span>
               {product.salePrice.toLocaleString()}원
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </section>
