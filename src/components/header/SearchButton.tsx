@@ -14,9 +14,9 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onClick }) => {
             aria-label="검색"
         >
             <img
-                src="/icons/search.svg"
+                src="/asset/headerSearch.svg"
                 alt="검색"
-                className="w-[25px] h-[25px]"
+                className="w-[25px] h-[25px] mr-[10px]"
             />
         </button>
     );

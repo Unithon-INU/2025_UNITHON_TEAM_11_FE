@@ -80,7 +80,11 @@ const ProductSection = ({
       {/* 상품 리스트 */}
       <div className="flex gap-3 overflow-x-auto scrollbar-hide">
         {initialProducts.map((product) => (
-          <button key={product.id} className="min-w-[140px] shrink-0" onClick={()=> router.push(`/market/details/${product.id}`)}>
+         <button
+            key={product.id}
+            className="min-w-[140px] shrink-0 text-left"
+            onClick={() => router.push(`/market/details/${product.id}`)}
+          >
             <div className="relative w-full aspect-[1/1] rounded-lg overflow-hidden bg-gray-100">
               <img
                 src={product.image}
@@ -88,7 +92,10 @@ const ProductSection = ({
                 className="w-full h-full object-cover"
               />
               <button
-                onClick={() => toggleLike(product.id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // 부모 클릭 방지
+                  toggleLike(product.id);
+                }}
                 className="absolute bottom-2 right-2"
               >
                 {likes[product.id] ? (
@@ -98,20 +105,22 @@ const ProductSection = ({
                 )}
               </button>
             </div>
-            <div className="mt-2 text-[13px] leading-4 text-[#333333]">{product.name}</div>
-            <div className="text-[13px] text-[#C2C2C2] line-through">
-              {product.price.toLocaleString()}원
-            </div>
-            <div className="text-[14px] font-bold text-[#222222]">
-              <span className="text-[#FF5E5E] mr-1">
-                {Math.round(
-                  ((product.price - product.salePrice) / product.price) * 100
-                )}
-                %
-              </span>
-              {product.salePrice.toLocaleString()}원
+
+            {/* 텍스트 부분 전체를 래핑 */}
+            <div className="flex flex-col items-start text-left mt-2">
+              <div className="text-[13px] leading-4 text-[#333333]">{product.name}</div>
+              <div className="text-[13px] text-[#C2C2C2] line-through">
+                {product.price.toLocaleString()}원
+              </div>
+              <div className="text-[14px] font-bold text-[#222222]">
+                <span className="text-[#FF5E5E] mr-1">
+                  {Math.round(((product.price - product.salePrice) / product.price) * 100)}%
+                </span>
+                {product.salePrice.toLocaleString()}원
+              </div>
             </div>
           </button>
+
         ))}
       </div>
     </section>
