@@ -1,11 +1,8 @@
 'use client';
 import '@/app/globals.css';
-import React, { useState } from 'react';
+import React from 'react';
 import DefaultBody from '@/components/defaultBody';
-import DefaultInput from '@/components/DefaultInput';
-import CommonButton from '@/components/CommonButton';
 import { useRouter } from 'next/navigation';
-import { PostLogin } from '@/api/postLogin';
 import BottomNav from '@/components/BottonNav';
 import HomeCarousel from '@/components/home/HomeCarousel';
 import CategoryChips from '@/components/home/CategoryChips';

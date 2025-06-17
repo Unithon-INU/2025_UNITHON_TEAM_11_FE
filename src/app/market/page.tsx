@@ -1,16 +1,12 @@
 'use client';
 import '@/app/globals.css';
-import React, { useState } from 'react';
+import React from 'react';
 import DefaultBody from '@/components/defaultBody';
-import DefaultInput from '@/components/DefaultInput';
-import CommonButton from '@/components/CommonButton';
 import { useRouter } from 'next/navigation';
-import { PostLogin } from '@/api/postLogin';
 import BottomNav from '@/components/BottonNav';
 import MarketCarousel from '@/components/market/MarketCarousel';
 import CategoryChips from '@/components/market/CategoryChips';
 import ProductSection from '@/components/home/ProductSection';
-import RecipeSection from '@/components/home/RecipeSection';
 import SearchBar from '@/components/home/SearchBar';
 import BottomBanner from '@/components/market/BottonBanner';
 import { useUser } from '@/context/UserContext';

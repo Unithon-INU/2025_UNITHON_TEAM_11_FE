@@ -70,7 +70,7 @@ const ProductSection = ({
       </div>
 
       {/* 부제목 */}
-      <p className="w-[354px] h-[18px] font-medium text-[14px] leading-[125%] tracking-[-0.03em] text-[#9F9F9F] mb-3">
+      <p className="font-medium text-[14px] leading-[125%] tracking-[-0.03em] text-[#9F9F9F] mb-3">
         {subtitle}
       </p>
 
