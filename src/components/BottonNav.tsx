@@ -35,7 +35,7 @@ export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
                     <Link href='/main' className="flex flex-col justify-center items-center h-full">
                         <img src={ activeIndex===0 ? ActiveHomeIconPath : HomeIconPath} width={24} height={24} className="stroke-red-500"  alt='메인'/>
                         <p className={`mt-[4px] font-pretendard font-medium text-[12px] leading-[14px] text-center tracking-[-0.03em] flex-none order-1 self-stretch flex-grow-0
-    ${activeIndex === 0 ? "text-[#817468]" : "text-[#CCC3BB]"}`}>홈</p>
+                        ${activeIndex === 0 ? "text-[#817468]" : "text-[#CCC3BB]"}`}>홈</p>
                     </Link>
                 </li>
                 <li className="flex-1 text-center">

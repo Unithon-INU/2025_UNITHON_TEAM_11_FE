@@ -49,7 +49,7 @@ export default function MarketPage() {
 
       </div>
     </DefaultBody>
-    <BottomNav activeIndex={0}></BottomNav>
+    <BottomNav activeIndex={1}></BottomNav>
     </div>
   );
 }

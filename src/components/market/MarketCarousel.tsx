@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const images = [
-  '/asset/marketcarousel.svg',
+  '/asset/marketCarousel.svg',
   
 ];
 
