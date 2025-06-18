@@ -36,18 +36,18 @@ const Header = ({ children }: HeaderProps) => {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 flex items-center h-[56px] px-4 bg-white w-full max-w-[500px] mx-auto z-50"
+      className="fixed top-0 left-0 right-0 flex items-center justify-between h-[56px] px-4 bg-white w-full max-w-[500px] mx-auto z-50"
     >
       {/* 왼쪽: BackButton */}
       <div className="flex items-center min-w-[30px]">{backButton}</div>
 
       {/* 중앙: Title */}
-      <div className="flex-1 text-center font-pretendard font-semibold text-lg leading-[100%] tracking-[-0.03em]">
+      <div className="flex text-center font-pretendard font-semibold text-lg justify-self-start leading-[100%] tracking-[-0.03em]">
         {title}
       </div>
 
       {/* 오른쪽: 여러 개 버튼 가능 */}
-      <div className="flex items-center gap-2 min-w-[40px] justify-end">
+      <div className="flex items-center gap-2 min-w-[40px] justify-self-end ">
         {rightButtons}
       </div>
     </header>

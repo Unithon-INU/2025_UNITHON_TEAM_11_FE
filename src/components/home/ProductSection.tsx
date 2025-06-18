@@ -24,7 +24,7 @@ const initialProducts: Product[] = [
     id: 1,
     name: '브로콜리, 500g, 1봉',
     price: 8700,
-    salePrice: 6090,
+    salePrice: 4000,
     image: '/asset/broccoli.svg',
     isLiked: true,
   },

@@ -1,5 +1,8 @@
 // tailwind.config.js
 module.exports = {
+  safelist: [
+    "checked:bg-[url('/asset/check-white.svg')]"
+  ],
   theme: {
     extend: {
       keyframes: {
