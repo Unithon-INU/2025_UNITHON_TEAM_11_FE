@@ -23,7 +23,7 @@ const HomeCarousel = () => {
   };
 
   return (
-    <div className="relative w-full aspect-[1/1] mt-6 overflow-hidden ">
+    <div className="relative w-full aspect-[1/1] mt-15 overflow-hidden ">
       <Image
         src={images[currentIndex]}
         alt={`Slide ${currentIndex + 1}`}

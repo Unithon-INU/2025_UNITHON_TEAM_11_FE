@@ -70,7 +70,7 @@ export default function SignUpProfilePage() {
         <Header.BackButton />
         <Header.Title>회원가입</Header.Title>
       </Header>
-      <DefaultBody hasHeader={0}>
+      <DefaultBody hasHeader={1}>
         <div className="flex flex-col  ">
           {/* 본문 영역 */}
           <main className="flex flex-col items-center mt-[24px]">

@@ -11,7 +11,9 @@ type SearchBarProps = {
 
 const SearchBar = ({ showCartButton = true }: SearchBarProps) => {
   return (
-    <div className="w-full flex items-center justify-between px-4 pt-4">
+   <div
+      className="fixed top-0 left-0 right-0 flex items-center h-[56px] px-4 bg-white w-full max-w-[500px] mx-auto z-50"
+    >
       {/* 검색창 */}
       <div className={`flex items-center bg-[#F3F0EC] rounded-xl px-3 py-2 ${showCartButton ? 'w-full mr-2' : 'flex-1'}`}>
         <input

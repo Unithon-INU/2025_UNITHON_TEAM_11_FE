@@ -36,7 +36,7 @@ export default function ProductDetailPage() {
       </Header>
 
       <div className="relative pb-[80px]">
-        <DefaultBody hasHeader={0}>
+        <DefaultBody hasHeader={1}>
           <main className="flex flex-col">
             {/* 상품 이미지 */}
             <div className="w-[100%] aspect-[1/1] bg-gray-100">

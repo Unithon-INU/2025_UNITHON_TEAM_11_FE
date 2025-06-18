@@ -23,7 +23,6 @@ export default function SignUpInfoPage() {
   const isIdValid = id.trim() !== '' && /^[a-zA-Z0-9_]{4,20}$/.test(id);
   const [pw, setPw] = useState('');
   const [pwCheck, setPwCheck] = useState('');
-  const isPwValid = pw.trim() !== '' && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(pw);
   const [pwCheckMessage, setPwCheckMessage] = useState('');
   const [pwCheckOk, setPwCheckOk] = useState(false);
   const isFilled = isEmailValid && isIdValid && idOk && emailOk && pwCheckOk;
@@ -90,7 +89,7 @@ export default function SignUpInfoPage() {
         <Header.BackButton />
         <Header.Title>회원가입</Header.Title>
       </Header>
-      <DefaultBody hasHeader={0}>
+      <DefaultBody hasHeader={1}>
         <div className="flex flex-col  ">
           {/* 본문 영역 */}
           <main className="flex flex-col items-center mt-[24px]">
