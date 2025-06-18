@@ -44,7 +44,7 @@ const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
        
         <div 
             id="scrollbar-hidden"
-            className={ "bg-white w-full flex flex-col px-[20px] mb-[110px] "+ pt }>
+            className={ "bg-white w-full flex flex-col  mb-[110px] "+ pt }>
             {children}
         </div>
     );
