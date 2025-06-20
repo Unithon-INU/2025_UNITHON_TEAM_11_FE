@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Review from '@/components/market/Review';
+import InquirySection from './InquirySection';
 
 const tabs = ['상품설명', '상품후기', '문의'];
 
@@ -61,7 +62,7 @@ export default function ProductTabs() {
 
         {activeTab === '문의' && (
           <div>
-            <p>문의사항은 고객센터 또는 판매자에게 직접 연락해주세요.</p>
+            <InquirySection />
           </div>
         )}
       </div>
