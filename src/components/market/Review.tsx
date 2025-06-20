@@ -68,12 +68,12 @@ export default function ProductReviewSection() {
       </div>
 
       {/* 전체 리뷰 보기 버튼 */}
-      <button className="w-full border border-[#E5E5E5] text-[14px] rounded-lg py-2 mb-6">리뷰 전체보기</button>
+      <button className="w-full border h-[52px] border-[#E5E5E5] text-[14px]  font-medium py-[17.5px] rounded-[500px] mb-6">리뷰 전체보기</button>
 
      <ReviewList reviews={mockReviews} />
 
       {/* 리뷰 전체보기 하단 */}
-      <button className="mt-6 w-full border border-[#E5E5E5] text-[14px] rounded-lg py-2">리뷰 전체보기</button>
+      <button className="mt-6 w-full border h-[52px] py-[17.5px] border-[#E5E5E5] text-[14px] font-medium rounded-[500px] ">리뷰 전체보기</button>
     </div>
   );
 }

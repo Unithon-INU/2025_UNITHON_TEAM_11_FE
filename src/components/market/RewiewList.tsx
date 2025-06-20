@@ -42,7 +42,7 @@ export default function ReviewList({ reviews }: Props) {
               <img
                 src={review.profileImage || '/asset/addProfile.svg'}
                 alt="프로필"
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover"
               />
               <div className="flex flex-col text-sm">
                 <div className="text-[13px]">
