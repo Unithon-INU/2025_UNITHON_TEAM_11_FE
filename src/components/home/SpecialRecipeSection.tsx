@@ -1,51 +1,37 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+
+import React from 'react';
 import { LuClock3 } from 'react-icons/lu';
 import { AiFillStar } from 'react-icons/ai';
 
-// 타입 정의
-type SpecialRecipe = {
+export type SpecialRecipe = {
   id: number;
   title: string;
   description: string;
   imageUrl: string;
   time: string;
-  rating: number | null;
+  rating: number;
   reviewCount: number;
   author: string;
 };
 
-const SpecialRecipeSection = () => {
-  // ✅ 더미 데이터로 초기화
-  const [recipe, setRecipe] = useState<SpecialRecipe>({
-    id: 1,
-    title: '토마토를 활용한 특별한 날의 브런치',
-    description:
-      '안녕하세요! 오늘은 토마토를 이용한 요리를 해보려고 합니다~ 간단하지만 맛은 결코 간단하지 않은...^^ 그런 요리에요. 특별한 날 기분까지 좋아지는 브런치로 만들어보세요!',
-    imageUrl: '/asset/special_recipe.svg',
-    time: '1시간 30분',
-    rating: 4.7,
-    reviewCount: 5,
-    author: 'xhakohpasta',
-  });
+type Props = {
+  recipe?: SpecialRecipe;
+};
 
-  // 🔒 API 연동 예정 (현재 주석 처리)
-  /*
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const res = await fetch('/api/recipe/special');
-        const data = await res.json();
-        setRecipe(data);
-      } catch (error) {
-        console.error('특별 레시피 로딩 실패:', error);
-      }
-    };
+const defaultRecipe: SpecialRecipe = {
+  id: 1,
+  title: '토마토를 활용한 특별한 날의 브런치',
+  description:
+    '안녕하세요! 오늘은 토마토를 이용한 요리를 해보려고 합니다~ 간단하지만 맛은 결코 간단하지 않은...^^ 그런 요리에요. 특별한 날 기분까지 좋아지는 브런치로 만들어보세요!',
+  imageUrl: '/asset/special_recipe.svg',
+  time: '1시간 30분',
+  rating: 4.7,
+  reviewCount: 5,
+  author: 'xhakohpasta',
+};
 
-    fetchRecipe();
-  }, []);
-  */
-
+const SpecialRecipeSection = ({ recipe = defaultRecipe }: Props) => {
   return (
     <section className="w-full bg-[#F6F3EE] pt-[32px] px-[20px] pb-[40px] mt-[56px]">
       {/* 섹션 헤더 */}

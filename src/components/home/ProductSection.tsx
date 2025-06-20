@@ -1,11 +1,10 @@
 'use client';
+
 import React, { useState } from 'react';
-import { FiHeart } from 'react-icons/fi';
-import { AiFillHeart } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 import LikeButton from '../LikeButton';
 
-type Product = {
+export type Product = {
   id: number;
   name: string;
   price: number;
@@ -18,9 +17,10 @@ type ProductSectionProps = {
   titleAccent?: string;
   titleRest?: string;
   subtitle?: string;
+  products?: Product[]; // 외부에서 주입 가능
 };
 
-const initialProducts: Product[] = [
+const defaultProducts: Product[] = [
   {
     id: 1,
     name: '브로콜리, 500g, 1봉',
@@ -45,15 +45,24 @@ const initialProducts: Product[] = [
     image: '/asset/broccoli.svg',
     isLiked: false,
   },
+   {
+    id: 4,
+    name: '아보카도, 500g, 1봉',
+    price: 8700,
+    salePrice: 6090,
+    image: '/asset/broccoli.svg',
+    isLiked: false,
+  },
 ];
 
 const ProductSection = ({
   titleAccent = '⏰ 특가',
   titleRest = '농수산물',
   subtitle = '좋은 가격에 살 수 있는 특가 농수산물',
+  products = defaultProducts,
 }: ProductSectionProps) => {
   const [likes, setLikes] = useState<Record<number, boolean>>(
-    Object.fromEntries(initialProducts.map((p) => [p.id, p.isLiked]))
+    Object.fromEntries(products.map((p) => [p.id, p.isLiked]))
   );
 
   const router = useRouter();
@@ -65,7 +74,7 @@ const ProductSection = ({
   return (
     <section className="w-full px-4 mt-[56px]">
       {/* 섹션 헤더 */}
-      <div className="flex justify-between items-center mb-1">
+      <div className="flex justify-between items-center mb-1 ">
         <div className="font-semibold text-[18px] leading-[125%] tracking-[-0.03em] text-[#222222]">
           <span className="text-[#4BE42C] mr-1">{titleAccent}</span>
           {titleRest}
@@ -79,8 +88,8 @@ const ProductSection = ({
       </p>
 
       {/* 상품 리스트 */}
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-        {initialProducts.map((product) => (
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide ">
+        {products.map((product) => (
           <div
             key={product.id}
             className="min-w-[140px] shrink-0 cursor-pointer"

@@ -1,6 +1,6 @@
 'use client';
 import '@/app/globals.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DefaultBody from '@/components/defaultBody';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottonNav';
@@ -11,21 +11,46 @@ import SearchBar from '@/components/home/SearchBar';
 import SpecialRecipeSection from '@/components/home/SpecialRecipeSection';
 import RecipeCircleSection from '@/components/recipe/RecipeCircleSection';
 import { useUser } from '@/context/UserContext';
-
+import { GetMainRecipe } from '@/api/main/getMainRecipe';
+import { SpecialRecipe } from '@/components/home/SpecialRecipeSection';
 
 export default function MarketPage() {
 
-  const dummyRecipes = [
-  { id: 1, title: '건강하게먹기', imageUrl: '/asset/rec1.svg' },
-  { id: 2, title: '타코열정남', imageUrl: '/asset/rec2.svg' },
-  { id: 3, title: '아이와 함께', imageUrl: '/asset/rec1.svg' },
-  { id: 4, title: '할머니 밥상', imageUrl: '/asset/rec2.svg' },
-  { id: 5, title: '티니핑 밥상', imageUrl: '/asset/rec1.svg' },
-
-];
  
   const router = useRouter();
   const { userInfo } = useUser();
+
+  const [hotrecipes, setHotRecipes] = useState([]);
+  const [newrecipes, setNewRecipes] = useState([]);
+  const [ recipeUsers, setRecipeUsers] = useState([]);
+  const [specialRecipe, setSpecialRecipe] = useState<SpecialRecipe | null>(null);
+  
+
+   useEffect(() => {
+      const fetchMain = async () => {
+        try {
+          const res = await GetMainRecipe();
+          console.log(res);
+          setHotRecipes(res.simpleProductResponseDtos || []);
+          setNewRecipes(res.newRecipeResponseDtos || []);
+          setRecipeUsers(res.memberRankingResponseDtos || []);
+          setSpecialRecipe({
+          id: res.specialRecipeResponseDto.id,
+          title: res.specialRecipeResponseDto.title,
+          description: res.specialRecipeResponseDto.content,
+          imageUrl: res.specialRecipeResponseDto.image,
+          time: res.specialRecipeResponseDto.time,
+          rating: res.specialRecipeResponseDto.rating,
+          reviewCount: res.specialRecipeResponseDto.comment,
+          author: '관리자'
+        });
+        } catch (error) {
+          console.error('메인 데이터 로딩 실패:', error);
+        }
+      };
+  
+      fetchMain();
+    }, []);
  
   return (
     <div className='mt-auto mb-auto'>
@@ -45,11 +70,12 @@ export default function MarketPage() {
             titleAccent="🔥 요즘 핫한"
             titleRest="레시피"
             subtitle={`${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
+            recipes={hotrecipes}
           />
 
           <RecipeCircleSection
             userNickname= {userInfo.nickname || '고객'}
-            recipes={dummyRecipes}
+            recipes={recipeUsers}
             onRefresh={() => console.log('새로 고침')}
           />
 
@@ -58,10 +84,12 @@ export default function MarketPage() {
             titleAccent="🌟 지금"
             titleRest="올라온 레시피"
             subtitle={`${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
+            recipes={newrecipes}
           />
 
-          {/* 하단 레시피 섹션 */}
-          <SpecialRecipeSection />
+          {/* 특별한 날 요리 */}
+          {specialRecipe && <SpecialRecipeSection recipe={specialRecipe} />}
+        
 
 
       </div>

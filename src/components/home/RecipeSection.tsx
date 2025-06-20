@@ -1,17 +1,29 @@
 'use client';
+
 import React, { useState } from 'react';
 import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
 import { LuClock3 } from 'react-icons/lu';
 import { useUser } from '@/context/UserContext';
 
+export type Recipe = {
+  id: number;
+  title: string;
+  image: string;
+  time: string;
+  rating: number;
+  isLiked: boolean;
+  comment: number;
+};
+
 type RecipeSectionProps = {
   titleAccent?: string;
   titleRest?: string;
   subtitle?: string;
+  recipes?: Recipe[]; // 외부 주입 가능
 };
 
-const initialRecipes = [
+const defaultRecipes: Recipe[] = [
   {
     id: 1,
     title: '아이와 함께 만드는 맛있는 건강 피자',
@@ -45,9 +57,10 @@ const RecipeSection = ({
   titleAccent = '🥘 오늘 저녁',
   titleRest = '추천 레시피',
   subtitle,
+  recipes = defaultRecipes, // 기본값 설정
 }: RecipeSectionProps) => {
   const [likes, setLikes] = useState<Record<number, boolean>>(
-    Object.fromEntries(initialRecipes.map((r) => [r.id, r.isLiked]))
+    Object.fromEntries(recipes.map((r) => [r.id, r.isLiked]))
   );
 
   const { userInfo } = useUser();
@@ -57,7 +70,7 @@ const RecipeSection = ({
   };
 
   return (
-    <section className="w-full px-4 mt-[56px] ">
+    <section className="w-full px-4 mt-[56px]">
       {/* 섹션 헤더 */}
       <div className="flex justify-between items-center mb-1">
         <div className="font-semibold text-[18px] leading-[125%] tracking-[-0.03em]">
@@ -68,17 +81,13 @@ const RecipeSection = ({
       </div>
 
       {/* 부제목 */}
-      {subtitle !== undefined ? (
-        <p className="w-[354px] h-[18px] font-medium text-[14px] leading-[125%] tracking-[-0.03em] text-[#9F9F9F] mb-3">{subtitle}</p>
-      ) : (
-        <p className="w-[354px] h-[18px] font-medium text-[14px] leading-[125%] tracking-[-0.03em] text-[#9F9F9F] mb-3">
-          {(userInfo.nickname || '고객')}님을 위한 심도깊은 레시피
-        </p>
-      )}
+      <p className="w-[354px] h-[18px] font-medium text-[14px] leading-[125%] tracking-[-0.03em] text-[#9F9F9F] mb-3">
+        {subtitle ?? `${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
+      </p>
 
       {/* 레시피 리스트 */}
       <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-        {initialRecipes.map((recipe) => (
+        {recipes.map((recipe) => (
           <div
             key={recipe.id}
             className="w-[140px] h-[230px] shrink-0 flex flex-col justify-start"

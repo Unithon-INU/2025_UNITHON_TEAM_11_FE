@@ -19,10 +19,7 @@ const InquirySection = () => {
       {/* 버튼 영역 */}
       <div className="flex flex-col gap-3 items-center">
         <button className="w-full max-w-[350px] h-[44px] border border-[#D9D9D9] rounded-full text-[#222] text-[14px]">
-          판매자 문의
-        </button>
-        <button className="w-full max-w-[350px] h-[44px] border border-[#D9D9D9] rounded-full text-[#222] text-[14px]">
-          챗봇 농산물 문의
+          문의하기
         </button>
       </div>
     </div>

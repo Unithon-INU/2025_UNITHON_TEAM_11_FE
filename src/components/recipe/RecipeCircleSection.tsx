@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 type RecipeItem = {
   id: number;
-  title: string;
+  nickname: string;
   imageUrl: string;
 };
 
@@ -48,14 +48,14 @@ const RecipeCircleSection = ({
             <div className="w-[64px] h-[64px] rounded-full overflow-hidden bg-gray-200">
               <Image
                 src={r.imageUrl}
-                alt={r.title}
+                alt={r.nickname}
                 width={64}
                 height={64}
                 className="w-full h-full object-cover"
               />
             </div>
             <p className="text-[13px] text-[#333] text-center mt-1 truncate w-full leading-tight">
-              {r.title}
+              {r.nickname}
             </p>
           </div>
         ))}
