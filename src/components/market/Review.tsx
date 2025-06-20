@@ -42,14 +42,14 @@ const mockReviews = [
 
 export default function ProductReviewSection() {
   return (
-    <div className="px-4 py-6">
+    <div className="py-6 px-5">
       {/* 상단 리뷰 통계 */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
           <div className="text-[15px] font-semibold text-[#222]">리뷰 1,234개</div>
           <button className="text-[13px] text-[#9A9A9A]">전체보기 &gt;</button>
         </div>
-        <div className="flex items-center gap-1 text-[14px] text-[#FFD600]">
+        <div className="flex items-center gap-1 text-[16px] text-[#FFD600]">
           {'★'.repeat(4)}<span className="text-[#C2C2C2]">★</span>
           <span className="text-[#222] ml-2 text-[14px]">4.2 / 5</span>
         </div>
@@ -62,7 +62,7 @@ export default function ProductReviewSection() {
             key={i}
             src="/asset/egg.svg"
             alt="리뷰사진"
-            className="w-20 h-20 object-cover rounded-md border"
+            className="w-20 h-20 object-cover rounded-md border-none"
           />
         ))}
       </div>
@@ -70,7 +70,8 @@ export default function ProductReviewSection() {
       {/* 전체 리뷰 보기 버튼 */}
       <button className="w-full border h-[52px] border-[#E5E5E5] text-[14px]  font-medium py-[17.5px] rounded-[500px] mb-6">리뷰 전체보기</button>
 
-     <ReviewList reviews={mockReviews} />
+      <ReviewList reviews={mockReviews} />
+  
 
       {/* 리뷰 전체보기 하단 */}
       <button className="mt-6 w-full border h-[52px] py-[17.5px] border-[#E5E5E5] text-[14px] font-medium rounded-[500px] ">리뷰 전체보기</button>

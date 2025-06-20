@@ -29,7 +29,7 @@ export default function ProductTabs() {
       </div>
 
       {/* 탭별 콘텐츠 */}
-      <div className="p-4 text-[14px] text-[#333]">
+      <div className=" text-[14px] text-[#333]">
         {activeTab === '상품설명' && (
           <div>
              {/* 상품 설명 이미지 */}
@@ -44,7 +44,7 @@ export default function ProductTabs() {
             </div>
 
             {/* 상품설명 토글 버튼 */}
-            <div className="px-4 mt-4">
+            <div className="px-5 mt-4">
               <button className="w-full h-[44px] rounded-full border border-[#DDD] text-[14px] text-[#333]">
                 상품설명 펼치기 ▼
               </button>
