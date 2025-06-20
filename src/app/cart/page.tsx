@@ -90,6 +90,19 @@ export default function CartPage() {
     );
   };
 
+  const toggleFarmCheck = (farmName: string) => {
+    setFarms((prev) =>
+      prev.map((farm) => {
+        if (farm.farm !== farmName) return farm;
+        const allChecked = farm.items.every((item) => item.checked);
+        return {
+          ...farm,
+          items: farm.items.map((item) => ({ ...item, checked: !allChecked })),
+        };
+      })
+    );
+  };
+
   const selectedItems = farms.flatMap((farm) => farm.items.filter((i) => i.checked));
   const productTotal = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryTotal = selectedItems.length > 0 ? 3000 : 0;
@@ -138,21 +151,9 @@ export default function CartPage() {
                           id={`farm-check-${farm.farm}`}
                           className="peer hidden"
                           checked={farm.items.every((i) => i.checked)}
-                          onChange={() => {
-                            const allChecked = farm.items.every((i) => i.checked);
-                            setFarms((prev) =>
-                              prev.map((f) =>
-                                f.farm === farm.farm
-                                  ? {
-                                      ...f,
-                                      items: f.items.map((i) => ({ ...i, checked: !allChecked })),
-                                    }
-                                  : f
-                              )
-                            );
-                          }}
+                          onChange={() => toggleFarmCheck(farm.farm)}
                         />
-                        <label htmlFor="all-check" className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
+                        <label htmlFor={`farm-check-${farm.farm}`} className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
                           <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px] " />
                         </label>
                         {farm.farm}
@@ -170,7 +171,7 @@ export default function CartPage() {
                             onChange={() => toggleCheck(item.id)}
                             aria-label='check'
                           />
-                          <label htmlFor="all-check" className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
+                          <label htmlFor={`item-check-${item.id}`} className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
                             <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px] " />
                           </label>
                           <img
