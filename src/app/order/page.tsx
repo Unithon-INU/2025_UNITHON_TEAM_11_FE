@@ -159,12 +159,12 @@ export default function ProductDetailPage() {
 
         {/* 하단 고정 버튼 */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 px-4 py-3 max-w-[500px] mx-auto flex items-center gap-2">
-          <button className="w-[48px] h-[48px] flex items-center justify-center rounded-xl border border-[#E5E5E5]">
-            <span className="text-[#4BE42C] text-2xl">♡</span>
-          </button>
-          <button className="flex-1 h-[48px] bg-[#4BE42C] text-white text-[14px] font-medium rounded-xl" onClick={() => setDrawerOpen(true)}>
-             {total.toLocaleString()}원 결제하기
-          </button>
+           <button
+          className={`w-full h-[48px] rounded-xl font-semibold text-[15px] ${agreed ? 'bg-[#4BE42C] text-white' : 'bg-[#eee] text-[#999]'}`}
+          disabled={!agreed}
+        >
+          {total.toLocaleString()}원 결제하기
+        </button>
         </div>
 
         
