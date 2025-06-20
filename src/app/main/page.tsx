@@ -65,6 +65,7 @@ export default function MainPage() {
             titleRest="농수산물"
             subtitle="좋은 가격에 살 수 있는 특가 농수산물"
             products={products}
+            onMoreClick={() => router.push('/sale-product')}
           />
 
           {/* 오늘 저녁 섹션 */}

@@ -18,6 +18,8 @@ type ProductSectionProps = {
   titleRest?: string;
   subtitle?: string;
   products?: Product[]; // 외부에서 주입 가능
+  onMoreClick?: () => void;
+
 };
 
 const defaultProducts: Product[] = [
@@ -60,6 +62,7 @@ const ProductSection = ({
   titleRest = '농수산물',
   subtitle = '좋은 가격에 살 수 있는 특가 농수산물',
   products = defaultProducts,
+  onMoreClick,
 }: ProductSectionProps) => {
   const [likes, setLikes] = useState<Record<number, boolean>>(
     Object.fromEntries(products.map((p) => [p.id, p.isLiked]))
@@ -79,7 +82,7 @@ const ProductSection = ({
           <span className="text-[#4BE42C] mr-1">{titleAccent}</span>
           {titleRest}
         </div>
-        <button className="text-[13px] text-[#9A9A9A]">더보기 &gt;</button>
+        <button className="text-[13px] text-[#9A9A9A]" onClick={onMoreClick}>더보기 &gt;</button>
       </div>
 
       {/* 부제목 */}
@@ -95,7 +98,7 @@ const ProductSection = ({
             className="min-w-[140px] shrink-0 cursor-pointer"
             onClick={() => router.push(`/market/details/${product.id}`)}
           >
-            <div className="relative w-full aspect-[1/1] rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative w-[135px] aspect-[1/1] rounded-lg overflow-hidden bg-gray-100">
               <img
                 src={product.image}
                 alt={product.name}

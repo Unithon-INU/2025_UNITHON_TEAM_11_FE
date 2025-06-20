@@ -22,45 +22,15 @@ type RecipeSectionProps = {
   titleAccent?: string;
   titleRest?: string;
   subtitle?: string;
-  recipes?: Recipe[]; // 외부 주입 가능
+  recipes: Recipe[]; // 외부 주입 가능
   onMoreClick?: () => void;
 };
-
-const defaultRecipes: Recipe[] = [
-  {
-    id: 1,
-    title: '아이와 함께 만드는 맛있는 건강 피자',
-    image: '/asset/broccoli.svg',
-    time: '1시간 30분',
-    rating: 4.7,
-    isLiked: true,
-    comment: 5,
-  },
-  {
-    id: 2,
-    title: '감성뿜뿜 프렌치토스트',
-    image: '/asset/broccoli.svg',
-    time: '1시간 30분',
-    rating: 3.5,
-    isLiked: false,
-    comment: 2,
-  },
-  {
-    id: 3,
-    title: '존맛탱',
-    image: '/asset/broccoli.svg',
-    time: '1시간 30분',
-    rating: 1.1,
-    isLiked: false,
-    comment: 0,
-  },
-];
 
 const RecipeSection = ({
   titleAccent = '🥘 오늘 저녁',
   titleRest = '추천 레시피',
   subtitle,
-  recipes = defaultRecipes, // 기본값 설정
+  recipes, // 기본값 설정
   onMoreClick,
 }: RecipeSectionProps) => {
   const [likes, setLikes] = useState<Record<number, boolean>>(

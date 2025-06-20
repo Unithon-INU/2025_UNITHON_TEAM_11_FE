@@ -64,7 +64,7 @@ const dummyRecipes = [
   },
 ];
 
-export default function SaleProductPage() {
+export default function RecommendRecipetPage() {
   const { userInfo } = useUser();
   const [recipes, setRecipes] = useState(dummyRecipes);
 

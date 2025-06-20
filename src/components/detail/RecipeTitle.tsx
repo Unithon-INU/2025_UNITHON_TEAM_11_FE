@@ -10,7 +10,7 @@ type Props = {
 const RecipeTitle = ({nickname}:Props) => {
   const { userInfo } = useUser();
   return (
-    <div className="px-5 py-2 text-[22px] font-semibold leading-[30px] tracking-[-0.03em] text-[#222]">
+    <div className="px-5 py-2 text-[22px] font-semibold leading-[30px] tracking-[-0.03em] text-[#222] mb-8">
       <span className="">{nickname || '고객'}</span>
       님을 위한 <br />
       <span className="text-[#4BE42C]">레시피</span>를 추천해드려요!
