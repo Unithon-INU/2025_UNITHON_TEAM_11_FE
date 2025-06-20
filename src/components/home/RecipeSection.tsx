@@ -5,6 +5,8 @@ import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
 import { LuClock3 } from 'react-icons/lu';
 import { useUser } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
+import LikeButton from '../LikeButton';
 
 export type Recipe = {
   id: number;
@@ -21,6 +23,7 @@ type RecipeSectionProps = {
   titleRest?: string;
   subtitle?: string;
   recipes?: Recipe[]; // 외부 주입 가능
+  onMoreClick?: () => void;
 };
 
 const defaultRecipes: Recipe[] = [
@@ -58,12 +61,14 @@ const RecipeSection = ({
   titleRest = '추천 레시피',
   subtitle,
   recipes = defaultRecipes, // 기본값 설정
+  onMoreClick,
 }: RecipeSectionProps) => {
   const [likes, setLikes] = useState<Record<number, boolean>>(
     Object.fromEntries(recipes.map((r) => [r.id, r.isLiked]))
   );
 
   const { userInfo } = useUser();
+  const router = useRouter();
 
   const toggleLike = (id: number) => {
     setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -77,7 +82,7 @@ const RecipeSection = ({
           <span className="text-[#4BE42C] mr-1">{titleAccent}</span>
           {titleRest}
         </div>
-        <button className="text-[13px] text-[#9A9A9A]">더보기 &gt;</button>
+        <button className="text-[13px] text-[#9A9A9A]" onClick={onMoreClick}>더보기 &gt;</button>
       </div>
 
       {/* 부제목 */}
@@ -99,16 +104,13 @@ const RecipeSection = ({
                 alt={recipe.title}
                 className="w-full h-full object-cover"
               />
-              <button
-                onClick={() => toggleLike(recipe.id)}
-                className="absolute bottom-2 right-2"
-              >
-                {likes[recipe.id] ? (
-                  <AiFillHeart className="text-green-500 text-xl" />
-                ) : (
-                  <FiHeart className="text-gray-400 text-xl" />
-                )}
-              </button>
+              <LikeButton
+                liked={likes[recipe.id]}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike(recipe.id);
+                }}
+              />
             </div>
 
             {/* 제목 */}

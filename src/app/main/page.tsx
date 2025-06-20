@@ -1,8 +1,9 @@
 'use client';
+
 import '@/app/globals.css';
 import React, { useEffect, useState } from 'react';
-import DefaultBody from '@/components/defaultBody';
 import { useRouter } from 'next/navigation';
+import DefaultBody from '@/components/defaultBody';
 import BottomNav from '@/components/BottonNav';
 import HomeCarousel from '@/components/home/HomeCarousel';
 import CategoryChips from '@/components/home/CategoryChips';
@@ -14,8 +15,8 @@ import { GetMain } from '@/api/main/getMain';
 import { SpecialRecipe } from '@/components/home/SpecialRecipeSection';
 
 export default function MainPage() {
-  const router = useRouter();
 
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [specialRecipe, setSpecialRecipe] = useState<SpecialRecipe | null>(null);
@@ -71,6 +72,7 @@ export default function MainPage() {
             titleAccent="🥘 오늘 저녁"
             titleRest="어떠세요?"
             recipes={recipes}
+            onMoreClick={() => router.push('/recommend-recipe')}
           />
 
           {/* 특별한 날 요리 */}
