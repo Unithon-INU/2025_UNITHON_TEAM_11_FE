@@ -71,12 +71,14 @@ export default function MarketPage() {
             titleRest="레시피"
             subtitle={`${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
             recipes={hotrecipes}
+            
           />
 
           <RecipeCircleSection
             userNickname= {userInfo.nickname || '고객'}
             recipes={recipeUsers}
             onRefresh={() => console.log('새로 고침')}
+            
           />
 
           {/* 자주 구매한 농수산품 섹션 */}

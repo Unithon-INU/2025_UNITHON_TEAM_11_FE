@@ -13,12 +13,14 @@ type Props = {
   userNickname?: string;
   recipes: RecipeItem[];
   onRefresh?: () => void;
+  
 };
 
 const RecipeCircleSection = ({
   userNickname = '고객',
   recipes,
   onRefresh,
+  
 }: Props) => {
   return (
     <section className="w-full bg-[#F6F3EE] px-4 pt-6 pb-5 mt-[56px]">
