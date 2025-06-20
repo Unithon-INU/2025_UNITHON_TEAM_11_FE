@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
+import LikeButton from '../LikeButton';
 
 type Product = {
   id: number;
@@ -91,19 +92,13 @@ const ProductSection = ({
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
-              <button
+              <LikeButton
+                liked={likes[product.id]}
                 onClick={(e) => {
-                  e.stopPropagation(); // 상위 클릭 방지
+                  e.stopPropagation();
                   toggleLike(product.id);
                 }}
-                className="absolute bottom-2 right-2"
-              >
-                {likes[product.id] ? (
-                  <AiFillHeart className="text-green-500 text-xl" />
-                ) : (
-                  <FiHeart className="text-gray-400 text-xl" />
-                )}
-              </button>
+              />
             </div>
 
             <div className="flex flex-col items-start text-left mt-2">

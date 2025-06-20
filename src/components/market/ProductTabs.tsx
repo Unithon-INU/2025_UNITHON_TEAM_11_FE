@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Review from '@/components/market/Review';
 
 const tabs = ['상품설명', '상품후기', '문의'];
 
@@ -54,8 +55,7 @@ export default function ProductTabs() {
 
         {activeTab === '상품후기' && (
           <div>
-            <p>⭐ 4.5 | "신선하고 맛있어요!"</p>
-            <p>⭐ 5.0 | "재구매 의사 100%"</p>
+            <Review/>
           </div>
         )}
 
