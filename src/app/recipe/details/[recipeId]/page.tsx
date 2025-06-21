@@ -10,6 +10,7 @@ import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
 import { GetRecipeDetail } from '@/api/recipe/getRecipeDetail';
 import { RecipeDetail } from '@/types/RecipeDetail';
 import RecipeSection from '@/components/home/RecipeSection';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 
 export default function RecipeDetailPage() {
   const { recipeId } = useParams();
@@ -33,6 +34,7 @@ export default function RecipeDetailPage() {
   const [recipeCount, setRecipeCount] = useState(recipe?.likeCount || 0);
 
   const [liked, setLiked] = useState(false);
+  const requireAuth = checkAuthAndRedirect()
 
   const [count, setCount] = useState(0);
 
@@ -44,11 +46,15 @@ export default function RecipeDetailPage() {
   }, [recipe]);
 
   const handleToggleLike = () => {
+    if (!requireAuth()) return
+
     setLiked(prev => !prev);
     setCount(prev => (liked ? prev - 1 : prev + 1));
   };
 
   const handleToggleRecipeLike = () => {
+    if (!requireAuth()) return
+
     setRecipeLiked(prev => !prev);
     setRecipeCount(prev => (recipeLiked ? prev - 1 : prev + 1));
   };

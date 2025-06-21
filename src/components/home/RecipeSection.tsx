@@ -7,6 +7,7 @@ import { LuClock3 } from 'react-icons/lu';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import LikeButton from '../LikeButton';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
 
 export type Recipe = {
   id: number;
@@ -39,8 +40,10 @@ const RecipeSection = ({
 
   const { userInfo } = useUser();
   const router = useRouter();
-
+  const requireAuth = checkAuthAndRedirect()
+  
   const toggleLike = (id: number) => {
+    if (!requireAuth()) return
     setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 

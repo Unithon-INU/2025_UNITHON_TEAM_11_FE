@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LikeButton from '../LikeButton';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 
 export type Product = {
   id: number;
@@ -69,8 +70,10 @@ const ProductSection = ({
   );
 
   const router = useRouter();
+  const requireAuth = checkAuthAndRedirect()
 
   const toggleLike = (id: number) => {
+    if (!requireAuth()) return
     setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 

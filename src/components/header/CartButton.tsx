@@ -2,19 +2,22 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 interface CartProps {
     onClick?: () => void;
 }
 
 const CartButton: React.FC<CartProps> = ({ onClick }) => {
     const router = useRouter();
+    const requireAuth = checkAuthAndRedirect()
 
     const handleBack = () => {
         if (onClick) {
             // onClick이 있으면 onClick 메서드 호출
             onClick();
         } else {
+            if (!requireAuth()) return
+
             router.push('/cart');
         }
         console.log("BackButton: handleBack");

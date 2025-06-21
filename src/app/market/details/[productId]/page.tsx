@@ -10,6 +10,7 @@ import ProductTabs from '@/components/market/ProductTabs';
 import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
 import { GetProductDetail } from '@/api/product/getProductDetail';
 import { ProductDetail } from '@/types/ProductDetail';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -32,11 +33,14 @@ export default function ProductDetailPage() {
   const rating = 4; // 예시 값 (API 연동 시 동적 할당 가능)
   const reviewCount = 1234;
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const requireAuth = checkAuthAndRedirect()
 
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(3210); // 초기 좋아요 수
 
   const handleToggleLike = () => {
+    if (!requireAuth()) return
+
     setLiked((prev) => !prev);
     setCount((prev) => (liked ? prev - 1 : prev + 1));
   };
@@ -199,7 +203,8 @@ export default function ProductDetailPage() {
           <button className="w-[48px] h-[48px] flex items-center justify-center rounded-xl border border-[#E5E5E5]">
             <span className="text-[#4BE42C] text-2xl">♡</span>
           </button>
-          <button className="flex-1 h-[48px] bg-[#4BE42C] text-white text-[14px] font-medium rounded-xl" onClick={() => setDrawerOpen(true)}>
+          <button className="flex-1 h-[48px] bg-[#4BE42C] text-white text-[14px] font-medium rounded-xl" 
+                  onClick={() => {if (!requireAuth()) return; setDrawerOpen(true)}}>
             구매하기
           </button>
         </div>

@@ -31,7 +31,7 @@ const RecipeGridList = ({ recipes }: Props) => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-3 px-5 py-4">
+    <div className="grid grid-cols-2 gap-3 gap-y-10 px-5 py-4">
       {recipes.map((r) => (
         <div key={r.id} className="flex flex-col">
           <div className="relative w-full aspect-square rounded-lg overflow-hidden">
