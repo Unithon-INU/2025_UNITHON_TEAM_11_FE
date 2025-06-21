@@ -22,7 +22,7 @@ export default function MarketPage() {
 
   const [hotrecipes, setHotRecipes] = useState([]);
   const [newrecipes, setNewRecipes] = useState([]);
-  const [ recipeUsers, setRecipeUsers] = useState([]);
+  const [recipeUsers, setRecipeUsers] = useState([]);
   const [specialRecipe, setSpecialRecipe] = useState<SpecialRecipe | null>(null);
   
 
@@ -31,9 +31,9 @@ export default function MarketPage() {
         try {
           const res = await GetMainRecipe();
           console.log(res);
-          setHotRecipes(res.simpleProductResponseDtos || []);
+          setHotRecipes(res.simpleRecipeResponseDtos || []);
           setNewRecipes(res.newRecipeResponseDtos || []);
-          setRecipeUsers(res.memberRankingResponseDtos || []);
+          setRecipeUsers(res.simpleMemberResponseDtos || []);
           setSpecialRecipe({
           id: res.specialRecipeResponseDto.id,
           title: res.specialRecipeResponseDto.title,

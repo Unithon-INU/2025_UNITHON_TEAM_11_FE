@@ -66,6 +66,7 @@ const RecipeSection = ({
           <div
             key={recipe.id}
             className="w-[140px] h-[230px] shrink-0 flex flex-col justify-start"
+            onClick={() => router.push(`/recipe/details/${recipe.id}`)}
           >
             {/* 이미지 */}
             <div className="relative w-full h-[140px] rounded-lg overflow-hidden bg-gray-100">

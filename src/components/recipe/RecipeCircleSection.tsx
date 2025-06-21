@@ -4,7 +4,7 @@ import { FiRefreshCw } from 'react-icons/fi';
 import Image from 'next/image';
 
 type RecipeItem = {
-  id: number;
+  memberId: number;
   nickname: string;
   imageUrl: string;
 };
@@ -46,7 +46,7 @@ const RecipeCircleSection = ({
       {/* 썸네일 리스트 */}
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         {recipes.map((r) => (
-          <div key={r.id} className="flex flex-col items-center shrink-0 w-[64px]">
+          <div key={r.memberId} className="flex flex-col items-center shrink-0 w-[64px]">
             <div className="w-[64px] h-[64px] rounded-full overflow-hidden bg-gray-200">
               <Image
                 src={r.imageUrl}
