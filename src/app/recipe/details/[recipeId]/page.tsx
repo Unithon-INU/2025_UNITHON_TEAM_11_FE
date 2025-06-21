@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import RecipeTabs from '@/components/recipe/RecipeTabs';
 import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
@@ -30,6 +30,7 @@ export default function RecipeDetailPage() {
     fetchRecipe();
   }, [recipeId]);
 
+  const router = useRouter();
   const [recipeLiked, setRecipeLiked] = useState(recipe?.isLiked);
   const [recipeCount, setRecipeCount] = useState(recipe?.likeCount || 0);
 
@@ -60,6 +61,10 @@ export default function RecipeDetailPage() {
   };
   if (!recipe) return null;
 
+  const handleClickSeller = () => {
+    router.push(`/profile/${recipe.member.memberId}?isSeller=${recipe.member.isSeller}`)
+
+  }
   return (
     <>
       <Header>
@@ -141,7 +146,7 @@ export default function RecipeDetailPage() {
 
             {/* 작성자 정보 + 좋아요 */}
             <div className="flex items-center justify-between px-4 py-4 border-[#F6F3EE] border-t-8 border-b-8 mt-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={handleClickSeller}>
                 <Image
                   src="/asset/goril.svg"
                   alt="프로필"

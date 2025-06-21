@@ -8,7 +8,7 @@ export const GetEmail = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/members/email/${email}`
+      `${apiUrl}/api/auth/email/${email}`
     );
     console.log(response.data);
     return response.data;

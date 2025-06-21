@@ -6,7 +6,7 @@ export type ProductDetail = {
     likeCount:number;
     memberId:number;
     nickname:string;
-    
+    isSeller: boolean;
   };
   isLiked: boolean;
   name: string;

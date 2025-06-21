@@ -8,7 +8,7 @@ export const GetNickname = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/members/nickname/${nickname}`
+      `${apiUrl}/api/auth/nickname/${nickname}`
     );
     console.log(response.data);
     return response.data;

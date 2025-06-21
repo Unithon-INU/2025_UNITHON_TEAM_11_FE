@@ -34,7 +34,7 @@ export const PostSignup = async (
 
     // axios 요청 보내기
     const response: AxiosResponse<any> = await axios.post(
-      `${apiUrl}/api/members/signup`,
+      `${apiUrl}/api/auth/signup`,
       formData,
        {
         headers: {

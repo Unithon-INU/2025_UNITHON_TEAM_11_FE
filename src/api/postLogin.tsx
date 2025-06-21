@@ -11,7 +11,7 @@ export const PostLogin = async (
 
   try {
     const response: AxiosResponse<any> = await axios.post(
-        `${apiUrl}/api/members/login`,
+        `${apiUrl}/api/auth/login`,
         {
           username: username,
           password: password,

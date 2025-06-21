@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 
 interface CartProps {
     onClick?: () => void;
@@ -9,12 +10,14 @@ interface CartProps {
 
 const HeartButton: React.FC<CartProps> = ({ onClick }) => {
     const router = useRouter();
+    const requireAuth = checkAuthAndRedirect()
 
     const handleBack = () => {
         if (onClick) {
             // onClick이 있으면 onClick 메서드 호출
             onClick();
         } else {
+            if (!requireAuth()) return
             router.push('/heart');
         }
         console.log("BackButton: handleBack");

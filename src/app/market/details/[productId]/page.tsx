@@ -44,8 +44,13 @@ export default function ProductDetailPage() {
     setLiked((prev) => !prev);
     setCount((prev) => (liked ? prev - 1 : prev + 1));
   };
-
   if (!product) return null;
+  
+  const handleClickSeller = () => {
+    router.push(`/profile/${product.member.memberId}?isSeller=${product.member.isSeller}`)
+
+  }
+  
   return (
     <>
       <Header>
@@ -127,7 +132,7 @@ export default function ProductDetailPage() {
 
             {/* 판매자 정보 */}
             <div className="flex items-center justify-between px-4 py-4 border-[#F6F3EE] border-t-8 border-b-8  mt-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={handleClickSeller}>
                 <Image
                   src={product.member.imageUrl}
                   alt="농장 로고"

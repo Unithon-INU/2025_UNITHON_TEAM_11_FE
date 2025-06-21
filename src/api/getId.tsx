@@ -8,7 +8,7 @@ export const GetId = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/members/username/${id}`
+      `${apiUrl}/api/auth/username/${id}`
     );
     console.log(response.data);
     return response.data;
