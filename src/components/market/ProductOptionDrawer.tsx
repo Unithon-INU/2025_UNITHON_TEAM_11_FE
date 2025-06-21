@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import QuantityCounter from '../QuantityCounter';
 
 const options = [
   { label: '단품 계란 15구, 1판', price: 6090, available: true },
@@ -93,9 +94,16 @@ export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
                 </button>
                 <div className="text-[13px] text-[#222] mb-4 pr-6">{label}</div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() =>
+                  <QuantityCounter
+                      quantity={quantity}
+                      onIncrease={() =>
+                        setSelectedOptions((prev) =>
+                          prev.map((opt) =>
+                            opt.label === label ? { ...opt, quantity: opt.quantity + 1 } : opt
+                          )
+                        )
+                      }
+                      onDecrease={() =>
                         setSelectedOptions((prev) =>
                           prev.map((opt) =>
                             opt.label === label
@@ -104,29 +112,7 @@ export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
                           )
                         )
                       }
-                      className={`w-7 h-7 rounded-full border border-[#D9D9D9] flex items-center justify-center ${
-                        quantity === 1 ? 'cursor-not-allowed bg-[#F3F3F3] text-[#C2C2C2]' : 'text-[#222]'
-                      }`}
-                      disabled={quantity === 1}
-                    >
-                      -
-                    </button>
-                    <div className="w-8 h-7 border rounded border-[#D9D9D9] bg-[#FAFAFA] text-center flex items-center justify-center text-[14px] text-[#222]">
-                      {quantity}
-                    </div>
-                    <button
-                      onClick={() =>
-                        setSelectedOptions((prev) =>
-                          prev.map((opt) =>
-                            opt.label === label ? { ...opt, quantity: opt.quantity + 1 } : opt
-                          )
-                        )
-                      }
-                      className="w-7 h-7 border rounded-full text-[#222] flex border-[#D9D9D9] items-center justify-center"
-                    >
-                      +
-                    </button>
-                  </div>
+                    />
                   <div className="text-[15px] font-semibold text-[#222]">
                     {(6090 * quantity).toLocaleString()}원
                   </div>

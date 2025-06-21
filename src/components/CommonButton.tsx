@@ -34,7 +34,7 @@ export default function CommonButton({
         w-full h-12 rounded-xl text-[15px] font-semibold transition-colors duration-200
         ${disabled
           ? 'bg-[#e7dfd7] text-[#fff]'
-          : 'bg-[#19C419] text-white hover:bg-[#13a313] active:scale-95 shadow-md'}
+          : 'bg-[#4BE42C] text-white hover:bg-[#13a313] active:scale-95 shadow-md'}
         ${isAnimating && animate ? 'animate-wiggle' : ''}
         ${className}
       `}
