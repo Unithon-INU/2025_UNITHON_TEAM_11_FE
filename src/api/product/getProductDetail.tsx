@@ -1,17 +1,16 @@
 import axios, { AxiosResponse } from "axios";
+import { ParamValue } from "next/dist/server/request/params";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const GetProductDetail = async (
-    productId: string,
+    productId: ParamValue,
     page: number,
-    size:number,
-    sort:string
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/products/${productId}?page=${page}&size=${size}&sort=${sort}`
+      `${apiUrl}/api/products/${productId}?page=${page}`
     );
     console.log(response.data);
     return response.data;

@@ -145,7 +145,7 @@ export default function RecipeDetailPage() {
                 />
                 <div className="text-sm">
                   <div className="font-semibold text-[14px] text-[#222]">{recipe.member.nickname}</div>
-                  <div className="text-[14px] text-[#9F9F9F] mt-[4px]">{recipe.content}</div>
+                  <div className="text-[14px] text-[#9F9F9F] mt-[4px]">{recipe.member.introduction}</div>
                 </div>
               </div>
               <button onClick={handleToggleLike} className="flex flex-col items-center">
