@@ -3,11 +3,11 @@
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
 import BottomNav from '@/components/BottonNav';
-
+import { useRouter } from 'next/navigation';
 
 export default function MyPage() {
 
-   
+   const router = useRouter();
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function MyPage() {
 
           {/* 입점 신청 */}
           <div className="text-[16px]  font-semibold  text-[#222222] border-t-8 border-[#F6F3EE] pt-3">
-            <div className="pt-3">입점 신청</div>
+            <div className="pt-3" onClick={()=>{router.push('/sale-apply')}}>입점 신청</div>
           </div>
 
           {/* 설정 관련 */}
