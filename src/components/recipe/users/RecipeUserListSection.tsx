@@ -13,6 +13,7 @@ type RecipeUser = {
 
 type Props = {
   users?: RecipeUser[];
+  isHeader?: boolean;
 };
 
 const dummyUsers: RecipeUser[] = [
@@ -46,22 +47,23 @@ const dummyUsers: RecipeUser[] = [
   },
 ];
 
-const RecipeUserListSection = ({ users = dummyUsers }: Props) => {
+const RecipeUserListSection = ({ users = dummyUsers, isHeader }: Props) => {
      const [isLiked, setLikes] = useState<Record<number, boolean>>(
             Object.fromEntries(users.map((p) => [p.id, p.isLiked]))
           );
         
-        
+     
           const toggleLike = (id: number) => {
             setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
           };
 
   return (
     <section className="px-4 w-full">
-      <div className="flex justify-between items-center mb-4">
+      { isHeader? (<div className="flex justify-between items-center mb-4">
         <h2 className="text-[18px] font-semibold text-[#222]">레시피 유저 둘러보기</h2>
         <button className="text-[14px] text-[#9F9F9F] flex gap-1 flex-row">추천순 <img src={'asset/ChevronDown.svg'}></img></button>
-      </div>
+      </div>) : (<></>)}
+      
       <div className="flex flex-col gap-5">
         {users.map((user) => (
           <div key={user.id} className="flex items-center justify-between">

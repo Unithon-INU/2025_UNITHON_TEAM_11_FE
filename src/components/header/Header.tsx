@@ -48,7 +48,7 @@ const Header = ({ children }: HeaderProps) => {
         </div>
       </div>
       {/* 오른쪽: 여러 개 버튼 가능 */}
-      <div className="flex items-center gap-2 min-w-[40px] justify-self-end ">
+      <div className="flex items-center gap-2 min-w-[40px] justify-self-end">
         {rightButtons}
       </div>
     </header>

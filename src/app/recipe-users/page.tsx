@@ -23,7 +23,7 @@ export default function RecipeUsersPage() {
           <main className="flex flex-col items-start">
             <SearchBar showCartButton={false} ></SearchBar>
             <InfluencerRankingSection/>
-            <RecipeUserListSection/>
+            <RecipeUserListSection isHeader={true}/>
           </main>
         </div>
       </DefaultBody>
