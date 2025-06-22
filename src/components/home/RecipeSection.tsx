@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
 import { LuClock3 } from 'react-icons/lu';
@@ -8,6 +8,7 @@ import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import LikeButton from '../LikeButton';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
+import { PostRecipeLike } from '@/api/like/postRecipeLike';
 
 export type Recipe = {
   id: number;
@@ -34,17 +35,36 @@ const RecipeSection = ({
   recipes, // 기본값 설정
   onMoreClick,
 }: RecipeSectionProps) => {
-  const [likes, setLikes] = useState<Record<number, boolean>>(
-    Object.fromEntries(recipes.map((r) => [r.id, r.isLiked]))
-  );
+  const [likes, setLikes] = useState<Record<number, boolean>>({});
+  
+    useEffect(() => {
+  // 현재 상태와 비교해 동일한 경우 setLikes 생략
+  const initialLikes = Object.fromEntries(recipes.map((p) => [p.id, p.isLiked]));
+  
+  setLikes((prev) => {
+    const same = Object.entries(initialLikes).every(
+      ([id, liked]) => prev[+id] === liked
+    );
+    return same ? prev : initialLikes;
+  });
+}, [recipes]);
+
 
   const { userInfo } = useUser();
   const router = useRouter();
   const requireAuth = checkAuthAndRedirect()
   
-  const toggleLike = (id: number) => {
-    if (!requireAuth()) return
-    setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleLike = async (id: number) => {
+    if (!requireAuth()) return;
+
+    try {
+      await PostRecipeLike(id); // ✅ API 호출// UI optimistic update
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+    } catch (error) {
+      // 요청 실패 시 상태 롤백
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+      console.error('좋아요 요청 실패:', error);
+    }
   };
 
   return (

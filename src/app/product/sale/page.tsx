@@ -1,6 +1,5 @@
 'use client';
-import RecipeTitle from '../../components/detail/RecipeTitle';
-import RecipeSortSelector from '../../components/detail/RecipeSortSelector';
+import RecipeSortSelector from '@/components/detail/RecipeSortSelector';
 import ProductGridList from '@/components/detail/ProductGridList';
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';

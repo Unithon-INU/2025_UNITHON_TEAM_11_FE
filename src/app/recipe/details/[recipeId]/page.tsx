@@ -6,16 +6,15 @@ import DefaultBody from '@/components/defaultBody';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import RecipeTabs from '@/components/recipe/RecipeTabs';
-import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
+import { PostMemberLike } from '@/api/like/postMemberLike';
 import { GetRecipeDetail } from '@/api/recipe/getRecipeDetail';
 import { RecipeDetail } from '@/types/RecipeDetail';
-import RecipeSection from '@/components/home/RecipeSection';
+import { PostRecipeLike } from '@/api/like/postRecipeLike';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 
 export default function RecipeDetailPage() {
   const { recipeId } = useParams();
   const [recipe, setRecipe] = useState<RecipeDetail>();
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -41,24 +40,35 @@ export default function RecipeDetailPage() {
 
   useEffect(() => {
     if (recipe) {
-      setLiked(recipe.isLiked);
-      setCount(recipe.likeCount);
+      setRecipeLiked(recipe.isLiked);
+      setRecipeCount(recipe.likeCount);
     }
   }, [recipe]);
 
-  const handleToggleLike = () => {
-    if (!requireAuth()) return
+  const handleToggleLike =  async () => {
+    if (!requireAuth() && !recipe) return;
 
-    setLiked(prev => !prev);
-    setCount(prev => (liked ? prev - 1 : prev + 1));
+    try {
+      await PostMemberLike(recipe?.member.memberId); // ✅ API 호출
+      setLiked((prev) => !prev);
+      setCount((prev) => (liked ? prev - 1 : prev + 1));
+    } catch (error) {
+      console.error('좋아요 처리 실패:', error);
+    }
   };
 
-  const handleToggleRecipeLike = () => {
-    if (!requireAuth()) return
+  const handleToggleRecipeLike =  async () => {
+    if (!requireAuth()) return;
 
-    setRecipeLiked(prev => !prev);
-    setRecipeCount(prev => (recipeLiked ? prev - 1 : prev + 1));
+    try {
+      await PostRecipeLike(recipeId); // ✅ API 호출
+      setRecipeLiked((prev) => !prev);
+      setRecipeCount((prev) => (recipeCount ? prev - 1 : prev + 1));
+    } catch (error) {
+      console.error('좋아요 처리 실패:', error);
+    }
   };
+
   if (!recipe) return null;
 
   const handleClickSeller = () => {

@@ -12,6 +12,7 @@ export type RecipeDetail = {
     memberId:number;
     nickname:string;
     isSeller:boolean;
+    isLiked: boolean;
   }
   isLiked: boolean;
   likeCount: number;

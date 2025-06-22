@@ -2,16 +2,16 @@ import axios, { AxiosResponse } from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const GetMainRecipe = async (
-   
+export const GetFrequentProduct = async (
+  
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
-
+  
   const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/main/recipe`,{
+      `${apiUrl}/api/products/frequent`,{
       headers: accessToken
         ? { Authorization: `Bearer ${accessToken}` }
         : {},

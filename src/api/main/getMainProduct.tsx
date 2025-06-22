@@ -6,9 +6,16 @@ export const GetMainProduct = async (
    
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
+
+  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/main/product`
+      `${apiUrl}/api/main/product`,{
+      headers: accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : {},
+    }
     );
     console.log(response.data);
     return response.data;

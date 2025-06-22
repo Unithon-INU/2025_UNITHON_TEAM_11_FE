@@ -1,8 +1,11 @@
 import axios, { AxiosResponse } from "axios";
+import { ParamValue } from "next/dist/server/request/params";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const GetMainRecipe = async (
+export const GetMember = async (
+    memberId: ParamValue,
+    page: number
    
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
@@ -11,7 +14,7 @@ export const GetMainRecipe = async (
 
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/main/recipe`,{
+      `${apiUrl}/api/members/${memberId}?page=${page}`,{
       headers: accessToken
         ? { Authorization: `Bearer ${accessToken}` }
         : {},

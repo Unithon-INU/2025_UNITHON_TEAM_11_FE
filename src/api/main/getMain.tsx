@@ -2,21 +2,25 @@ import axios, { AxiosResponse } from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const GetMain = async (
-    
-): Promise<any> => {
+export const GetMain = async (): Promise<any> => {
   axios.defaults.withCredentials = true;
+
+  // 🔒 accessToken 가져오기
+  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+
   try {
-    const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/main`
-    );
+    const response: AxiosResponse<any> = await axios.get(`${apiUrl}/api/main`, {
+      headers: accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : {},
+    });
+
     console.log(response.data);
     return response.data;
   } catch (error: any) {
     if (error.response) {
       const { status, data } = error.response;
       console.error("Error response:", status, data);
-      
     } else if (error.request) {
       console.error("No response received:", error.request);
     } else {

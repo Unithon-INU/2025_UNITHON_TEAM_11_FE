@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import LikeButton from '../LikeButton';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
+import { PostProductLike } from '@/api/like/postProductLike';
 
 export type Product = {
   id: number;
@@ -23,58 +24,44 @@ type ProductSectionProps = {
 
 };
 
-const defaultProducts: Product[] = [
-  {
-    id: 1,
-    name: '브로콜리, 500g, 1봉',
-    price: 8700,
-    salePrice: 4000,
-    image: '/asset/broccoli.svg',
-    isLiked: true,
-  },
-  {
-    id: 2,
-    name: '아보카도, 500g, 1봉',
-    price: 8700,
-    salePrice: 6090,
-    image: '/asset/broccoli.svg',
-    isLiked: false,
-  },
-  {
-    id: 3,
-    name: '아보카도, 500g, 1봉',
-    price: 8700,
-    salePrice: 6090,
-    image: '/asset/broccoli.svg',
-    isLiked: false,
-  },
-   {
-    id: 4,
-    name: '아보카도, 500g, 1봉',
-    price: 8700,
-    salePrice: 6090,
-    image: '/asset/broccoli.svg',
-    isLiked: false,
-  },
-];
 
 const ProductSection = ({
   titleAccent = '⏰ 특가',
   titleRest = '농수산물',
   subtitle = '좋은 가격에 살 수 있는 특가 농수산물',
-  products = defaultProducts,
+  products = [],
   onMoreClick,
 }: ProductSectionProps) => {
-  const [likes, setLikes] = useState<Record<number, boolean>>(
-    Object.fromEntries(products.map((p) => [p.id, p.isLiked]))
-  );
+ const [likes, setLikes] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+  // 현재 상태와 비교해 동일한 경우 setLikes 생략
+  const initialLikes = Object.fromEntries(products.map((p) => [p.id, p.isLiked]));
+  
+  setLikes((prev) => {
+    const same = Object.entries(initialLikes).every(
+      ([id, liked]) => prev[+id] === liked
+    );
+    return same ? prev : initialLikes;
+  });
+}, [products]);
+
+
 
   const router = useRouter();
   const requireAuth = checkAuthAndRedirect()
 
-  const toggleLike = (id: number) => {
-    if (!requireAuth()) return
-    setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleLike = async (id: number) => {
+    if (!requireAuth()) return;
+
+    try {
+      await PostProductLike(id); // ✅ API 호출// UI optimistic update
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+    } catch (error) {
+      // 요청 실패 시 상태 롤백
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+      console.error('좋아요 요청 실패:', error);
+    }
   };
 
   return (

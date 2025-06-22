@@ -56,6 +56,7 @@ export default function MarketPage() {
             titleRest="농수산품"
             subtitle={`${userInfo.nickname || '고객'}님을 위해 추천하는 농수산품이에요.`}
             products={product}
+            onMoreClick={()=>{router.push('/product/recommend')}}
           />
 
           {/* 자주 구매한 농수산품 섹션 */}
@@ -64,6 +65,7 @@ export default function MarketPage() {
             titleRest="농수산품"
             subtitle={`${userInfo.nickname || '고객'}님을 위해 추천하는 농수산품이에요.`}
             products={frequent}
+            onMoreClick={()=>{router.push('/product/frequent')}}
           />
 
           {/* 하단 배너 섹션 */}

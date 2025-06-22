@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiFillHeart } from 'react-icons/ai';
 import { FiHeart } from 'react-icons/fi';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
+import { PostProductLike } from '@/api/like/postProductLike';
 
 export type Product = {
   id: number;
@@ -18,12 +20,36 @@ type ProductGridListProps = {
 };
 
 export default function ProductGridList({ products }: ProductGridListProps) {
-  const [likes, setLikes] = useState<Record<number, boolean>>(() =>
-    Object.fromEntries(products.map((p) => [p.id, p.isLiked]))
-  );
+  const [likes, setLikes] = useState<Record<number, boolean>>({});
 
-  const toggleLike = (id: number) => {
-    setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+  useEffect(() => {
+  // 현재 상태와 비교해 동일한 경우 setLikes 생략
+  const initialLikes = Object.fromEntries(products.map((p) => [p.id, p.isLiked]));
+  
+  setLikes((prev) => {
+    const same = Object.entries(initialLikes).every(
+      ([id, liked]) => prev[+id] === liked
+    );
+    return same ? prev : initialLikes;
+  });
+}, [products]);
+
+
+
+  const requireAuth = checkAuthAndRedirect()
+  
+  
+const toggleLike = async (id: number) => {
+    if (!requireAuth()) return;
+
+    try {
+      await PostProductLike(id); // ✅ API 호출// UI optimistic update
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+    } catch (error) {
+      // 요청 실패 시 상태 롤백
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+      console.error('좋아요 요청 실패:', error);
+    }
   };
 
   return (

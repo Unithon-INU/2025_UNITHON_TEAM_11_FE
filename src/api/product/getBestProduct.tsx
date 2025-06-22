@@ -2,8 +2,8 @@ import axios, { AxiosResponse } from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const GetMainRecipe = async (
-   
+export const GetBestProduct = async (
+  
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
 
@@ -11,7 +11,7 @@ export const GetMainRecipe = async (
 
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/main/recipe`,{
+      `${apiUrl}/api/products/best`,{
       headers: accessToken
         ? { Authorization: `Bearer ${accessToken}` }
         : {},
