@@ -18,10 +18,11 @@ export default function LoginPage() {
      try {
         const res = await PostLogin(id,pw);
         console.log(res);
-        if(res.accessToken){
-          localStorage.setItem('accessToken', res.accessToken);
+        if(res.data.accessToken){
+          localStorage.setItem('accessToken', res.data.accessToken);
+          router.push('./main');
         }
-        router.push('./main');
+        
         
       }  catch (error: any) {
       console.error("로그인 실패", error);
