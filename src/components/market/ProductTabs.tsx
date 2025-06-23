@@ -3,11 +3,18 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Review from '@/components/market/Review';
 import InquirySection from './InquirySection';
+import { RawReview } from '@/types/Review';
 
 const tabs = ['상품설명', '상품후기', '문의'];
 
-export default function ProductTabs() {
+type ProductTabsProps = {
+  reviews?: RawReview[]; // 외부에서 주입 가능한 리뷰 데이터
+  rating?: number;
+};
+
+export default function ProductTabs({ reviews = [], rating }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState('상품설명');
+
 
   return (
     <div>
@@ -56,7 +63,7 @@ export default function ProductTabs() {
 
         {activeTab === '상품후기' && (
           <div>
-            <Review/>
+            <Review reviews={reviews} averageRating={rating}/>
           </div>
         )}
 

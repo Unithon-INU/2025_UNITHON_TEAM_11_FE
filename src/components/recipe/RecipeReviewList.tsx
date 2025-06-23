@@ -1,35 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LikeButton from '../LikeButton';
-
-export type Review = {
-  id: number;
-  user: string;
-  date: string;
-  rating: number;
-  liked: boolean;
-  likeCount: number;
-  option: string;
-  comment: string;
-  images: string[];
-  profileImage?: string;
-};
+import { RawReview } from '@/types/Review';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
+import { PostReviewLike } from '@/api/like/postReviewLike';
 
 type Props = {
-  reviews: Review[];
+  reviews: RawReview[];
 };
 
 export default function ReviewList({ reviews }: Props) {
-  const [likes, setLikes] = useState<Record<number, boolean>>(
-    Object.fromEntries(reviews.map((r) => [r.id, r.liked]))
-  );
+  const [likes, setLikes] = useState<Record<number, boolean>>({});
 
-  const toggleLike = (id: number) => {
-    setLikes((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  useEffect(() => {
+  // 현재 상태와 비교해 동일한 경우 setLikes 생략
+  const initialLikes = Object.fromEntries(reviews.map((p) => [p.id, p.isLiked === false]));
+  
+  setLikes((prev) => {
+    const same = Object.entries(initialLikes).every(
+      ([id, liked]) => prev[+id] === liked
+    );
+    return same ? prev : initialLikes;
+  });
+}, [reviews]);
+
+  const toggleLike = async (id: number) => {
+    if (!checkAuthAndRedirect()) return;
+
+    try {
+      await PostReviewLike(id); // ✅ API 호출// UI optimistic update
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+    } catch (error) {
+      // 요청 실패 시 상태 롤백
+      setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+      console.error('좋아요 요청 실패:', error);
+    }
   };
 
   return (
@@ -41,7 +47,7 @@ export default function ReviewList({ reviews }: Props) {
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2 ">
                 <img
-                    src={review.profileImage || '/asset/addProfile.svg'}
+                    src={review.memberInfo.imageUrl || '/asset/addProfile.svg'}
                     alt="프로필"
                     className="w-10 h-10 rounded-full object-cover"
                 />
@@ -60,8 +66,8 @@ export default function ReviewList({ reviews }: Props) {
                         </div>
 
                     <div className="flex gap-2">
-                    <span className="font-regular text-[#9F9F9F]">{review.user}</span>
-                    <span className="text-[#9F9F9F]">{review.date}</span>
+                    <span className="font-regular text-[#9F9F9F]">{review.memberInfo.nickname}</span>
+                    <span className="text-[#9F9F9F]">{review.createdAt}</span>
                     </div>
                 </div>
                 </div>
@@ -74,9 +80,9 @@ export default function ReviewList({ reviews }: Props) {
             </div>
 
             {/* 이미지 */}
-            {review.images.length > 0 && (
+            {review.imageUrls.length > 0 && (
                 <div className="flex gap-2 mb-2">
-                {review.images.map((img, i) => (
+                {review.imageUrls.map((img, i) => (
                     <img
                     key={i}
                     src={img}
@@ -90,7 +96,7 @@ export default function ReviewList({ reviews }: Props) {
             {/* 옵션 및 댓글 */}
             
             <p className="text-[14px] text-[#333] whitespace-pre-wrap leading-[1.5]">
-                {review.comment}
+                {review.content}
             </p>
             </div>
         </div>

@@ -11,6 +11,7 @@ import { GetRecipeDetail } from '@/api/recipe/getRecipeDetail';
 import { RecipeDetail } from '@/types/RecipeDetail';
 import { PostRecipeLike } from '@/api/like/postRecipeLike';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
+import { RawReview } from '@/types/Review';
 
 export default function RecipeDetailPage() {
   const { recipeId } = useParams();
@@ -21,6 +22,8 @@ export default function RecipeDetailPage() {
       try {
         const res = await GetRecipeDetail(recipeId, 0);
         setRecipe(res);
+
+      
       } catch (error) {
         console.error('레시피 데이터 로딩 실패:', error);
       }

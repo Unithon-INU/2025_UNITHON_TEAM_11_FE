@@ -11,6 +11,7 @@ import ProductOptionDrawer from '@/components/market/ProductOptionDrawer';
 import { GetProductDetail } from '@/api/product/getProductDetail';
 import { ProductDetail } from '@/types/ProductDetail';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
+import { PostMemberLike } from '@/api/like/postMemberLike';
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -34,18 +35,25 @@ export default function ProductDetailPage() {
   const reviewCount = 1234;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const requireAuth = checkAuthAndRedirect()
-
-  const [liked, setLiked] = useState(false);
-  const [count, setCount] = useState(3210); // 초기 좋아요 수
-
-  const handleToggleLike = () => {
-    if (!requireAuth()) return
-
-    setLiked((prev) => !prev);
-    setCount((prev) => (liked ? prev - 1 : prev + 1));
-  };
-  if (!product) return null;
   
+  
+  const [liked, setLiked] = useState<boolean>(!!product?.member.isLiked);
+  const [count, setCount] = useState<number>(product?.member.likeCount ?? 0);
+
+
+  const handleToggleLike = async () => {
+    if (!requireAuth() || !product) return;
+
+    try {
+      await PostMemberLike(product.member.memberId); // ✅ API 호출
+      setLiked((prev) => !prev);
+      setCount((prev) => (liked ? prev - 1 : prev + 1));
+    } catch (error) {
+      console.error('좋아요 처리 실패:', error);
+    }
+  };
+  
+  if (!product) return null;
   const handleClickSeller = () => {
     router.push(`/profile/${product.member.memberId}?isSeller=${product.member.isSeller}`)
 
@@ -153,13 +161,13 @@ export default function ProductDetailPage() {
                     className="flex flex-col items-center justify-center"
                 >
                     <Image
-                    src={liked ? '/asset/star1.svg' : '/asset/star0.svg'}
+                    src={liked ? '/asset/star0.svg' : '/asset/star1.svg'}
                     alt="좋아요"
                     width={24}
                     height={24}
                     />
                     <span className="text-[12px] text-[#9F9F9F] mt-[2px]">
-                    {product.member.likeCount.toLocaleString()}
+                    {count}
                     </span>
                 </button>
             </div>
@@ -193,12 +201,13 @@ export default function ProductDetailPage() {
                 </div>
 
 
-            <ProductTabs/>    
+            <ProductTabs reviews={product.reviews} rating={product.rating}/>    
 
             <ProductSection
                 titleAccent=''
                 titleRest='인기 많은 농수산품'
-                subtitle=''/> 
+                subtitle=''
+                products={product.bestProducts}/> 
             
           </main>
         </DefaultBody>

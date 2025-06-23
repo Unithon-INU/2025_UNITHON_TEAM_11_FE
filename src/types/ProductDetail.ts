@@ -1,5 +1,9 @@
+import { Product } from "@/components/detail/ProductGridList";
+import { RawReview } from "./Review";
+
 // types/ProductDetail.ts
 export type ProductDetail = {
+  bestProducts:Product[]
   member: {
     imageUrl:string;
     introduction:string;
@@ -12,7 +16,7 @@ export type ProductDetail = {
   isLiked: boolean;
   name: string;
   description: string;
-  reviews: string;
+  reviews: RawReview[];
   mainImageUrl: string;
   descriptionImageUrls: string | string[]; // 백엔드 응답이 string일 수도 있고, 배열일 수도 있으니 대응
   rating: number;

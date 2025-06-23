@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Review from './RecipeReview';
 import { RecipeStep } from '@/types/RecipeDetail';
+import { RawReview } from '@/types/Review';
 
 const tabs = ['레시피', '레시피 후기', '댓글'];
 
@@ -10,7 +11,7 @@ type Props = {
   ingredients: Record<string, string>;
   sauces?: Record<string, string>;
   steps?: RecipeStep[];
-  reviews?: string[];
+  reviews?: RawReview[];
   totalReviewCount?: number;
   rating?: number;
   recentImageUrls?: string[];
@@ -21,7 +22,7 @@ export default function RecipeTabs({
   ingredients,
   sauces,
   steps,
-  reviews,
+  reviews=[],
   totalReviewCount,
   rating,
   recentImageUrls,
@@ -133,7 +134,7 @@ export default function RecipeTabs({
                 후기 남기기
               </button>
             </div>
-            <Review />
+            <Review reviews={reviews}/>
           </div>
         )}
 

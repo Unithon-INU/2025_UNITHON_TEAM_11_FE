@@ -1,3 +1,5 @@
+import { RawReview } from "./Review";
+
 export type RecipeStep = {
   stepOrder: number;
   description: string;
@@ -27,7 +29,7 @@ export type RecipeDetail = {
   ingredients: Record<string, string>; // 예: { 두부: "1모", 된장: "2스푼" }
   sauces: Record<string, string>; // 예: { 간장: "1스푼" }
   steps: RecipeStep[];
-  reviews: string[]; // 추후 필요시 구체적인 타입으로 대체 가능
+  reviews: RawReview[]; // 추후 필요시 구체적인 타입으로 대체 가능
   totalReviewCount: number;
   recentImageUrls: string[];
   comments: string[]; // 추후 필요시 구체적인 타입으로 대체 가능
