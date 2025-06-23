@@ -1,21 +1,14 @@
 import axios, { AxiosResponse } from "axios";
+import axiosInstance from "@/api/axiosInstance";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const GetHotRecipe = async (
   
 ): Promise<any> => {
-  axios.defaults.withCredentials = true;
-
-  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
+  
   try {
-    const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/recipes/best`,{
-      headers: accessToken
-        ? { Authorization: `Bearer ${accessToken}` }
-        : {},
-    }
+    const response: AxiosResponse<any> = await axiosInstance.get(
+      `/api/recipes/best`,
     );
     console.log(response.data);
     return response.data;

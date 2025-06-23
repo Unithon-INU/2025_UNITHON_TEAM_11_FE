@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import  { AxiosResponse } from "axios";
 import { ParamValue } from "next/dist/server/request/params";
+import axiosInstance from "@/api/axiosInstance";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -7,19 +8,12 @@ export const PostMemberLike = async (
   memberId: ParamValue | number
 ): Promise<any> => {
   console.log("전송 데이터", memberId);
-  axios.defaults.withCredentials = true;
 
   try {
-    const accessToken = localStorage.getItem('accessToken'); // 또는 쿠키 등에서 꺼낼 수도 있음
-
-    const response: AxiosResponse<any> = await axios.post(
+    const response: AxiosResponse<any> = await axiosInstance.post(
       `${apiUrl}/api/likes/member/${memberId}`,
       null, // POST body가 없으므로 null
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // ✅ 헤더에 토큰 추가
-        },
-      }
+      
     );
 
     console.log(response.data);

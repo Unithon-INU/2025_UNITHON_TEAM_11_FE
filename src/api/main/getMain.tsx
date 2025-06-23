@@ -1,23 +1,15 @@
-import axios, { AxiosResponse } from "axios";
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+// api/getMain.ts
+import { AxiosResponse } from "axios";
+import axiosInstance from "@/api/axiosInstance"; // ✅ 우리가 만든 인터셉터 적용된 인스턴스
 
 export const GetMain = async (): Promise<any> => {
-  axios.defaults.withCredentials = true;
-
-  // 🔒 accessToken 가져오기
-  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
   try {
-    const response: AxiosResponse<any> = await axios.get(`${apiUrl}/api/main`, {
-      headers: accessToken
-        ? { Authorization: `Bearer ${accessToken}` }
-        : {},
-    });
+    const response: AxiosResponse<any> = await axiosInstance.get("/api/main");
 
     console.log(response.data);
     return response.data;
   } catch (error: any) {
+    // 에러 로깅은 그대로 유지
     if (error.response) {
       const { status, data } = error.response;
       console.error("Error response:", status, data);

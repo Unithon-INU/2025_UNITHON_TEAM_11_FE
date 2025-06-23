@@ -1,21 +1,14 @@
 import axios, { AxiosResponse } from "axios";
+import axiosInstance from "@/api/axiosInstance";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const GetBestProduct = async (
   
 ): Promise<any> => {
-  axios.defaults.withCredentials = true;
-
-  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
+ 
   try {
-    const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/products/best`,{
-      headers: accessToken
-        ? { Authorization: `Bearer ${accessToken}` }
-        : {},
-    }
+    const response: AxiosResponse<any> = await axiosInstance.get(
+      `/api/products/best`,
     );
     console.log(response.data);
     return response.data;

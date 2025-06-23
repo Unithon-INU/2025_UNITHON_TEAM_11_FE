@@ -20,6 +20,8 @@ export default function LoginPage() {
         console.log(res);
         if(res.data.accessToken){
           localStorage.setItem('accessToken', res.data.accessToken);
+          localStorage.setItem('refreshToken', res.data.refreshToken);
+
           router.push('./main');
         }
         

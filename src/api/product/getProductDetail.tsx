@@ -1,23 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import { ParamValue } from "next/dist/server/request/params";
+import axiosInstance from "@/api/axiosInstance";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const GetProductDetail = async (
     productId: ParamValue,
     page: number,
 ): Promise<any> => {
-  axios.defaults.withCredentials = true;
 
-  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
   try {
-    const response: AxiosResponse<any> = await axios.get(
-      `${apiUrl}/api/products/${productId}?page=${page}`,{
-      headers: accessToken
-        ? { Authorization: `Bearer ${accessToken}` }
-        : {},
-    }
+    const response: AxiosResponse<any> = await axiosInstance.get(
+      `/api/products/${productId}?page=${page}`,
     );
     console.log(response.data);
     return response.data;
