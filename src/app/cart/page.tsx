@@ -9,12 +9,14 @@ import { PutCart } from '@/api/cart/putCart';
 import { GetCart } from '@/api/cart/getCart';
 import { Cart } from '@/types/Cart';
 import { getAccessToken } from '@/utils/tokenStorage';
+import { useOrderContext } from '@/context/OrderContext';
 
 export default function CartPage() {
   const router = useRouter();
   const [farms, setFarms] = useState<any[]>([]);
   const originalCartRef = useRef<Cart[]>([]);
   const [hasAccessToken, setHasAccessToken] = useState(true);
+  const { setItems } = useOrderContext();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -53,6 +55,25 @@ export default function CartPage() {
 
     fetchCart();
   }, []);
+
+   const handleOrder = () => {
+    const orderItems = farms.flatMap((farm) =>
+    farm.items
+      .filter((item: any) => item.checked)
+      .map((item: any) => ({
+      productId: item.productId,
+      imageUrl: item.imageUrl,
+      productName: item.productName,
+      sellerName: farm.sellerNickname,
+      productOption: item.productOption,
+      quantity: item.quantity,
+      productPrice: item.productPrice,
+    }))
+  );
+
+    setItems(orderItems);
+    router.push('/order');
+  };
 
   const toggleCheck = (productOption: string) => {
     setFarms((prev) =>
@@ -299,7 +320,7 @@ export default function CartPage() {
       </DefaultBody>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[500px] bg-[#FFFDFB] p-4 [box-shadow:0px_-1px_4px_0px_#00000008] rounded-[12px]">
-        <CommonButton type="button" disabled={selectedItems.length === 0} animate={selectedItems.length > 0}>
+        <CommonButton type="button" disabled={selectedItems.length === 0} animate={selectedItems.length > 0} onClick={handleOrder}>
           구매하기
         </CommonButton>
       </div>
