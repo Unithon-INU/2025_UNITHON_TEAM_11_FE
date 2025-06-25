@@ -16,14 +16,16 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+
 // ✅ 응답 에러 처리 (420 핸들링)
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-    // 420 오류 발생 + 재시도 안한 요청만 처리
-    if (error.response?.status === 420 && !originalRequest._retry) {
+    const shouldRetry = [420, 401, 419].includes(error.response?.status ?? -1);
+
+      if (shouldRetry && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -31,9 +33,10 @@ axiosInstance.interceptors.response.use(
         if (!refreshToken) throw new Error('No refresh token found');
 
         const newTokens = await PostRefresh(refreshToken);
+        console.log('새토큰',newTokens);
 
         // ✅ 로컬 스토리지에 새 토큰 저장
-        setTokens(newTokens.accessToken, newTokens.refreshToken);
+        setTokens(newTokens.data.accessToken, newTokens.data.refreshToken);
 
         // ✅ Authorization 헤더 교체
         originalRequest.headers = {

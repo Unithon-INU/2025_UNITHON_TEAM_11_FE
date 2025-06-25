@@ -14,7 +14,6 @@ type ProductReviewSectionProps = {
 
 
 export default function ProductReviewSection({reviews,
-  totalCount = 0,
   averageRating = 0,
 }: ProductReviewSectionProps) {
   const filledStars = Math.floor(averageRating);
@@ -23,11 +22,11 @@ export default function ProductReviewSection({reviews,
   const reviewImages = reviews.flatMap((r) => r.imageUrls).slice(0, 5);
 
   const mappedReviews = reviews.map((review, i) => ({
-    id: i, // 혹시 서버에서 id 없을 경우 index 사용
+    reviewId: review.reviewId, // 혹시 서버에서 id 없을 경우 index 사용
     user: review.memberInfo.nickname,
     date: review.createdAt,
     rating: review.rating,
-    liked: review.isLiked === true,
+    isliked: review.isLiked === true,
     likeCount: review.likeCount,
     option: review.purchaseOption ?? '',
     comment: review.content,

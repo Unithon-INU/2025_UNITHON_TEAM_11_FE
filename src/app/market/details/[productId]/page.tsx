@@ -146,11 +146,11 @@ export default function ProductDetailPage() {
                   alt="농장 로고"
                   width={48}
                   height={48}
-                  className="rounded-full"
+                  className="rounded-full w-12 h-12"
                 />
                 <div className="text-sm">
                   <div className="font-pretendard font-semibold text-[14px] leading-[17px] tracking-[-0.03em] text-[#222222]">{product.member.nickname}</div>
-                  <div className="font-pretendard font-normal text-[14px] leading-[17px] tracking-[-0.03em] text-[#9F9F9F] mt-[4px]">
+                  <div className="font-pretendard font-normal text-[14px] leading-[17px] tracking-[-0.03em] text-[#9F9F9F] mt-[4px] w-[85%]">
                     {product.member.introduction}
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function ProductDetailPage() {
                     className="flex flex-col items-center justify-center"
                 >
                     <Image
-                    src={liked ? '/asset/star0.svg' : '/asset/star1.svg'}
+                    src={liked ? '/asset/star1.svg' : '/asset/star0.svg'}
                     alt="좋아요"
                     width={24}
                     height={24}
@@ -194,7 +194,7 @@ export default function ProductDetailPage() {
                     ].map((item) => (
                     <div key={item.label} className="flex">
                         <span className="w-[80px] text-[#9F9F9F]">{item.label}</span>
-                        <span className="text-[#5E5E5E]">{item.value}</span>
+                        <span className="text-[#5E5E5E] w-[85%]">{item.value}</span>
                     </div>
                     ))}
                 </div>

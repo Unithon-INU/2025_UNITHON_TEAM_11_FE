@@ -1,5 +1,5 @@
 export type RawReview = {
-  id: number;
+  reviewId: number;
   content: string;
   createdAt: string;
   imageUrls: string[];

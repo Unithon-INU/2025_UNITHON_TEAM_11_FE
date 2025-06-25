@@ -10,7 +10,7 @@ export type RecipeDetail = {
   member:{
     imageUrl:string;
     introduction:string;
-    likeCount:string;
+    likeCount:number;
     memberId:number;
     nickname:string;
     isSeller:boolean;

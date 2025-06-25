@@ -36,15 +36,17 @@ export default function RecipeDetailPage() {
   const [recipeLiked, setRecipeLiked] = useState(recipe?.isLiked);
   const [recipeCount, setRecipeCount] = useState(recipe?.likeCount || 0);
 
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(recipe?.member.isLiked);
   const requireAuth = checkAuthAndRedirect()
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(recipe?.member.likeCount || 0);
 
   useEffect(() => {
     if (recipe) {
       setRecipeLiked(recipe.isLiked);
       setRecipeCount(recipe.likeCount);
+      setLiked(recipe.member.isLiked);
+      setCount(recipe.member.likeCount);
     }
   }, [recipe]);
 
@@ -66,7 +68,7 @@ export default function RecipeDetailPage() {
     try {
       await PostRecipeLike(recipeId); // ✅ API 호출
       setRecipeLiked((prev) => !prev);
-      setRecipeCount((prev) => (recipeCount ? prev - 1 : prev + 1));
+      setRecipeCount((prev) => (recipeLiked ? prev - 1 : prev + 1));
     } catch (error) {
       console.error('좋아요 처리 실패:', error);
     }
@@ -161,11 +163,11 @@ export default function RecipeDetailPage() {
             <div className="flex items-center justify-between px-4 py-4 border-[#F6F3EE] border-t-8 border-b-8 mt-2">
               <div className="flex items-center gap-2" onClick={handleClickSeller}>
                 <Image
-                  src="/asset/goril.svg"
+                  src={recipe.member.imageUrl}
                   alt="프로필"
                   width={48}
                   height={48}
-                  className="rounded-full"
+                  className="rounded-full w-12 aspect-[1/1]"
                 />
                 <div className="text-sm">
                   <div className="font-semibold text-[14px] text-[#222]">{recipe.member.nickname}</div>

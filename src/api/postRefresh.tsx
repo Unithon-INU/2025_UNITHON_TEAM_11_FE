@@ -16,12 +16,8 @@ export const PostRefresh = async (
       `${apiUrl}/api/auth/refresh`,
       {
         refreshToken: refreshToken
-        },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // ✅ 헤더에 토큰 추가
-        },
-      }
+        }
+     
     );
 
     console.log(response.data);
