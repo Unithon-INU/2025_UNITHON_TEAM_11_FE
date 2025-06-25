@@ -4,34 +4,66 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import QuantityCounter from '../QuantityCounter';
 import { OptionItem } from '@/types/OptionItem';
-
+import { PostCart } from '@/api/cart/PostCart';
+import { useRouter } from 'next/navigation';
 
 type SelectedOption = {
   optionName: string;
   quantity: number;
+  additionalPrice: number;
 };
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  options: OptionItem[]; // ✅ 외부 주입
+  options: OptionItem[];
 };
 
 export default function ProductOptionDrawer({ isOpen, onClose, options }: Props) {
   const [selectedOptions, setSelectedOptions] = React.useState<SelectedOption[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const router = useRouter();
 
   const handleSelect = (optionName: string) => {
     if (selectedOptions.some((opt) => opt.optionName === optionName)) return;
-    setSelectedOptions((prev) => [...prev, { optionName, quantity: 1 }]);
+    const price = getPriceByLabel(optionName);
+    setSelectedOptions((prev) => [
+      ...prev,
+      { optionName, quantity: 1, additionalPrice: price  },
+    ]);
     setIsDropdownOpen(false);
   };
 
-  const getPriceByLabel = (optionName: string) => options.find((opt) => opt.optionName === optionName)?.price ?? 0;
+  const getPriceByLabel = (optionName: string) =>
+    options.find((opt) => opt.optionName === optionName)?.additionalPrice ?? 0;
+
   const totalPrice = selectedOptions.reduce(
-    (sum, opt) => sum + opt.quantity * getPriceByLabel(opt.optionName),
+    (sum, opt) => sum + opt.quantity * opt.additionalPrice,
     0
   );
+
+  const handleAddToCart = async () => {
+    try {
+      for (const opt of selectedOptions) {
+        const productId = options.find((o) => o.optionName === opt.optionName)?.productId;
+        if (!productId) continue;
+
+        await PostCart(
+          productId,
+           opt.quantity,
+           opt.optionName,
+        );
+      }
+
+      const confirmed = window.confirm('장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
+      if (confirmed) {
+        router.push('/cart');
+      }
+    } catch (error) {
+      console.error('장바구니 담기 실패:', error);
+      alert('장바구니 담기에 실패했습니다.');
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -52,7 +84,6 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
           <div className="px-4 flex-1 overflow-y-auto">
             <h2 className="text-[18px] font-semibold mb-[16px]">상품 옵션</h2>
 
-            {/* 옵션 선택 버튼 */}
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className={`border border-[#D9D9D9] rounded-lg p-3 text-[14px] cursor-pointer flex justify-between items-center ${
@@ -67,7 +98,6 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
               />
             </div>
 
-            {/* 옵션 리스트 */}
             {isDropdownOpen && (
               <div className="border border-[#D9D9D9] rounded-lg rounded-t-none divide-y divide-[#D9D9D9]">
                 {options.map((opt) => (
@@ -89,50 +119,49 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
               </div>
             )}
 
-            {/* 선택된 옵션들 */}
-            {selectedOptions.map(({ optionName, quantity }) => {
-              const unitPrice = getPriceByLabel(optionName);
-              return (
-                <div key={optionName} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
-                  <button
-                    onClick={() =>
-                      setSelectedOptions((prev) => prev.filter((opt) => opt.optionName !== optionName))
+            {selectedOptions.map(({ optionName, quantity, additionalPrice }) => (
+              <div key={optionName} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
+                <button
+                  onClick={() =>
+                    setSelectedOptions((prev) =>
+                      prev.filter((opt) => opt.optionName !== optionName)
+                    )
+                  }
+                  className="absolute top-3 right-5 text-[#C2C2C2] text-[18px]"
+                >
+                  ✕
+                </button>
+                <div className="text-[13px] text-[#222] mb-4 pr-6">{optionName}</div>
+                <div className="flex items-center justify-between">
+                  <QuantityCounter
+                    quantity={quantity}
+                    onIncrease={() =>
+                      setSelectedOptions((prev) =>
+                        prev.map((opt) =>
+                          opt.optionName === optionName
+                            ? { ...opt, quantity: opt.quantity + 1 }
+                            : opt
+                        )
+                      )
                     }
-                    className="absolute top-3 right-5 text-[#C2C2C2] text-[18px]"
-                  >
-                    ✕
-                  </button>
-                  <div className="text-[13px] text-[#222] mb-4 pr-6">{optionName}</div>
-                  <div className="flex items-center justify-between">
-                    <QuantityCounter
-                      quantity={quantity}
-                      onIncrease={() =>
-                        setSelectedOptions((prev) =>
-                          prev.map((opt) =>
-                            opt.optionName === optionName ? { ...opt, quantity: opt.quantity + 1 } : opt
-                          )
+                    onDecrease={() =>
+                      setSelectedOptions((prev) =>
+                        prev.map((opt) =>
+                          opt.optionName === optionName
+                            ? { ...opt, quantity: Math.max(1, opt.quantity - 1) }
+                            : opt
                         )
-                      }
-                      onDecrease={() =>
-                        setSelectedOptions((prev) =>
-                          prev.map((opt) =>
-                            opt.optionName === optionName
-                              ? { ...opt, quantity: Math.max(1, opt.quantity - 1) }
-                              : opt
-                          )
-                        )
-                      }
-                    />
-                    <div className="text-[15px] font-semibold text-[#222]">
-                      {(unitPrice * quantity).toLocaleString()}원
-                    </div>
+                      )
+                    }
+                  />
+                  <div className="text-[15px] font-semibold text-[#222]">
+                    {(additionalPrice * quantity).toLocaleString()}원
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
-          {/* 하단 고정 결제 영역 */}
           {selectedOptions.length > 0 && (
             <div className="px-4 pt-4 pb-6">
               <div className="flex justify-between mb-2 text-[14px]">
@@ -143,7 +172,10 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
               </div>
               <p className="text-[12px] text-[#BEBEBE] text-end">배송비 2,000원</p>
               <div className="mt-6 flex gap-2">
-                <button className="flex-1 h-[48px] border border-[#222] rounded-xl text-[14px]">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 h-[48px] border border-[#222] rounded-xl text-[14px]"
+                >
                   장바구니 넣기
                 </button>
                 <button className="flex-1 h-[48px] bg-[#4BE42C] rounded-xl text-white text-[14px]">

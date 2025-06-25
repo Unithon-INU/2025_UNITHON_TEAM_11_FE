@@ -1,5 +1,5 @@
 export type OptionItem = {
-  id:number;
+  productId:number;
   optionName: string;
   price: number;
   additionalPrice: number;

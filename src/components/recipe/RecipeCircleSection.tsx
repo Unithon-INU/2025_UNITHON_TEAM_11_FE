@@ -2,6 +2,7 @@
 import React from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 type RecipeItem = {
   memberId: number;
@@ -22,6 +23,9 @@ const RecipeCircleSection = ({
   onRefresh,
   
 }: Props) => {
+
+  const router = useRouter();
+
   return (
     <section className="w-full bg-[#F6F3EE] px-4 pt-6 pb-5 mt-[56px]">
       {/* 헤더 */}
@@ -46,7 +50,7 @@ const RecipeCircleSection = ({
       {/* 썸네일 리스트 */}
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         {recipes.map((r) => (
-          <div key={r.memberId} className="flex flex-col items-center shrink-0 w-[64px]">
+          <div key={r.memberId} className="flex flex-col items-center shrink-0 w-[64px]" onClick={()=> router.push(`/profile/${r.memberId}`)}>
             <div className="w-[64px] h-[64px] rounded-full overflow-hidden bg-gray-200">
               <Image
                 src={r.imageUrl}

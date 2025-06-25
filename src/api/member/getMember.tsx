@@ -13,7 +13,7 @@ export const GetMember = async (
 
   try {
     const response: AxiosResponse<any> = await axiosInstance.get(
-      `}/api/members/${memberId}?page=${page}`,
+      `/api/members/${memberId}?page=${page}`,
     );
     console.log(response.data);
     return response.data;

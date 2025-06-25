@@ -27,7 +27,7 @@ export default function UserProfilePage() {
         const res = await GetMember(userId, 0)
         setUserData(res)
         setCount(res.likeCount || 0)
-        setLiked(false)
+        setLiked(res.isLiked)
       } catch (error) {
         console.error('사용자 데이터 로딩 실패:', error)
       }
@@ -73,7 +73,7 @@ export default function UserProfilePage() {
                   alt="프로필"
                   width={60}
                   height={60}
-                  className="rounded-full"
+                  className="rounded-full w-15 h-15"
                 />
                 <div className="flex flex-col">
                   <h2 className="mt-2 text-[16px] font-semibold">{userData.nickname}</h2>
