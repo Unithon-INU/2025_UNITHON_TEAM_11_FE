@@ -15,7 +15,7 @@ type CategoryChipsProps = {
 };
 
 const defaultCategories: Category[] = [
-  { label: '레시피 유저 둘러보기', icon: '🧑‍🍳', onClick:'/recipe-users' },
+  { label: '레시피 유저 둘러보기', icon: '🧑‍🍳', onClick:'/recipe/users' },
   { label: '지금 핫한 레시피', icon: '🔥' },
   { label: '최근 본 레시피', icon: '🌟' },
 ];

@@ -1,29 +1,37 @@
 'use client';
+
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import QuantityCounter from '../QuantityCounter';
+import { OptionItem } from '@/types/OptionItem';
 
-const options = [
-  { label: '단품 계란 15구, 1판', price: 6090, available: true },
-  { label: '단품 계란 30구, 1판', price: 6090, available: true },
-];
+
+type SelectedOption = {
+  optionName: string;
+  quantity: number;
+};
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  options: OptionItem[]; // ✅ 외부 주입
 };
 
-export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
-  const [selectedOptions, setSelectedOptions] = React.useState<{ label: string; quantity: number }[]>([]);
+export default function ProductOptionDrawer({ isOpen, onClose, options }: Props) {
+  const [selectedOptions, setSelectedOptions] = React.useState<SelectedOption[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
-  const handleSelect = (label: string) => {
-    if (selectedOptions.some((opt) => opt.label === label)) return;
-    setSelectedOptions((prev) => [...prev, { label, quantity: 1 }]);
+  const handleSelect = (optionName: string) => {
+    if (selectedOptions.some((opt) => opt.optionName === optionName)) return;
+    setSelectedOptions((prev) => [...prev, { optionName, quantity: 1 }]);
     setIsDropdownOpen(false);
   };
 
-  const totalPrice = selectedOptions.reduce((sum, opt) => sum + opt.quantity * 6090, 0);
+  const getPriceByLabel = (optionName: string) => options.find((opt) => opt.optionName === optionName)?.price ?? 0;
+  const totalPrice = selectedOptions.reduce(
+    (sum, opt) => sum + opt.quantity * getPriceByLabel(opt.optionName),
+    0
+  );
 
   return (
     <AnimatePresence>
@@ -64,13 +72,13 @@ export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
               <div className="border border-[#D9D9D9] rounded-lg rounded-t-none divide-y divide-[#D9D9D9]">
                 {options.map((opt) => (
                   <div
-                    key={opt.label}
-                    onClick={() => opt.available && handleSelect(opt.label)}
+                    key={opt.optionName}
+                    onClick={() => opt.available && handleSelect(opt.optionName)}
                     className={`flex justify-between items-center px-3 py-3 text-[14px] ${
                       opt.available ? 'text-[#222]' : 'text-[#C2C2C2]'
                     } ${opt.available ? 'cursor-pointer' : 'cursor-default'}`}
                   >
-                    {opt.label}
+                    {opt.optionName}
                     {!opt.available && (
                       <button className="text-[11px] px-2 py-1 border border-[#E5E5E5] rounded-md text-[#999]">
                         재입고 알림
@@ -82,48 +90,51 @@ export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
             )}
 
             {/* 선택된 옵션들 */}
-            {selectedOptions.map(({ label, quantity }) => (
-              <div key={label} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
-                <button
-                  onClick={() =>
-                    setSelectedOptions((prev) => prev.filter((opt) => opt.label !== label))
-                  }
-                  className="absolute top-3 right-5 text-[#C2C2C2] text-[18px]"
-                >
-                  ✕
-                </button>
-                <div className="text-[13px] text-[#222] mb-4 pr-6">{label}</div>
-                <div className="flex items-center justify-between">
-                  <QuantityCounter
+            {selectedOptions.map(({ optionName, quantity }) => {
+              const unitPrice = getPriceByLabel(optionName);
+              return (
+                <div key={optionName} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
+                  <button
+                    onClick={() =>
+                      setSelectedOptions((prev) => prev.filter((opt) => opt.optionName !== optionName))
+                    }
+                    className="absolute top-3 right-5 text-[#C2C2C2] text-[18px]"
+                  >
+                    ✕
+                  </button>
+                  <div className="text-[13px] text-[#222] mb-4 pr-6">{optionName}</div>
+                  <div className="flex items-center justify-between">
+                    <QuantityCounter
                       quantity={quantity}
                       onIncrease={() =>
                         setSelectedOptions((prev) =>
                           prev.map((opt) =>
-                            opt.label === label ? { ...opt, quantity: opt.quantity + 1 } : opt
+                            opt.optionName === optionName ? { ...opt, quantity: opt.quantity + 1 } : opt
                           )
                         )
                       }
                       onDecrease={() =>
                         setSelectedOptions((prev) =>
                           prev.map((opt) =>
-                            opt.label === label
+                            opt.optionName === optionName
                               ? { ...opt, quantity: Math.max(1, opt.quantity - 1) }
                               : opt
                           )
                         )
                       }
                     />
-                  <div className="text-[15px] font-semibold text-[#222]">
-                    {(6090 * quantity).toLocaleString()}원
+                    <div className="text-[15px] font-semibold text-[#222]">
+                      {(unitPrice * quantity).toLocaleString()}원
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* 하단 고정 결제 영역 */}
           {selectedOptions.length > 0 && (
-            <div className=" px-4 pt-4 pb-6">
+            <div className="px-4 pt-4 pb-6">
               <div className="flex justify-between mb-2 text-[14px]">
                 <span className="text-[#999]">결제 예상 금액</span>
                 <span className="text-[#222] font-semibold text-[16px]">
@@ -132,8 +143,12 @@ export default function ProductOptionDrawer({ isOpen, onClose }: Props) {
               </div>
               <p className="text-[12px] text-[#BEBEBE] text-end">배송비 2,000원</p>
               <div className="mt-6 flex gap-2">
-                <button className="flex-1 h-[48px] border border-[#222] rounded-xl text-[14px]">장바구니 넣기</button>
-                <button className="flex-1 h-[48px] bg-[#4BE42C] rounded-xl text-white text-[14px]">구매하기</button>
+                <button className="flex-1 h-[48px] border border-[#222] rounded-xl text-[14px]">
+                  장바구니 넣기
+                </button>
+                <button className="flex-1 h-[48px] bg-[#4BE42C] rounded-xl text-white text-[14px]">
+                  구매하기
+                </button>
               </div>
             </div>
           )}

@@ -1,5 +1,6 @@
 import { Product } from "@/components/detail/ProductGridList";
 import { RawReview } from "./Review";
+import { OptionItem } from "./OptionItem";
 
 // types/ProductDetail.ts
 export type ProductDetail = {
@@ -36,4 +37,5 @@ export type ProductDetail = {
   totalReviewCount: number;
   totalImageCount: number;
   recentImageUrls: string[];
+  productOptions: OptionItem[];
 };

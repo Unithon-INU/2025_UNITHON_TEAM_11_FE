@@ -1,57 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '@/components/header/Header';
 import CommonButton from '@/components/CommonButton';
 import DefaultBody from '@/components/defaultBody';
 import { useRouter } from 'next/navigation';
-
-const mockData = [
-  {
-    farm: '병아리 농장',
-    items: [
-      {
-        id: 1,
-        product: '토마토 행사',
-        option: '방울토마토',
-        price: 6000,
-        quantity: 1,
-        checked: false,
-      },
-      {
-        id: 2,
-        product: '토마토 행사',
-        option: '방울토마토',
-        price: 6000,
-        quantity: 1,
-        checked: false,
-      },
-    ],
-  },
-  {
-    farm: '고릴라 농장',
-    items: [
-      {
-        id: 3,
-        product: '토마토 행사',
-        option: '방울토마토',
-        price: 6000,
-        quantity: 2,
-        checked: false,
-      },
-    ],
-  },
-];
+import { PutCart } from '@/api/cart/putCart';
+import { GetCart } from '@/api/cart/getCart';
+import { Cart } from '@/types/Cart';
 
 export default function CartPage() {
   const router = useRouter();
-  const [farms, setFarms] = useState(mockData);
+  const [farms, setFarms] = useState<any[]>([]);
+  const originalCartRef = useRef<Cart[]>([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await GetCart();
+        setFarms(response);
+        // 원본 상태 저장
+        const flat = response.flatMap((farm: any) =>
+          farm.items.map((item: any) => ({
+            productId: item.id,
+            quantity: item.quantity,
+            productOption: item.option,
+          }))
+        );
+        originalCartRef.current = flat;
+      } catch (err) {
+        console.error('장바구니 불러오기 실패:', err);
+      }
+    };
+
+    fetchCart();
+  }, []);
 
   const toggleCheck = (id: number) => {
     setFarms((prev) =>
       prev.map((farm) => ({
         ...farm,
-        items: farm.items.map((item) =>
+        items: farm.items.map((item: any) =>
           item.id === id ? { ...item, checked: !item.checked } : item
         ),
       }))
@@ -62,7 +51,7 @@ export default function CartPage() {
     setFarms((prev) =>
       prev.map((farm) => ({
         ...farm,
-        items: farm.items.map((item) =>
+        items: farm.items.map((item: any) =>
           item.id === id
             ? { ...item, quantity: Math.max(1, item.quantity + amount) }
             : item
@@ -75,17 +64,17 @@ export default function CartPage() {
     setFarms((prev) =>
       prev.map((farm) => ({
         ...farm,
-        items: farm.items.filter((item) => item.id !== id),
+        items: farm.items.filter((item: any) => item.id !== id),
       })).filter((farm) => farm.items.length > 0)
     );
   };
 
   const toggleAllCheck = () => {
-    const allChecked = farms.every((farm) => farm.items.every((item) => item.checked));
+    const allChecked = farms.every((farm) => farm.items.every((item: any) => item.checked));
     setFarms((prev) =>
       prev.map((farm) => ({
         ...farm,
-        items: farm.items.map((item) => ({ ...item, checked: !allChecked })),
+        items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
       }))
     );
   };
@@ -94,16 +83,38 @@ export default function CartPage() {
     setFarms((prev) =>
       prev.map((farm) => {
         if (farm.farm !== farmName) return farm;
-        const allChecked = farm.items.every((item) => item.checked);
+        const allChecked = farm.items.every((item: any) => item.checked);
         return {
           ...farm,
-          items: farm.items.map((item) => ({ ...item, checked: !allChecked })),
+          items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
         };
       })
     );
   };
 
-  const selectedItems = farms.flatMap((farm) => farm.items.filter((i) => i.checked));
+  const handleBack = async () => {
+    const updatedCart: Cart[] = farms.flatMap((farm) =>
+      farm.items.map((item: any) => ({
+        productId: item.id,
+        quantity: item.quantity,
+        productOption: item.option,
+      }))
+    );
+
+    const hasChanges = JSON.stringify(updatedCart) !== JSON.stringify(originalCartRef.current);
+
+    if (hasChanges) {
+      try {
+        await PutCart(updatedCart);
+      } catch (err) {
+        console.error('장바구니 저장 실패:', err);
+      }
+    }
+
+    router.back();
+  };
+
+  const selectedItems = farms.flatMap((farm) => farm.items.filter((i: any) => i.checked));
   const productTotal = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryTotal = selectedItems.length > 0 ? 3000 : 0;
   const totalPrice = productTotal + deliveryTotal;
@@ -111,7 +122,7 @@ export default function CartPage() {
   return (
     <>
       <Header>
-        <Header.BackButton />
+        <Header.BackButton onClick={handleBack} />
         <Header.Title>장바구니</Header.Title>
       </Header>
 
@@ -124,7 +135,7 @@ export default function CartPage() {
                   type="checkbox"
                   id="all-check"
                   className="peer hidden"
-                  checked={farms.every((farm) => farm.items.every((item) => item.checked))}
+                  checked={farms.every((farm) => farm.items.every((item:any) => item.checked))}
                   onChange={toggleAllCheck}
                 />
                 <label htmlFor="all-check" className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
@@ -137,8 +148,8 @@ export default function CartPage() {
 
             <div className="space-y-4 mt-4 ">
               {farms.map((farm) => {
-                const selectedFarmItems = farm.items.filter((i) => i.checked);
-                const farmProductTotal = selectedFarmItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+                const selectedFarmItems = farm.items.filter((i:any) => i.checked);
+                const farmProductTotal = selectedFarmItems.reduce((sum:any, i:any) => sum + i.price * i.quantity, 0);
                 const farmDeliveryTotal = selectedFarmItems.length > 0 ? 3000 : 0;
                 const farmTotal = farmProductTotal + farmDeliveryTotal;
 
@@ -150,7 +161,7 @@ export default function CartPage() {
                           type="checkbox"
                           id={`farm-check-${farm.farm}`}
                           className="peer hidden"
-                          checked={farm.items.every((i) => i.checked)}
+                          checked={farm.items.every((i:any) => i.checked)}
                           onChange={() => toggleFarmCheck(farm.farm)}
                         />
                         <label htmlFor={`farm-check-${farm.farm}`} className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
@@ -160,7 +171,7 @@ export default function CartPage() {
                       </label>
                     </div>
 
-                    {farm.items.map((item) => (
+                    {farm.items.map((item: any) => (
                       <div key={item.id} className='flex flex-col border-t border-[#F2EEE9] py-4'>
                         <div className="flex items-start gap-3 px-4 py-2">
                           <input
