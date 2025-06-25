@@ -8,6 +8,7 @@ import { PostCart } from '@/api/cart/PostCart';
 import { useRouter } from 'next/navigation';
 
 type SelectedOption = {
+  productId: number;
   optionName: string;
   quantity: number;
   additionalPrice: number;
@@ -24,18 +25,28 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const router = useRouter();
 
+  React.useEffect(() => {
+    console.log('🔄 selectedOptions 업데이트됨:', selectedOptions);
+  }, [selectedOptions]);
+
   const handleSelect = (optionName: string) => {
+    const matched = options.find((opt) => opt.optionName === optionName);
+    if (!matched) return;
     if (selectedOptions.some((opt) => opt.optionName === optionName)) return;
-    const price = getPriceByLabel(optionName);
+
+    const { productId, additionalPrice } = matched;
+
     setSelectedOptions((prev) => [
       ...prev,
-      { optionName, quantity: 1, additionalPrice: price  },
+      {
+        productId,
+        optionName,
+        quantity: 1,
+        additionalPrice,
+      },
     ]);
     setIsDropdownOpen(false);
   };
-
-  const getPriceByLabel = (optionName: string) =>
-    options.find((opt) => opt.optionName === optionName)?.additionalPrice ?? 0;
 
   const totalPrice = selectedOptions.reduce(
     (sum, opt) => sum + opt.quantity * opt.additionalPrice,
@@ -43,27 +54,23 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
   );
 
   const handleAddToCart = async () => {
-    try {
-      for (const opt of selectedOptions) {
-        const productId = options.find((o) => o.optionName === opt.optionName)?.productId;
-        if (!productId) continue;
+  try {
+    await Promise.all(
+      selectedOptions.map(async (opt) => {
+        await PostCart(opt.productId, opt.quantity, opt.optionName);
+      })
+    );
 
-        await PostCart(
-          productId,
-           opt.quantity,
-           opt.optionName,
-        );
-      }
-
-      const confirmed = window.confirm('장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
-      if (confirmed) {
-        router.push('/cart');
-      }
-    } catch (error) {
-      console.error('장바구니 담기 실패:', error);
-      alert('장바구니 담기에 실패했습니다.');
+    const confirmed = window.confirm('장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
+    if (confirmed) {
+      router.push('/cart');
     }
-  };
+  } catch (error) {
+    console.error('장바구니 담기 실패:', error);
+    alert('장바구니 담기에 실패했습니다.');
+  }
+};
+
 
   return (
     <AnimatePresence>
@@ -119,7 +126,7 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
               </div>
             )}
 
-            {selectedOptions.map(({ optionName, quantity, additionalPrice }) => (
+            {selectedOptions.map(({ productId, optionName, quantity, additionalPrice }) => (
               <div key={optionName} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
                 <button
                   onClick={() =>

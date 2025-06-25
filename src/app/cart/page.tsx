@@ -18,17 +18,27 @@ export default function CartPage() {
 
   useEffect(() => {
     const fetchCart = async () => {
-       const token = getAccessToken();
-            if (!token) {
-              setHasAccessToken(false);
-              return;
-            }
+      const token = getAccessToken();
+      if (!token) {
+        setHasAccessToken(false);
+        return;
+      }
 
       try {
         const response = await GetCart();
-        setFarms(response.groups);
-        // 원본 상태 저장
-        const flat = response.groups.flatMap((farm: any) =>
+
+        // ✅ 각 item에 checked: false 초기화
+        const farmsWithChecked = response.groups.map((farm: any) => ({
+          ...farm,
+          items: farm.items.map((item: any) => ({
+            ...item,
+            checked: false,
+          })),
+        }));
+
+        setFarms(farmsWithChecked);
+
+        const flat = farmsWithChecked.flatMap((farm: any) =>
           farm.items.map((item: any) => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -44,14 +54,37 @@ export default function CartPage() {
     fetchCart();
   }, []);
 
-  const toggleCheck = (productId: number) => {
+  const toggleCheck = (productOption: string) => {
     setFarms((prev) =>
       prev.map((farm) => ({
         ...farm,
         items: farm.items.map((item: any) =>
-          item.productId === productId ? { ...item, checked: !item.checked } : item
+          item.productOption === productOption ? { ...item, checked: !item.checked } : item
         ),
       }))
+    );
+  };
+
+  const toggleAllCheck = () => {
+    const allChecked = farms.every((farm) => farm.items.every((item: any) => item.checked));
+    setFarms((prev) =>
+      prev.map((farm) => ({
+        ...farm,
+        items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
+      }))
+    );
+  };
+
+  const toggleFarmCheck = (sellerId: number) => {
+    setFarms((prev) =>
+      prev.map((farm) => {
+        if (farm.sellerId !== sellerId) return farm;
+        const allChecked = farm.items.every((item: any) => item.checked);
+        return {
+          ...farm,
+          items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
+        };
+      })
     );
   };
 
@@ -70,33 +103,12 @@ export default function CartPage() {
 
   const deleteItem = (productId: number) => {
     setFarms((prev) =>
-      prev.map((farm) => ({
-        ...farm,
-        items: farm.items.filter((item: any) => item.productId !== productId),
-      })).filter((farm) => farm.items.length > 0)
-    );
-  };
-
-  const toggleAllCheck = () => {
-    const allChecked = farms.every((farm) => farm.items.every((item: any) => item.checked));
-    setFarms((prev) =>
-      prev.map((farm) => ({
-        ...farm,
-        items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
-      }))
-    );
-  };
-
-  const toggleFarmCheck = (farmName: string) => {
-    setFarms((prev) =>
-      prev.map((farm) => {
-        if (farm.farm !== farmName) return farm;
-        const allChecked = farm.items.every((item: any) => item.checked);
-        return {
+      prev
+        .map((farm) => ({
           ...farm,
-          items: farm.items.map((item: any) => ({ ...item, checked: !allChecked })),
-        };
-      })
+          items: farm.items.filter((item: any) => item.productId !== productId),
+        }))
+        .filter((farm) => farm.items.length > 0)
     );
   };
 
@@ -138,81 +150,90 @@ export default function CartPage() {
         <div className="flex flex-col pb-40 bg-[#F8F7F4]">
           <div className="flex flex-col px-5">
             {!hasAccessToken ? (
-            <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center gap-6 px-4">
-              <div className="text-center text-[#888] text-[16px] font-medium">
-                로그인 후 이용가능한 기능입니다.
+              <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center gap-6 px-4">
+                <div className="text-center text-[#888] text-[16px] font-medium">
+                  로그인 후 이용가능한 기능입니다.
+                </div>
+                <button
+                  onClick={() => router.push('/login')}
+                  className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-[#333] transition-all"
+                >
+                  로그인하러 가기
+                </button>
               </div>
-              <button
-                onClick={() => router.push('/login')}
-                className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-[#333] transition-all"
-              >
-                로그인하러 가기
-              </button>
-            </div>
-
-          ) : (
-            <>
-            {farms.length === 0 ? (
+            ) : farms.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[60vh] text-[#888] text-[16px] font-medium">
                 장바구니가 비어있습니다.
               </div>
             ) : (
-                <>
-                <div className="flex items-center  justify-between py-4 mx-[-20px] bg-white">
+              <>
+                <div className="flex items-center justify-between py-4 mx-[-20px] bg-white">
                   <label className="flex items-center gap-2 text-[15px] font-medium px-5 cursor-pointer">
                     <input
                       type="checkbox"
                       id="all-check"
                       className="peer hidden"
-                      checked={farms.every((farm) => farm.items.every((item:any) => item.checked))}
+                      checked={farms.every((farm) => farm.items.every((item: any) => item.checked))}
                       onChange={toggleAllCheck}
                     />
-                    <label htmlFor="all-check" className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
-                      <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px] " />
+                    <label
+                      htmlFor="all-check"
+                      className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]"
+                    >
+                      <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px]" />
                     </label>
                     전체 선택
                   </label>
                   <span className="text-[#9F9F9F] text-sm px-5">선택 삭제</span>
                 </div>
 
-                <div className="space-y-4 mt-4 ">
+                <div className="space-y-4 mt-4">
                   {farms.map((farm) => {
-                    const selectedFarmItems = farm.items.filter((i:any) => i.checked);
-                    const farmProductTotal = selectedFarmItems.reduce((sum:any, i:any) => sum + i.productPrice * i.quantity, 0);
+                    const selectedFarmItems = farm.items.filter((i: any) => i.checked);
+                    const farmProductTotal = selectedFarmItems.reduce(
+                      (sum: any, i: any) => sum + i.productPrice * i.quantity,
+                      0
+                    );
                     const farmDeliveryTotal = farmProductTotal >= 10000 ? 0 : 3000;
                     const farmTotal = farmProductTotal + farmDeliveryTotal;
 
                     return (
-                      <div key={farm.sellerId} className="bg-white rounded-xl border border-[#F3F0EC] ">
+                      <div key={farm.sellerId} className="bg-white rounded-xl border border-[#F3F0EC]">
                         <div className="flex items-center justify-between px-4 py-4">
                           <label className="flex items-center gap-2 text-[15px] font-semibold cursor-pointer">
                             <input
                               type="checkbox"
                               id={`farm-check-${farm.sellerId}`}
                               className="peer hidden"
-                              checked={farm.items.every((i:any) => i.checked)}
-                              onChange={() => toggleFarmCheck(farm.farm)}
+                              checked={farm.items.every((i: any) => i.checked)}
+                              onChange={() => toggleFarmCheck(farm.sellerId)}
                             />
-                            <label htmlFor={`farm-check-${farm.sellerId}`} className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
-                              <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px] " />
+                            <label
+                              htmlFor={`farm-check-${farm.sellerId}`}
+                              className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]"
+                            >
+                              <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px]" />
                             </label>
                             {farm.sellerNickname}
                           </label>
                         </div>
 
                         {farm.items.map((item: any) => (
-                          <div key={item.productId} className='flex flex-col border-t border-[#F2EEE9] py-4'>
+                          <div key={`${item.productOption}-${item.productId}`} className="flex flex-col border-t border-[#F2EEE9] py-4">
                             <div className="flex items-start gap-3 px-4 py-2">
                               <input
                                 type="checkbox"
-                                id={`item-check-${item.productId}`}
+                                id={`item-check-${item.productOption}-${item.productId}`}
                                 className="peer hidden"
                                 checked={item.checked}
-                                onChange={() => toggleCheck(item.productId)}
-                                aria-label='check'
+                                onChange={() => toggleCheck(item.productOption)}
+                                aria-label="check"
                               />
-                              <label htmlFor={`item-check-${item.productId}`} className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]">
-                                <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px] " />
+                              <label
+                                htmlFor={`item-check-${item.productOption}-${item.productId}`}
+                                className="w-5 h-5 rounded-md border border-[#D9D9D9] bg-white flex items-center justify-center cursor-pointer peer-checked:bg-[#4BE42C]"
+                              >
+                                <img src="/asset/check-white.svg" alt="check" className="w-[14px] h-[14px]" />
                               </label>
                               <img
                                 src={item.imageUrl}
@@ -231,7 +252,7 @@ export default function CartPage() {
                               </button>
                             </div>
 
-                            <div className='ml-13 mr-5'>
+                            <div className="ml-13 mr-5">
                               <div className="mt-2 w-full text-[13px] text-[#222222] border border-[#ddd] rounded-lg px-4 py-3 inline-block">
                                 {item.productOption}
                               </div>
@@ -261,8 +282,10 @@ export default function CartPage() {
                         ))}
 
                         <div className="flex justify-center text-[14px] mb-1 mt-5">
-                          <span className="text-[#999]">상품 {farmProductTotal.toLocaleString()}원 + 배송비 {farmDeliveryTotal.toLocaleString()}원 = </span>
-                          <div className='text-[#222]'>{farmTotal.toLocaleString()}원</div>
+                          <span className="text-[#999]">
+                            상품 {farmProductTotal.toLocaleString()}원 + 배송비 {farmDeliveryTotal.toLocaleString()}원 =
+                          </span>
+                          <div className="text-[#222]">{farmTotal.toLocaleString()}원</div>
                         </div>
                         <p className="text-[12px] text-center text-[#BEBEBE] mb-3">10,000원 이상 구매 시 무료배송</p>
                       </div>
@@ -271,8 +294,6 @@ export default function CartPage() {
                 </div>
               </>
             )}
-            </>
-          )}
           </div>
         </div>
       </DefaultBody>
