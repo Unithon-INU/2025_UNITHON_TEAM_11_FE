@@ -84,7 +84,7 @@ export default function MyPage() {
 
               {/* 주요 메뉴 */}
               <div className="grid grid-cols-3 bg-[#F2EEE9] rounded-[8px] py-4 text-center text-[13px] text-[#5E5E5E] font-medium">
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2" onClick={()=> router.push('/mypage/order')}>
                   <img src="/asset/order.svg" className="w-6 h-6" />
                   <span>주문 내역</span>
                 </div>
