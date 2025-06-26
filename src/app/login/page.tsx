@@ -19,8 +19,19 @@ export default function LoginPage() {
         const res = await PostLogin(id,pw);
         console.log(res);
         if(res.data.accessToken){
-          localStorage.setItem('accessToken', res.data.accessToken);
-          localStorage.setItem('refreshToken', res.data.refreshToken);
+          const userInfo = {
+            accessToken: res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+            userId: res.data.userId,
+            profileURL: res.data.imageUrl,
+            introduction: res.data.introduction,
+            nickname: res.data.nickname,
+          };
+
+          Object.entries(userInfo).forEach(([key, value]) => {
+            localStorage.setItem(key, String(value));
+          });
+
 
           router.push('./main');
         }

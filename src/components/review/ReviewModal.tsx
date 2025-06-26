@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { PostRecipeReview } from '@/api/review/postRecipeReview';
+import CommonButton from '../CommonButton';
 
 type Props = {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export default function ReviewModal({
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const isFilled = comment && rating
  
 
   useEffect(() => {
@@ -132,13 +133,13 @@ export default function ReviewModal({
 
       {/* 하단 고정 버튼 */}
       <div className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-2 bg-white border-t border-[#EEE] z-50">
-        <button
-          className="w-full h-[48px] rounded-xl bg-[#DCD4CB] text-white text-[15px] font-semibold disabled:opacity-50"
-          disabled={isSubmitting}
+        <CommonButton
+          disabled={!isFilled}
           onClick={handleSubmit}
+          animate={!isFilled}
         >
           {isSubmitting ? '등록 중...' : '후기 등록'}
-        </button>
+        </CommonButton>
       </div>
     </div>
   );

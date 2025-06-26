@@ -40,6 +40,7 @@ export default function MyPage() {
     fetchUserInfo();
   }, []);
 
+  
   return (
     <>
       <Header>
@@ -77,7 +78,7 @@ export default function MyPage() {
                   <button className="text-xs underline text-[#5E5E5E] text-start mt-1">프로필 수정</button>
                 </div>
                 <div className="ml-auto">
-                  <img src="/asset/chevronRight.svg" alt=">" className="w-6 h-6" />
+                  <img src="/asset/chevronRight.svg" alt=">" className="w-6 h-6" onClick={()=> router.push('/mypage/profile')}/>
                 </div>
               </div>
 
@@ -127,7 +128,7 @@ export default function MyPage() {
 
               {/* 하단 */}
               <div className="border-t-8 border-[#F6F3EE] pt-3 pb-10 text-[16px] font-semibold text-[#222222]">
-                <div className="py-3">로그아웃</div>
+                <div className="py-3" >로그아웃</div>
                 <div className="py-2">회원탈퇴</div>
               </div> 
             </main>
