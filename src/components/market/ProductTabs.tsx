@@ -8,13 +8,22 @@ import { RawReview } from '@/types/Review';
 const tabs = ['상품설명', '상품후기', '문의'];
 
 type ProductTabsProps = {
-  reviews?: RawReview[]; // 외부에서 주입 가능한 리뷰 데이터
+  descriptionImageUrls: string[];
+  reviews?: RawReview[];
   rating?: number;
 };
 
-export default function ProductTabs({ reviews = [], rating }: ProductTabsProps) {
+export default function ProductTabs({
+  reviews = [],
+  rating,
+  descriptionImageUrls
+}: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState('상품설명');
+  const [showAllImages, setShowAllImages] = useState(false);
 
+  const handleToggle = () => {
+    setShowAllImages((prev) => !prev);
+  };
 
   return (
     <div>
@@ -37,33 +46,40 @@ export default function ProductTabs({ reviews = [], rating }: ProductTabsProps) 
       </div>
 
       {/* 탭별 콘텐츠 */}
-      <div className=" text-[14px] text-[#333]">
+      <div className="text-[14px] text-[#333]">
         {activeTab === '상품설명' && (
           <div>
-             {/* 상품 설명 이미지 */}
-            <div className="mt-6 px-4">
-              <Image
-                src="/asset/egg1.svg"
-                alt="닭 이미지"
-                width={500}
-                height={300}
-                className="w-full object-cover border-none"
-              />
+            {/* 상품 설명 이미지들 */}
+            <div className="mt-6 px-4 space-y-4">
+              {descriptionImageUrls.slice(0, showAllImages ? descriptionImageUrls.length : 1).map((url, index) => (
+                <Image
+                  key={index}
+                  src={url}
+                  alt={`상품 이미지 ${index + 1}`}
+                  width={500}
+                  height={300}
+                  className="w-full object-cover border-none rounded-md"
+                />
+              ))}
             </div>
 
-            {/* 상품설명 토글 버튼 */}
-            <div className="px-5 mt-4">
-              <button className="w-full h-[44px] rounded-full border border-[#DDD] text-[14px] text-[#333]">
-                상품설명 펼치기 ▼
-              </button>
-            </div>
-
+            {/* 토글 버튼 (이미지가 2개 이상일 때만) */}
+            {descriptionImageUrls.length > 1 && (
+              <div className="px-5 mt-4">
+                <button
+                  onClick={handleToggle}
+                  className="w-full h-[44px] rounded-full border border-[#DDD] text-[14px] text-[#333]"
+                >
+                  {showAllImages ? '상품설명 접기 ▲' : '상품설명 펼치기 ▼'}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === '상품후기' && (
           <div>
-            <Review reviews={reviews} averageRating={rating}/>
+            <Review reviews={reviews} averageRating={rating} />
           </div>
         )}
 

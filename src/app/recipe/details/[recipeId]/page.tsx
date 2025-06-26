@@ -188,7 +188,7 @@ export default function RecipeDetailPage() {
            
 
             <RecipeTabs ingredients={recipe.ingredients} sauces={recipe.sauces} steps={recipe.steps} reviews={recipe.reviews} totalReviewCount={recipe.totalReviewCount} 
-                    rating={recipe.rating} recentImageUrls={recipe.recentImageUrls} comments={recipe.comments}/>
+                    rating={recipe.rating} recentImageUrls={recipe.recentImageUrls} comments={recipe.comments} recipeImg={recipe.imageUrl} recipeId={recipe.id} recipeName={recipe.title} writer={recipe.member.nickname}/>
 
           </main>
         </DefaultBody>

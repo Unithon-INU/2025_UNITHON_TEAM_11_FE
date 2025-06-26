@@ -33,4 +33,5 @@ export type RecipeDetail = {
   totalReviewCount: number;
   recentImageUrls: string[];
   comments: string[]; // 추후 필요시 구체적인 타입으로 대체 가능
+  id:number;
 };

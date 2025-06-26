@@ -19,7 +19,7 @@ export type ProductDetail = {
   description: string;
   reviews: RawReview[];
   mainImageUrl: string;
-  descriptionImageUrls: string | string[]; // 백엔드 응답이 string일 수도 있고, 배열일 수도 있으니 대응
+  descriptionImageUrls: string[] // 백엔드 응답이 string일 수도 있고, 배열일 수도 있으니 대응
   rating: number;
   price: number;
   salePrice: number;
@@ -31,11 +31,12 @@ export type ProductDetail = {
   origin: string;
   harvestPeriod: string;
   expirationDate: string;
-  relatedProducts: string; // 쉼표로 구분된 string이면 필요 시 split() 사용
+  relatedProducts: Product[]; 
   packaging: string;
   additionalInfo: string;
   totalReviewCount: number;
   totalImageCount: number;
   recentImageUrls: string[];
   productOptions: OptionItem[];
+  
 };

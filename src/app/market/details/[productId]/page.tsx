@@ -175,7 +175,8 @@ export default function ProductDetailPage() {
             <ProductSection
                 titleAccent=''
                 titleRest='연관 농수산품'
-                subtitle=''/>
+                subtitle=''
+                products={product.relatedProducts}/>
 
            <div className="mt-6 border-t-8 border-[#F9F7F3] px-4 py-4 mb-[16px]  text-sm">
                 {/* 헤더 */}
@@ -201,7 +202,7 @@ export default function ProductDetailPage() {
                 </div>
 
 
-            <ProductTabs reviews={product.reviews} rating={product.rating}/>    
+            <ProductTabs reviews={product.reviews} rating={product.rating} descriptionImageUrls={product.descriptionImageUrls}/>    
 
             <ProductSection
                 titleAccent=''
