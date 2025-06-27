@@ -17,6 +17,7 @@ export default function RegisterProductPage() {
   const [quantity, setQuantity] = useState('');
   const [weight, setWeight] = useState('');
   const [discount, setDiscount] = useState(false);
+  const [discountRatePercent, setDiscountRatePercent] = useState(0);
   const [options, setOptions] = useState([{ name: '', extra: '' }]);
   const [deliveryPrice, setDeliveryPrice] = useState('');
   const [deliverySchedule, setDeliverySchedule] = useState('');
@@ -30,7 +31,6 @@ export default function RegisterProductPage() {
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainPreview, setMainPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function RegisterProductPage() {
 
       const productData = {
         packaging: storage,
-        discountRatePercent: discount ? 10 : 0,
+        discountRatePercent: discount ? discountRatePercent : 0,
         origin,
         price: Number(price),
         deliveryCompany: selectedCourier ?? '',
@@ -94,7 +94,7 @@ export default function RegisterProductPage() {
       const res = await PostAddProduct(
         productData,
         mainImage,
-        [] // 상세 이미지가 현재 없으므로 빈 배열 전달
+        [] // 상세 이미지 없을 경우 빈 배열
       );
 
       alert('상품이 성공적으로 등록되었습니다!');
@@ -105,6 +105,15 @@ export default function RegisterProductPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateDiscountedPrice = () => {
+    const priceValue = Number(price);
+    if (discount && priceValue && discountRatePercent > 0) {
+      const discountAmount = Math.floor(priceValue * (discountRatePercent / 100));
+      return discountAmount.toLocaleString();
+    }
+    return '0';
   };
 
   return (
@@ -190,16 +199,40 @@ export default function RegisterProductPage() {
             />
           </div>
 
-          {/* 할인 퍼센트 */}
-          <div className="flex items-center mt-10">
+            {/* 할인 퍼센트 */}
+          <div className="flex items-center mt-10 gap-2">
             <input
               type="checkbox"
               checked={discount}
-              onChange={() => setDiscount(!discount)}
-              className="mr-2"
+              onChange={() => {
+                setDiscount(!discount);
+                if (!discount) setDiscountRatePercent(10); // 체크 시 기본 10% 적용
+                else setDiscountRatePercent(0); // 해제 시 0으로 초기화
+              }}
+              className="accent-[#4BE42C] w-5 h-5"
             />
-            <span>상품 할인 적용(퍼센트)</span>
+            <span className="font-semibold">상품 할인 적용(퍼센트)</span>
           </div>
+
+          {discount && (
+            <div className="w-full bg-[#F7F4EF] rounded-lg p-4 flex flex-col gap-2">
+              <p className="text-[#999] text-sm">퍼센트로 적용됩니다.</p>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  min={1}
+                  max={100}
+                  value={discountRatePercent}
+                  onChange={(e) => setDiscountRatePercent(Number(e.target.value))}
+                  className="w-[80px] p-2 rounded bg-white border border-[#ddd] text-center text-[15px]"
+                />
+                <span>% 할인 적용</span>
+              </div>
+              <div className="text-right text-[14px] font-medium text-[#222]">
+                할인 적용가 = {calculateDiscountedPrice()}원
+              </div>
+            </div>
+          )}
 
           {/* 판매 옵션 */}
           <div>
