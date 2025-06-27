@@ -2,14 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-
-type Influencer = {
-  memberId: number;
-  nickname: string;
-  imageUrl: string;
-  likeCount: number;
-  isLiked: boolean;
-};
+import { Influencer } from '@/types/Influencer';
 
 type Props = {
   influencers: Influencer[];

@@ -2,17 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-
-type RecipeUser = {
-  memberId: number;
-  nickname: string;
-  introduction: string;
-  imageUrl: string;
-  isLiked: boolean;
-};
+import { Influencer } from '@/types/Influencer';
 
 type Props = {
-  users?: RecipeUser[];
+  users?: Influencer[];
   isHeader?: boolean;
 };
 

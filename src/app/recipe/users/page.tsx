@@ -7,14 +7,7 @@ import SearchBar from '@/components/home/SearchBar';
 import RecipeUserListSection from '@/components/recipe/users/RecipeUserListSection';
 import InfluencerRankingSection from '@/components/recipe/users/InfluencerRankingSection';
 import { GetRank } from '@/api/member/getRank';
-
-type Influencer = {
-  memberId: number;
-  nickname: string;
-  imageUrl: string;
-  likeCount: number;
-  isLiked: boolean;
-};
+import { Influencer } from '@/types/Influencer';
 
 export default function RecipeUsersPage() {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
@@ -51,10 +44,10 @@ export default function RecipeUsersPage() {
           <main className="flex flex-col items-start">
             <SearchBar showCartButton={false} />
             <InfluencerRankingSection
-              influencers={influencers}
+              influencers={influencers.slice(0, 5)}
               onToggleLike={handleToggleLike}
             />
-            <RecipeUserListSection isHeader={true} />
+            <RecipeUserListSection isHeader={true} users={influencers}/>
           </main>
         </div>
       </DefaultBody>

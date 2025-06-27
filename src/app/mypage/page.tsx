@@ -75,7 +75,8 @@ export default function MyPage() {
                 <div className="flex flex-col justify-start text-sm">
                   <p className="text-[#222222] text-[13px] mb-[-3px]">안녕하세요,</p>
                   <p className="text-[20px] font-semibold">{userInfo?.nickname || '회원님'}!</p>
-                  <button className="text-xs underline text-[#5E5E5E] text-start mt-1">프로필 수정</button>
+                  <button className="text-xs underline text-[#5E5E5E] text-start mt-1"
+                          onClick={()=> router.push('/profile/edit')}>프로필 수정</button>
                 </div>
                 <div className="ml-auto">
                   <img src="/asset/chevronRight.svg" alt=">" className="w-6 h-6" onClick={()=> router.push('/mypage/profile')}/>
