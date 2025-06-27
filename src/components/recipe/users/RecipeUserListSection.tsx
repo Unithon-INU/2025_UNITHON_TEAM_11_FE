@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Influencer } from '@/types/Influencer';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   users?: Influencer[];
@@ -14,7 +15,7 @@ type Props = {
 
 const RecipeUserListSection = ({ users=[], isHeader, title }: Props) => {
   const [isLiked, setIsLiked] = useState<Record<number, boolean>>({});
-
+  const router = useRouter(); 
   useEffect(() => {
     const initialLikes = Object.fromEntries(
       users.map((user) => [user.memberId, user.isLiked])
@@ -39,7 +40,7 @@ const RecipeUserListSection = ({ users=[], isHeader, title }: Props) => {
 
       <div className="flex flex-col gap-5">
         {users.map((user) => (
-          <div key={user.memberId} className="flex items-center justify-between">
+          <div key={user.memberId} className="flex items-center justify-between" onClick={()=> router.push(`/profile/${user.memberId}`)}>
             <div className="flex items-center gap-3 py-2">
               <Image
                 src={user.imageUrl}

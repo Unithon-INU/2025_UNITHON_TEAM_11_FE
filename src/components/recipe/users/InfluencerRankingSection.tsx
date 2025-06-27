@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Influencer } from '@/types/Influencer';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   influencers: Influencer[];
@@ -11,6 +12,8 @@ type Props = {
 };
 
 const InfluencerRankingSection = ({ influencers, onToggleLike, title }: Props) => {
+  const router = useRouter();
+  
   return (
     <section className="px-4 mt-6 w-full pb-[55px]">
       <div className="flex justify-between items-center mb-2">
@@ -21,7 +24,7 @@ const InfluencerRankingSection = ({ influencers, onToggleLike, title }: Props) =
       </div>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide">
         {influencers.map((inf, index) => (
-          <div key={inf.memberId} className="shrink-0">
+          <div key={inf.memberId} className="shrink-0" onClick={()=> router.push(`/profile/${inf.memberId}`)}>
             <div className="relative w-[128px] h-[144px] rounded-xl bg-gray-100">
               <Image src={inf.imageUrl} alt={inf.nickname} fill className="object-cover" />
               <div className="absolute top-1 left-1 bg-white rounded-4 text-xs w-[24px] h-[24px] flex items-center justify-center font-bold">

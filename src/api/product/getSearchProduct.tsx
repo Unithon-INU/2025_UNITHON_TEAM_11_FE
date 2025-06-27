@@ -1,19 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import { ParamValue } from "next/dist/server/request/params";
 import axiosInstance from "@/api/axiosInstance";
+import { Product } from "@/types/Product";
 
 
-export const GetSearchMember = async (
+export const GetSearchProduct = async (
     keyword : ParamValue,
     page: number
    
-): Promise<any> => {
+): Promise<Product[]> => {
   axios.defaults.withCredentials = true;
 
 
   try {
     const response: AxiosResponse<any> = await axiosInstance.get(
-      `/api/members/search?keyword=${keyword}&page=${page}`,
+      `/api/products/search?keyword=${keyword}&page=${page}`,
     );
     console.log(response.data);
     return response.data;

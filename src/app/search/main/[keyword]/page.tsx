@@ -16,7 +16,7 @@ import { GetUserHeart } from '@/api/heart/getUserHeart';
 import { GetFarmHeart } from '@/api/heart/getFarmHeart';
 import { getAccessToken } from '@/utils/tokenStorage';
 
-export default function FavoritePage() {
+export default function SearchMainPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'레시피' | '판매 농수산물'>('레시피');
   const [activeRecipeTab, setActiveRecipeTab] = useState<'레시피' | '레시피 유저'>('레시피');
@@ -58,28 +58,14 @@ export default function FavoritePage() {
   return (
     <>
       <Header>
-        <Header.Title>찜한 목록</Header.Title>
-        <Header.RightButton>
-          <Header.CartButton />
-        </Header.RightButton>
+        <Header.BackButton/>
+        <Header.Title>검색 결과</Header.Title>
+        
       </Header>
 
       <DefaultBody hasHeader={1}>
         <div className="relative pb-[80px]">
-          {!hasAccessToken ? (
-            <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center gap-6 px-4">
-              <div className="text-center text-[#888] text-[16px] font-medium">
-                로그인 후 이용가능한 기능입니다.
-              </div>
-              <button
-                onClick={() => router.push('/login')}
-                className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-[#333] transition-all"
-              >
-                로그인하러 가기
-              </button>
-            </div>
-
-          ) : (
+         
             <div className="flex flex-col items-center justify-start w-full h-full bg-[#FFFDFB]">
               <div className="w-full flex justify-center text-sm border-b border-[#F0F0F0]">
                 {['레시피', '판매 농수산물'].map((tab) => (
@@ -117,7 +103,6 @@ export default function FavoritePage() {
                     ))}
                   </div>
 
-               
 
                   <div className="w-full px-2">
                     <div className="w-full px-4 flex justify-between items-center text-[18px] font-semibold mb-4 mt-6">
@@ -157,7 +142,6 @@ export default function FavoritePage() {
                   </div>
 
                  
-
                   <div className="w-full px-2">
                     <div className="w-full px-4 flex justify-between items-center text-[18px] font-semibold mb-4 mt-6">
                       <span>
@@ -180,7 +164,7 @@ export default function FavoritePage() {
                 </>
               )}
             </div>
-          )}
+         
         </div>
       </DefaultBody>
 

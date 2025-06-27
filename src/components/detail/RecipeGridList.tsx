@@ -7,6 +7,7 @@ import { FiHeart } from 'react-icons/fi';
 import { AiFillHeart } from 'react-icons/ai';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
 import { PostRecipeLike } from '@/api/like/postRecipeLike';
+import { useRouter } from 'next/navigation';
 
 export type Recipe = {
   id: number;
@@ -25,7 +26,8 @@ type Props = {
 const RecipeGridList = ({ recipes }: Props) => {
 
      const [likes, setLikes] = useState<Record<number, boolean>>({});
-
+  const router = useRouter();
+  
     useEffect(() => {
     // 현재 상태와 비교해 동일한 경우 setLikes 생략
     const initialLikes = Object.fromEntries(recipes.map((p) => [p.id, p.isLiked]));
@@ -58,7 +60,7 @@ const RecipeGridList = ({ recipes }: Props) => {
   return (
     <div className="grid grid-cols-2 gap-3 gap-y-10 px-5 py-4">
       {recipes.map((r) => (
-        <div key={r.id} className="flex flex-col">
+        <div key={r.id} className="flex flex-col" onClick={()=> router.push(`/recipe/details/${r.id}`)}>
           <div className="relative w-full aspect-square rounded-lg overflow-hidden">
             <img
               src={r.image}
@@ -67,7 +69,7 @@ const RecipeGridList = ({ recipes }: Props) => {
             />
             <div className="absolute bottom-2 right-2 w-8 h-8">
               <button
-                onClick={() => toggleLike(r.id)}
+                onClick={(e) =>{ e.stopPropagation(); toggleLike(r.id)}}
                 className="absolute bottom-2 right-2"
               >
                 {likes[r.id] ? (

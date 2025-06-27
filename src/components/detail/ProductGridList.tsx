@@ -6,7 +6,7 @@ import { FiHeart } from 'react-icons/fi';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
 import { PostProductLike } from '@/api/like/postProductLike';
 import { Product } from '@/types/Product';
-
+import { useRouter } from 'next/navigation';
 
 type ProductGridListProps = {
   products: Product[];
@@ -14,7 +14,7 @@ type ProductGridListProps = {
 
 export default function ProductGridList({ products }: ProductGridListProps) {
   const [likes, setLikes] = useState<Record<number, boolean>>({});
-
+  const router = useRouter();
   useEffect(() => {
   // 현재 상태와 비교해 동일한 경우 setLikes 생략
   const initialLikes = Object.fromEntries(products.map((p) => [p.id, p.isLiked]));
@@ -45,6 +45,8 @@ const toggleLike = async (id: number) => {
     }
   };
 
+  
+
   return (
     <div className="grid grid-cols-2 gap-3 px-5 py-6 w-full">
       {products.map((product, index) => {
@@ -53,7 +55,7 @@ const toggleLike = async (id: number) => {
         );
 
         return (
-          <div key={`{product.id}-${index}`} className="flex flex-col">
+          <div key={`{product.id}-${index}`} className="flex flex-col" onClick={()=> router.push(`/market/details/${product.id}`)}>
             {/* 이미지 */}
             <div className="relative w-full aspect-square rounded-lg overflow-hidden">
               <img
@@ -62,7 +64,7 @@ const toggleLike = async (id: number) => {
                 className="w-full h-full object-cover"
               />
               <button
-                onClick={() => toggleLike(product.id)}
+                onClick={(e) =>{ e.stopPropagation(); toggleLike(product.id)}}
                 className="absolute bottom-2 right-2"
               >
                 {likes[product.id] ? (
@@ -73,10 +75,6 @@ const toggleLike = async (id: number) => {
               </button>
             </div>
 
-            {/* 장바구니 버튼 */}
-            <button className="mt-2 py-[10px] text-[13px] font-medium bg-white border border-[#C2C2C2] text-[#222222] rounded-xl">
-              장바구니 담기
-            </button>
 
             {/* 상품 이름 */}
             <div className="mt-2 text-[14px] text-[#333333] font-medium truncate">
