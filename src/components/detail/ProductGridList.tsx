@@ -5,15 +5,8 @@ import { AiFillHeart } from 'react-icons/ai';
 import { FiHeart } from 'react-icons/fi';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
 import { PostProductLike } from '@/api/like/postProductLike';
+import { Product } from '@/types/Product';
 
-export type Product = {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  salePrice: number;
-  isLiked: boolean;
-};
 
 type ProductGridListProps = {
   products: Product[];
@@ -54,13 +47,13 @@ const toggleLike = async (id: number) => {
 
   return (
     <div className="grid grid-cols-2 gap-3 px-5 py-6 w-full">
-      {products.map((product) => {
+      {products.map((product, index) => {
         const discountRate = Math.round(
           ((product.price - product.salePrice) / product.price) * 100
         );
 
         return (
-          <div key={product.id} className="flex flex-col">
+          <div key={`{product.id}-${index}`} className="flex flex-col">
             {/* 이미지 */}
             <div className="relative w-full aspect-square rounded-lg overflow-hidden">
               <img

@@ -88,7 +88,8 @@ export default function MyPage() {
                   <img src="/asset/order.svg" className="w-6 h-6" />
                   <span>주문 내역</span>
                 </div>
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2"
+                     onClick={()=> router.push('/product/recent')} >
                   <img src="/asset/eye.svg" className="w-6 h-6" />
                   <span>최근 본 상품</span>
                 </div>
@@ -104,8 +105,7 @@ export default function MyPage() {
                 <div className="grid grid-cols-2 gap-x-6 gap-y-6 text-[16px] text-[#222222] font-semibold">
                   <span>댓글 내역</span>
                   <span>문의 내역</span>
-                  <span>상품 리뷰</span>
-                  <span>레시피 리뷰</span>
+                  
                 </div>
               </div>
 

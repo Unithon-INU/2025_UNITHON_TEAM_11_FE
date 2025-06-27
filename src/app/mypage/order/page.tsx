@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
 import SearchBar from '@/components/home/SearchBar';
@@ -10,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { getAccessToken } from '@/utils/tokenStorage';
 import { GetMyOrder } from '@/api/mypage/getMyOrder';
 
-type OrderItem = {
+export type OrderItem = {
   id: number;
   status: string;
   sellerNickname: string;
@@ -33,24 +32,19 @@ export default function UserProfilePage() {
   const router = useRouter();
   const [hasAccessToken, setHasAccessToken] = useState(true);
 
-  useEffect(() => {
-    const token = getAccessToken();
-    if (!token) {
-      setHasAccessToken(false);
-      return;
-    }
-    fetchOrders(0); // 초기 page=0으로 로드
-  }, []);
-
   const fetchOrders = async (pageNumber: number) => {
     try {
-      if (isFetching) return; // 중복 호출 방지
       setIsFetching(true);
       const res = await GetMyOrder(pageNumber);
-      if (res.length < 4) {
+      if (res.length < 5) {
         setHasMore(false);
       }
-      setOrders(prev => [...prev, ...res]);
+      // id 기준 중복 제거
+      setOrders(prev => {
+        const existingIds = new Set(prev.map(item => item.id));
+        const filtered = res.filter(item => !existingIds.has(item.id));
+        return [...prev, ...filtered];
+      });
       setPage(prev => prev + 1);
     } catch (error) {
       console.error('주문 목록 불러오기 실패:', error);
@@ -58,6 +52,15 @@ export default function UserProfilePage() {
       setIsFetching(false);
     }
   };
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) {
+      setHasAccessToken(false);
+      return;
+    }
+    fetchOrders(0); // 최초 로드 시 page=0
+  }, []);
 
   const handleIntersect = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -74,9 +77,7 @@ export default function UserProfilePage() {
       root: null,
       threshold: 0.5,
     });
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
+    if (observerRef.current) observer.observe(observerRef.current);
     return () => {
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
@@ -110,10 +111,9 @@ export default function UserProfilePage() {
           <main className="flex flex-col">
             <SearchBar showCartButton={false} />
 
-            {/* 주문 리스트 */}
             <div className="flex flex-col gap-4 mt-4">
-              {orders.map((order, idx) => (
-                <div key={`${order.id}-${idx}`} className="border-b-8 border-[#F6F3EE] pb-6">
+              {orders.map((order) => (
+                <div key={order.id} className="border-b-8 border-[#F6F3EE] pb-6">
                   <div className="flex justify-between items-center px-4">
                     <span className={`text-[14px] font-medium ${order.status.includes('취소') ? 'text-[#FF6B2C]' : 'text-[#4BE42C]'}`}>
                       {order.status}
