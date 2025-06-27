@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Header from '@/components/header/Header';
@@ -8,18 +8,9 @@ import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
 import { useRouter } from 'next/navigation';
 import { getAccessToken } from '@/utils/tokenStorage';
 import { GetMyOrder } from '@/api/mypage/getMyOrder';
+import ReviewModal from '@/components/review/ReviewModal';
+import { OrderItem } from '@/types/OrderItem';
 
-export type OrderItem = {
-  id: number;
-  status: string;
-  sellerNickname: string;
-  productName: string;
-  productOption: string;
-  quantity: number;
-  price: number;
-  imageUrl: string;
-  purchaseDate: string;
-};
 
 export default function UserProfilePage() {
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -27,6 +18,9 @@ export default function UserProfilePage() {
   const [hasMore, setHasMore] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
 
   const requireAuth = checkAuthAndRedirect();
   const router = useRouter();
@@ -39,7 +33,6 @@ export default function UserProfilePage() {
       if (res.length < 5) {
         setHasMore(false);
       }
-      // id 기준 중복 제거
       setOrders(prev => {
         const existingIds = new Set(prev.map(item => item.id));
         const filtered = res.filter(item => !existingIds.has(item.id));
@@ -59,7 +52,7 @@ export default function UserProfilePage() {
       setHasAccessToken(false);
       return;
     }
-    fetchOrders(0); // 최초 로드 시 page=0
+    fetchOrders(0);
   }, []);
 
   const handleIntersect = useCallback(
@@ -115,10 +108,15 @@ export default function UserProfilePage() {
               {orders.map((order) => (
                 <div key={order.id} className="border-b-8 border-[#F6F3EE] pb-6">
                   <div className="flex justify-between items-center px-4">
-                    <span className={`text-[14px] font-medium ${order.status.includes('취소') ? 'text-[#FF6B2C]' : 'text-[#4BE42C]'}`}>
+                    <span
+                      className={`text-[14px] font-medium ${order.status.includes('취소') ? 'text-[#FF6B2C]' : 'text-[#4BE42C]'}`}
+                    >
                       {order.status}
                     </span>
-                    <button className="text-[13px] text-[#999]" onClick={() => router.push(`/order/${order.id}`)}>
+                    <button
+                      className="text-[13px] text-[#999]"
+                      onClick={() => router.push(`/order/${order.id}`)}
+                    >
                       {order.status.includes('취소') ? '취소상세 >' : '주문상세 >'}
                     </button>
                   </div>
@@ -130,24 +128,42 @@ export default function UserProfilePage() {
                     <div className="flex flex-col justify-between flex-1">
                       <div>
                         <p className="text-[13px] text-[#999]">{order.purchaseDate} 주문</p>
-                        <p className="text-[15px] font-medium">{order.sellerNickname} {order.productName}</p>
+                        <p className="text-[15px] font-medium">
+                          {order.sellerNickname} {order.productName}
+                        </p>
                         {order.productOption && (
-                          <p className="text-[13px] text-[#999]">{order.productOption} 외 {order.quantity}개</p>
+                          <p className="text-[13px] text-[#999]">
+                            {order.productOption} 외 {order.quantity}개
+                          </p>
                         )}
                       </div>
-                      <p className="text-[15px] font-semibold ">{order.price.toLocaleString()}원</p>
+                      <p className="text-[15px] font-semibold">
+                        {order.price.toLocaleString()}원
+                      </p>
                     </div>
                   </div>
 
                   <div className="mt-4 flex gap-2 px-4">
                     {order.status === '배송 완료' && (
                       <>
-                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">교환, 반품하기</button>
-                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">리뷰쓰기</button>
+                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">
+                          교환, 반품하기
+                        </button>
+                        <button
+                          className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          리뷰쓰기
+                        </button>
                       </>
                     )}
                     {(order.status === '상품 준비중' || order.status === '배송 중') && (
-                      <button className="w-full h-[40px] rounded-lg border border-[#DDD] text-[14px]">주문 취소</button>
+                      <button className="w-full h-[40px] rounded-lg border border-[#DDD] text-[14px]">
+                        주문 취소
+                      </button>
                     )}
                   </div>
                 </div>
@@ -157,6 +173,20 @@ export default function UserProfilePage() {
           </main>
         </DefaultBody>
       </div>
+
+      {/* 리뷰 모달 연결 */}
+      {selectedOrder && (
+        <ReviewModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          writer={selectedOrder.sellerNickname}
+          recipeName={selectedOrder.productName}
+          recipeId={selectedOrder.id}
+          ImgUrl={selectedOrder.imageUrl}
+          purchase_option={selectedOrder.productOption}
+          type="product"
+        />
+      )}
     </>
   );
 }

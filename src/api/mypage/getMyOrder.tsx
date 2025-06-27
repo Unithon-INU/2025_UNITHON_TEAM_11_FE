@@ -1,7 +1,7 @@
 // api/getMain.ts
 import { AxiosResponse } from "axios";
 import axiosInstance from "@/api/axiosInstance"; // ✅ 우리가 만든 인터셉터 적용된 인스턴스
-import { OrderItem } from "@/app/mypage/order/page"; // ✅ 타입 정의 파일에서 OrderItem 타입 가져오기
+import { OrderItem } from "@/types/OrderItem";
 
 export const GetMyOrder = async (page:number): Promise<OrderItem[]> => {
   try {

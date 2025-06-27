@@ -8,7 +8,7 @@ import { RecipeStep } from '@/types/RecipeDetail';
 import { RawReview } from '@/types/Review';
 import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
 
-const tabs = ['레시피', '레시피 후기', '댓글'];
+const tabs = ['레시피', '레시피 후기'];
 
 type Props = {
   ingredients: Record<string, string>;
@@ -179,6 +179,8 @@ export default function RecipeTabs({
         recipeName={recipeName}
         recipeId={recipeId}
         ImgUrl={recipeImg}
+        type="recipe"
+
       />
     </>
   );

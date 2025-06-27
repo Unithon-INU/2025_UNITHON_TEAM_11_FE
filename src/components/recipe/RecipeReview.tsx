@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import ReviewList from './RecipeReviewList';
+import FullReviewModal from '../review/FullReviewModal';
 import { RawReview } from '@/types/Review';
 
 type ProductReviewSectionProps = {
@@ -11,18 +12,19 @@ type ProductReviewSectionProps = {
   averageRating?: number;
 };
 
-
-
-export default function ProductReviewSection({reviews,
+export default function ProductReviewSection({
+  reviews,
   averageRating = 0,
 }: ProductReviewSectionProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ 추가
+
   const filledStars = Math.floor(averageRating);
   const emptyStars = 5 - filledStars;
 
   const reviewImages = reviews.flatMap((r) => r.imageUrls).slice(0, 5);
 
   const mappedReviews = reviews.map((review, i) => ({
-    reviewId: review.reviewId, // 혹시 서버에서 id 없을 경우 index 사용
+    reviewId: review.reviewId ?? i, // 안전하게 index fallback
     user: review.memberInfo.nickname,
     date: review.createdAt,
     rating: review.rating,
@@ -31,46 +33,75 @@ export default function ProductReviewSection({reviews,
     option: review.purchaseOption ?? '',
     comment: review.content,
     images: review.imageUrls ?? [],
-    profileImage: review.memberInfo.imageUrl
+    profileImage: review.memberInfo.imageUrl,
   }));
 
   return (
-    <div className="py-6 px-5">
-      {/* 상단 리뷰 통계 */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-1">
-          <div className="text-[15px] font-semibold text-[#222]">리뷰 {reviews.length}개</div>
-          <button className="text-[13px] text-[#9A9A9A]">전체보기 &gt;</button>
+    <>
+      <div className="py-6 ">
+        {/* 상단 리뷰 통계 */}
+        <div className="mb-4 px-5">
+          <div className="flex justify-between items-center mb-1">
+            <div className="text-[15px] font-semibold text-[#222]">리뷰 {reviews.length}개</div>
+            <button
+              className="text-[13px] text-[#9A9A9A]"
+              onClick={() => setIsModalOpen(true)} // ✅ 연동
+            >
+              전체보기 &gt;
+            </button>
+          </div>
+          <div className="flex items-center gap-1 text-[16px] text-[#FFD600]">
+            {'★'.repeat(filledStars)}
+            <span className="text-[#C2C2C2]">{'★'.repeat(emptyStars)}</span>
+            <span className="text-[#222] ml-2 text-[14px]">{averageRating.toFixed(1)} / 5</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1 text-[16px] text-[#FFD600]">
-          {'★'.repeat(filledStars)}
-          <span className="text-[#C2C2C2]">{'★'.repeat(emptyStars)}</span>
-          <span className="text-[#222] ml-2 text-[14px]">{averageRating.toFixed(1)} / 5</span>
+
+        {/* 리뷰 사진 모음 */}
+        <div className="flex gap-2 overflow-x-auto mb-4 scrollbar-hide px-5">
+          {reviewImages.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt="리뷰사진"
+              className="w-20 h-20 object-cover rounded-md border-none"
+            />
+          ))}
+        </div>
+
+        <div className='px-5'>
+        {/* 리뷰 전체보기 버튼 */}
+        <button
+          className="w-full border h-[52px]  border-[#E5E5E5] text-[14px] font-medium py-[17.5px] rounded-[500px] mb-6"
+          onClick={() => setIsModalOpen(true)} // ✅ 연동
+        >
+          리뷰 전체보기
+        </button>
+        </div>
+        
+        <div className=' border-t-8 border-[#F0F0F0] px-5'></div>
+        
+        <ReviewList reviews={mappedReviews} />
+        <div className='px-5'>
+        
+
+        {/* 하단 리뷰 전체보기 버튼 */}
+        <button
+          className=" px-5 mt-6 w-full border h-[52px] py-[17.5px] border-[#E5E5E5] text-[14px] font-medium rounded-[500px]"
+          onClick={() => setIsModalOpen(true)} // ✅ 연동
+        >
+          리뷰 전체보기
+        </button>
         </div>
       </div>
 
-      {/* 리뷰 사진 모음 */}
-      <div className="flex gap-2 overflow-x-auto mb-4 scrollbar-hide">
-        {reviewImages.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt="리뷰사진"
-            className="w-20 h-20 object-cover rounded-md border-none"
-          />
-        ))}
-      </div>
-
-      {/* 전체 리뷰 보기 버튼 */}
-      <button className="w-full border h-[52px] border-[#E5E5E5] text-[14px] font-medium py-[17.5px] rounded-[500px] mb-6">
-        리뷰 전체보기
-      </button>
-
-      <ReviewList reviews={mappedReviews} />
-
-      <button className="mt-6 w-full border h-[52px] py-[17.5px] border-[#E5E5E5] text-[14px] font-medium rounded-[500px]">
-        리뷰 전체보기
-      </button>
-    </div>
+      {/* FullReviewModal 연동 */}
+      <FullReviewModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        reviews={reviews}
+        averageRating={averageRating}
+      />
+    </>
   );
 }

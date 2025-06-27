@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { PostRecipeReview } from '@/api/review/postRecipeReview';
 import CommonButton from '../CommonButton';
+import { PostProductReview } from '@/api/review/postProductReview';
 
 type Props = {
   isOpen: boolean;
@@ -12,6 +13,9 @@ type Props = {
   recipeName: string;
   recipeId: number;
   ImgUrl: string;
+  type: 'recipe' | 'product';
+  purchase_option?: string;
+
 };
 
 export default function ReviewModal({
@@ -20,23 +24,25 @@ export default function ReviewModal({
   writer,
   recipeName,
   recipeId,
-  ImgUrl
+  ImgUrl,
+  type,
+  purchase_option // ✅ props destructure
 }: Props) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isFilled = comment && rating
- 
+
+  const isFilled = comment && rating;
 
   useEffect(() => {
-  if (isOpen) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}, [isOpen]);
+    if (isOpen) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isOpen]);
 
- if (!isOpen) return null;
+  if (!isOpen) return null;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -58,7 +64,15 @@ export default function ReviewModal({
 
     try {
       setIsSubmitting(true);
-      await PostRecipeReview(recipeId, rating, comment, imageFile);
+
+      if (type === 'recipe') {
+        await PostRecipeReview(recipeId, rating, comment, imageFile);
+        
+      } else if (type === 'product') {
+        await PostProductReview(recipeId,  rating, comment, imageFile, purchase_option);
+
+      }
+
       alert('후기가 등록되었습니다!');
       onClose();
     } catch (err) {
