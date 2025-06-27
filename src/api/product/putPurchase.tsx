@@ -10,9 +10,9 @@ export const PutPurchase = async (
 ): Promise<any> => {
   axios.defaults.withCredentials = true;
 
-
+    console.log("주문 취소 요청 ID:", purchaseId);
   try {
-    const response: AxiosResponse<any> = await axiosInstance.get(
+    const response: AxiosResponse<any> = await axiosInstance.put(
       `/api/purchases/${purchaseId}`,
     );
     console.log(response.data);

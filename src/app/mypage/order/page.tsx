@@ -10,6 +10,7 @@ import { getAccessToken } from '@/utils/tokenStorage';
 import { GetMyOrder } from '@/api/mypage/getMyOrder';
 import ReviewModal from '@/components/review/ReviewModal';
 import { OrderItem } from '@/types/OrderItem';
+import { PutPurchase } from '@/api/product/putPurchase';
 
 
 export default function UserProfilePage() {
@@ -46,6 +47,15 @@ export default function UserProfilePage() {
     }
   };
 
+  const handleCancelOrder = async(orderId: number) => {
+    if (!confirm('정말로 주문을 취소하시겠습니까?')) return;
+    try {
+      const res = await PutPurchase(orderId);
+      console.log('주문 취소 완료:', res);}
+    catch (error) {
+      console.error('주문 취소 실패:', error);
+    }
+  };
   useEffect(() => {
     const token = getAccessToken();
     if (!token) {
@@ -160,7 +170,8 @@ export default function UserProfilePage() {
                       </>
                     )}
                     {(order.status === '상품 준비중' || order.status === '배송 중') && (
-                      <button className="w-full h-[40px] rounded-lg border border-[#DDD] text-[14px]">
+                      <button className="w-full h-[40px] rounded-lg border border-[#DDD] text-[14px]"
+                        onClick={() => handleCancelOrder(order.id)}>
                         주문 취소
                       </button>
                     )}
