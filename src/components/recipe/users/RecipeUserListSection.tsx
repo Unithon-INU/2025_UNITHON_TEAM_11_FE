@@ -7,11 +7,12 @@ import { Influencer } from '@/types/Influencer';
 type Props = {
   users?: Influencer[];
   isHeader?: boolean;
+  title?:string;
 };
 
 
 
-const RecipeUserListSection = ({ users=[], isHeader }: Props) => {
+const RecipeUserListSection = ({ users=[], isHeader, title }: Props) => {
   const [isLiked, setIsLiked] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const RecipeUserListSection = ({ users=[], isHeader }: Props) => {
     <section className="px-4 w-full">
       {isHeader && (
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[18px] font-semibold text-[#222]">레시피 유저 둘러보기</h2>
+          <h2 className="text-[18px] font-semibold text-[#222]">{title} 둘러보기</h2>
           <button className="text-[14px] text-[#9F9F9F] flex gap-1 flex-row">
             추천순 <img src={'/asset/ChevronDown.svg'} />
           </button>

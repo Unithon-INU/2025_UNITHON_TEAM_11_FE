@@ -6,14 +6,15 @@ import { Influencer } from '@/types/Influencer';
 
 type Props = {
   influencers: Influencer[];
+  title: string;
   onToggleLike: (id: number) => void;
 };
 
-const InfluencerRankingSection = ({ influencers, onToggleLike }: Props) => {
+const InfluencerRankingSection = ({ influencers, onToggleLike, title }: Props) => {
   return (
     <section className="px-4 mt-6 w-full pb-[55px]">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-[18px] font-semibold text-[#222]">요리 인플루언서 랭킹</h2>
+        <h2 className="text-[18px] font-semibold text-[#222]">{title}</h2>
         <button className="text-[14px] text-[#9F9F9F] flex gap-1 flex-row">
           일간 <img src={'/asset/ChevronDown.svg'} />
         </button>

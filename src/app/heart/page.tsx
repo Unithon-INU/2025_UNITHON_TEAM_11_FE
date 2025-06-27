@@ -134,7 +134,7 @@ export default function FavoritePage() {
                     {activeRecipeTab === '레시피' ? (
                       <RecipeGridList recipes={recipeList} />
                     ) : (
-                      <RecipeUserListSection users={userList} />
+                      <RecipeUserListSection users={userList}  />
                     )}
                   </div>
                 </>

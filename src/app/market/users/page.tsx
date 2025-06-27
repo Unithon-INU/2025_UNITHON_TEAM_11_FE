@@ -6,16 +6,16 @@ import DefaultBody from '@/components/defaultBody';
 import SearchBar from '@/components/home/SearchBar';
 import RecipeUserListSection from '@/components/recipe/users/RecipeUserListSection';
 import InfluencerRankingSection from '@/components/recipe/users/InfluencerRankingSection';
-import { GetRank } from '@/api/member/getRank';
 import { Influencer } from '@/types/Influencer';
+import { GetSeller } from '@/api/member/getSeller';
 
-export default function RecipeUsersPage() {
+export default function MarketUsersPage() {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
 
   useEffect(() => {
     const fetchRank = async () => {
       try {
-        const response = await GetRank();
+        const response = await GetSeller();
         setInfluencers(response);
       } catch (error) {
         console.error('랭킹 데이터 가져오기 실패:', error);
@@ -37,18 +37,18 @@ export default function RecipeUsersPage() {
     <>
       <Header>
         <Header.BackButton />
-        <Header.Title>레시피 유저 둘러보기</Header.Title>
+        <Header.Title>농수산물 판매자</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
         <div className="flex flex-col">
           <main className="flex flex-col items-start">
             <SearchBar showCartButton={false} />
             <InfluencerRankingSection
-              title='레시피 유저 랭킹'
+                title='판매자 랭킹'
               influencers={influencers.slice(0, 5)}
               onToggleLike={handleToggleLike}
             />
-            <RecipeUserListSection isHeader={true} users={influencers} title='레시피 유저'/>
+            <RecipeUserListSection isHeader={true} users={influencers} title='판매자 유저'/>
           </main>
         </div>
       </DefaultBody>

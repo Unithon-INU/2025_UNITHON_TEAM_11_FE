@@ -12,7 +12,7 @@ type CategoryChipsProps = {
 const defaultCategories = [
  
   { label: '최근 본 레시피', icon: '🌟' , onClick:'/recipe/recent'},
-  { label: '농수산품 판매자 둘러보기', icon: '👩‍🌾' },
+  { label: '농수산품 판매자 둘러보기', icon: '👩‍🌾' , onClick:'/market/users' },
 ];
 
 const CategoryChips = ({ categories = defaultCategories }: CategoryChipsProps) => {
