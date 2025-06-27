@@ -6,24 +6,31 @@ import QuantityCounter from '../QuantityCounter';
 import { OptionItem } from '@/types/OptionItem';
 import { PostCart } from '@/api/cart/PostCart';
 import { useRouter } from 'next/navigation';
-
+import { useOrderContext } from '@/context/OrderContext';
 type SelectedOption = {
   productId: number;
   optionName: string;
   quantity: number;
   additionalPrice: number;
+  imageUrl: string; 
+  productName: string;
+  sellerNickname: string;
 };
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   options: OptionItem[];
+  imageUrl: string; // 이미지 URL
+  productName: string; // 상품 이름
+  sellerNickname: string; // 판매자 닉네임
 };
 
-export default function ProductOptionDrawer({ isOpen, onClose, options }: Props) {
+export default function ProductOptionDrawer({ isOpen, onClose, options, imageUrl, productName, sellerNickname }: Props) {
   const [selectedOptions, setSelectedOptions] = React.useState<SelectedOption[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const router = useRouter();
+  const { setItems } = useOrderContext();
 
   React.useEffect(() => {
     console.log('🔄 selectedOptions 업데이트됨:', selectedOptions);
@@ -34,7 +41,7 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
     if (!matched) return;
     if (selectedOptions.some((opt) => opt.optionName === optionName)) return;
 
-    const { productId, additionalPrice } = matched;
+    const { productId, additionalPrice} = matched;
 
     setSelectedOptions((prev) => [
       ...prev,
@@ -43,6 +50,10 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
         optionName,
         quantity: 1,
         additionalPrice,
+        imageUrl, // 이미지 URL이 없을 경우 빈 문자열
+        productName, // 상품 이름이 없을 경우 빈 문자열
+        sellerNickname, // 판매자 닉네임이 없을 경우 빈 문자열
+       
       },
     ]);
     setIsDropdownOpen(false);
@@ -54,23 +65,45 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
   );
 
   const handleAddToCart = async () => {
-  try {
-    await Promise.all(
-      selectedOptions.map(async (opt) => {
-        await PostCart(opt.productId, opt.quantity, opt.optionName);
-      })
-    );
+    try {
+      await Promise.all(
+        selectedOptions.map(async (opt) => {
+          await PostCart(opt.productId, opt.quantity, opt.optionName);
+        })
+      );
 
-    const confirmed = window.confirm('장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
-    if (confirmed) {
-      router.push('/cart');
+      const confirmed = window.confirm('장바구니에 상품이 담겼습니다. 장바구니로 이동하시겠습니까?');
+      if (confirmed) {
+        router.push('/cart');
+      }
+    } catch (error) {
+      console.error('장바구니 담기 실패:', error);
+      alert('장바구니 담기에 실패했습니다.');
     }
-  } catch (error) {
-    console.error('장바구니 담기 실패:', error);
-    alert('장바구니 담기에 실패했습니다.');
-  }
-};
+  };
 
+  /** ✅ handleOrder 추가 */
+  const handleOrder = () => {
+    if (selectedOptions.length === 0) {
+      alert('주문할 상품을 선택해주세요.');
+      return;
+    }
+
+    const orderItems = selectedOptions.map((item) => ({
+      productId: item.productId,
+      imageUrl: item.imageUrl ?? '',
+      productName: item.productName ?? '',
+      sellerName: item.sellerNickname ?? '',
+      productOption: item.optionName,
+      quantity: item.quantity,
+      productPrice: item.additionalPrice,
+    }));
+
+    console.log('🛒 주문 데이터:', orderItems);
+    setItems(orderItems);
+    // 이후 전역 Context 혹은 Router state로 전달하여 /order 페이지에서 사용
+    router.push('/order');
+  };
 
   return (
     <AnimatePresence>
@@ -126,7 +159,7 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
               </div>
             )}
 
-            {selectedOptions.map(({ productId, optionName, quantity, additionalPrice }) => (
+            {selectedOptions.map(({ optionName, quantity, additionalPrice }) => (
               <div key={optionName} className="relative mt-4 border border-[#D9D9D9] rounded-lg px-5 py-4">
                 <button
                   onClick={() =>
@@ -185,7 +218,10 @@ export default function ProductOptionDrawer({ isOpen, onClose, options }: Props)
                 >
                   장바구니 넣기
                 </button>
-                <button className="flex-1 h-[48px] bg-[#4BE42C] rounded-xl text-white text-[14px]">
+                <button
+                  onClick={handleOrder}
+                  className="flex-1 h-[48px] bg-[#4BE42C] rounded-xl text-white text-[14px]"
+                >
                   구매하기
                 </button>
               </div>

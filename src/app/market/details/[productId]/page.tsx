@@ -224,7 +224,7 @@ export default function ProductDetailPage() {
           </button>
         </div>
 
-        <ProductOptionDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} options={product.productOptions} />
+        <ProductOptionDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} options={product.productOptions} imageUrl={product.mainImageUrl} productName={product.name} sellerNickname={product.member.nickname} />
 
       </div>
     </>

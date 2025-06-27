@@ -101,6 +101,15 @@ export default function MyPage() {
               </div>
 
          
+              {/* 나의 활동
+              <div>
+                <p className="text-[14px] text-[#9F9F9F] font-semibold mb-3">나의 활동</p>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-6 text-[16px] text-[#222222] font-semibold">
+                  <span>리뷰 내역</span>
+                  <span>문의 내역</span>
+                  
+                </div>
+              </div> */}
 
               {/* 입점 신청 */}
               {!userInfo?.isSeller && (
@@ -111,13 +120,13 @@ export default function MyPage() {
                 </div>
               )}
 
-              {/* 설정 관련 */}
+              {/* 설정 관련 
               <div className="border-t-8 border-[#F6F3EE] pt-3">
                 <div className="flex justify-between py-3 items-center text-[16px] font-semibold text-[#222222]">
                   <span>비밀번호 변경</span>
                 </div>
                 <div className="pt-3 text-[16px] font-semibold text-[#222222]">고객센터</div>
-              </div>
+              </div>*/}
 
               {/* 하단 */}
               <div className="border-t-8 border-[#F6F3EE] pt-3 pb-10 text-[16px] font-semibold text-[#222222]">

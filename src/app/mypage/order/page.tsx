@@ -102,7 +102,7 @@ export default function UserProfilePage() {
       <div className="relative pb-[80px]">
         <DefaultBody hasHeader={1}>
           <main className="flex flex-col">
-            <SearchBar showCartButton={false} />
+            
 
             <div className="flex flex-col gap-4 mt-4">
               {orders.map((order) => (
@@ -117,7 +117,7 @@ export default function UserProfilePage() {
                       className="text-[13px] text-[#999]"
                       onClick={() => router.push(`/order/${order.id}`)}
                     >
-                      {order.status.includes('취소') ? '취소상세 >' : '주문상세 >'}
+                      
                     </button>
                   </div>
 
@@ -146,9 +146,7 @@ export default function UserProfilePage() {
                   <div className="mt-4 flex gap-2 px-4">
                     {order.status === '배송 완료' && (
                       <>
-                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">
-                          교환, 반품하기
-                        </button>
+                       
                          {!order?.isReviewed && (
                         <button
                           className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]"
