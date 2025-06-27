@@ -1,4 +1,4 @@
-import { Product } from "@/components/detail/ProductGridList";
+import { Product } from "./Product";
 import { RawReview } from "./Review";
 import { OptionItem } from "./OptionItem";
 

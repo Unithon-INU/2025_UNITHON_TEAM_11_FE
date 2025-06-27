@@ -33,13 +33,7 @@ const RecipeCircleSection = ({
         <div className="text-[18px] font-semibold tracking-[-0.03em] text-[#222]">
           <span className="text-[#4BE42C] mr-[4px]">🧑‍🍳 요리 선생님</span>추천
         </div>
-        <button
-          onClick={onRefresh}
-          className="text-[13px] text-[#666] flex items-center gap-1"
-        >
-          새로 고침
-          <FiRefreshCw className="text-[14px]" />
-        </button>
+       
       </div>
 
       {/* 부제목 */}

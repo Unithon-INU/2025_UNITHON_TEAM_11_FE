@@ -3,12 +3,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { Category } from '@/types/Category';
 
-type Category = {
-  label: string;
-  icon: string;
-  onClick?: string; // 각 버튼에 대한 클릭 핸들러
-};
 
 type CategoryChipsProps = {
   categories?: Category[]; // 외부에서 주입 가능
@@ -16,8 +12,8 @@ type CategoryChipsProps = {
 
 const defaultCategories: Category[] = [
   { label: '레시피 유저 둘러보기', icon: '🧑‍🍳', onClick:'/recipe/users' },
-  { label: '지금 핫한 레시피', icon: '🔥' },
-  { label: '최근 본 레시피', icon: '🌟' },
+  { label: '지금 핫한 레시피', icon: '🔥' , onClick:'/recipe/recommend'},
+  { label: '최근 본 레시피', icon: '🌟', onClick:'/recipe/recent' },
 ];
 
 const CategoryChips = ({ categories = defaultCategories }: CategoryChipsProps) => {

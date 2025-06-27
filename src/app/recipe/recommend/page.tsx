@@ -1,72 +1,30 @@
 'use client';
-import RecipeTitle from '@/components/detail/RecipeTitle';
-import RecipeSortSelector from '@/components/detail/RecipeSortSelector';
+
+import RecipeSortSelector from '../../../components/detail/RecipeSortSelector';
 import RecipeGridList from '@/components/detail/RecipeGridList';
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
-import { useUser } from '@/context/UserContext';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
+import { GetHotRecipe } from '@/api/recipe/getHotRecipe';
 
-const dummyRecipes = [
-  {
-    id: 1,
-    title: '아이와 함께 만드는 맛있는 건강 피자',
-    image: '/asset/pizza.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: true,
-  },
-  {
-    id: 2,
-    title: '아보카도 샌드위치',
-    image: '/asset/avocado.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: false,
-  },
-  {
-    id: 3,
-    title: '다이어트 건강 샐러드',
-    image: '/asset/salad.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: false,
-  },
-  {
-    id: 4,
-    title: '수제 햄버거',
-    image: '/asset/burger.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: false,
-  },
-  {
-    id: 5,
-    title: '아이와 함께 만드는 맛있는 건강 파스타',
-    image: '/asset/pasta.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: false,
-  },
-  {
-    id: 6,
-    title: '아이와 함께 만드는 맛있는 건강 미트볼',
-    image: '/asset/meatball.jpg',
-    time: '1시간 30분',
-    rating: 4.7,
-    comment: 5,
-    isLiked: false,
-  },
-];
+export default function RecommendRecipePage() {
+  const [recipes, setRecipes] = useState<any[]>([]);
+  const [nickname, setNickname] = useState('');
 
-export default function RecommendRecipetPage() {
-  const { userInfo } = useUser();
-  const [recipes, setRecipes] = useState(dummyRecipes);
+  
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const nickname = localStorage.getItem('nickname') || '';
+        setNickname(nickname);
+        try {
+          const res = await GetHotRecipe();
+          setRecipes(res);
+        } catch (error) {
+          console.error('레시피 데이터 로딩 실패:', error);
+        } 
+      };
+        fetchRecipes();
+      }, []);
 
   return (
     <>
@@ -76,7 +34,11 @@ export default function RecommendRecipetPage() {
       <DefaultBody hasHeader={1}>
         <div className="flex flex-col">
           <main className="flex flex-col items-start mt-[24px] px-4">
-            <RecipeTitle nickname={userInfo.nickname || '고객'} />
+            <div className="px-5 text-[22px] font-semibold leading-[30px] tracking-[-0.03em] text-[#222] mb-8">
+              <span>{nickname || '고객'}</span>님께
+              <span className="text-[#4BE42C]"> 추천하는 </span>
+              <div>레시피를 알려드려요!</div>
+            </div>
             <RecipeSortSelector />
             <RecipeGridList recipes={recipes} />
           </main>

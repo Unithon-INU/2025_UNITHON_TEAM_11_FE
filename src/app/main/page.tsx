@@ -65,7 +65,7 @@ export default function MainPage() {
             titleRest="농수산물"
             subtitle="좋은 가격에 살 수 있는 특가 농수산물"
             products={products}
-            onMoreClick={() => router.push('/sale-product')}
+            onMoreClick={() => router.push('/product/sale')}
           />
 
           {/* 오늘 저녁 섹션 */}
@@ -73,11 +73,13 @@ export default function MainPage() {
             titleAccent="🥘 오늘 저녁"
             titleRest="어떠세요?"
             recipes={recipes}
-            onMoreClick={() => router.push('/recommend-recipe')}
+            onMoreClick={() => router.push('/recipe/recommend')}
           />
 
           {/* 특별한 날 요리 */}
+          <div onClick={() => router.push('/recipe/details/' + (specialRecipe ? specialRecipe.id : ''))} className="w-full max-w-[600px]">
           {specialRecipe && <SpecialRecipeSection recipe={specialRecipe} />}
+          </div> 
         </div>
       </DefaultBody>
       <BottomNav activeIndex={0} />

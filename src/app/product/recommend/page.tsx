@@ -4,7 +4,6 @@ import RecipeSortSelector from '../../../components/detail/RecipeSortSelector';
 import ProductGridList from '@/components/detail/ProductGridList';
 import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
-import { useUser } from '@/context/UserContext';
 import { useState, useEffect } from 'react';
 import { GetBestProduct } from '@/api/product/getBestProduct';
 
@@ -14,6 +13,8 @@ export default function RecommendProductPage() {
 
 useEffect(() => {
       const fetchProduct = async () => {
+        const nickname = localStorage.getItem('nickname') || '';
+        setNickname(nickname);
         try {
           const res = await GetBestProduct();
           setProduct(res);
@@ -25,7 +26,7 @@ useEffect(() => {
       fetchProduct();
     }, []);
 
-  const { userInfo } = useUser();
+  const [nickname, setNickname] = useState('');
   const [product, setProduct] = useState([]);
 
   return (
@@ -39,7 +40,7 @@ useEffect(() => {
             <div className="px-5  text-[22px] font-semibold leading-[30px] tracking-[-0.03em] text-[#222] mb-8">
             <div>현재 <span className="text-[#4BE42C]">추천하는</span> 농수산물을</div>
 
-            <span className="">{userInfo.nickname || '고객'}</span>
+            <span className="">{nickname || '고객'}</span>
             님에게 알려드려요! <br />
             </div>
             <RecipeSortSelector />

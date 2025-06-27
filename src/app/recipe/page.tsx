@@ -71,7 +71,7 @@ export default function MarketPage() {
             titleRest="레시피"
             subtitle={`${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
             recipes={hotrecipes}
-            
+            onMoreClick={() => router.push('/recipe/recommend')}
           />
 
           <RecipeCircleSection
@@ -81,17 +81,19 @@ export default function MarketPage() {
             
           />
 
-          {/* 자주 구매한 농수산품 섹션 */}
+          
           <RecipeSection
             titleAccent="🌟 지금"
             titleRest="올라온 레시피"
             subtitle={`${userInfo.nickname || '고객'}님을 위한 심도깊은 레시피`}
             recipes={newrecipes}
+            onMoreClick={() => router.push('/recipe/list')}
           />
 
           {/* 특별한 날 요리 */}
+          <div onClick={() => router.push('/recipe/details/' + (specialRecipe ? specialRecipe.id : ''))} className="w-full max-w-[600px]">
           {specialRecipe && <SpecialRecipeSection recipe={specialRecipe} />}
-        
+          </div>
 
 
       </div>
