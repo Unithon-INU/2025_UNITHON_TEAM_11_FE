@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GetMypage } from '@/api/mypage/getMypage'; 
 import { getAccessToken } from '@/utils/tokenStorage';
+import { DeleteMember } from '@/api/member/deleteMember';
 
 type UserInfo = {
   memberId: number;
@@ -40,6 +41,28 @@ export default function MyPage() {
     fetchUserInfo();
   }, []);
 
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('로그아웃하시겠습니까?');
+    if (confirmLogout) {
+      localStorage.clear();
+      router.push('/login');
+    }
+  };
+
+  const handleWithdraw = async () => {
+    const confirmWithdraw = window.confirm('정말 탈퇴하시겠습니까?');
+    if (!confirmWithdraw) return;
+
+    try {
+      await DeleteMember();
+      alert('회원 탈퇴가 완료되었습니다.');
+      localStorage.clear();
+      router.push('/login');
+    } catch (error) {
+      console.error('회원 탈퇴 실패', error);
+      alert('회원 탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
   
   return (
     <>
@@ -130,8 +153,8 @@ export default function MyPage() {
 
               {/* 하단 */}
               <div className="border-t-8 border-[#F6F3EE] pt-3 pb-10 text-[16px] font-semibold text-[#222222]">
-                <div className="py-3" >로그아웃</div>
-                <div className="py-2">회원탈퇴</div>
+                <div className="py-3" onClick={handleLogout}>로그아웃</div>
+                <div className="py-2" onClick={handleWithdraw}>회원탈퇴</div>
               </div> 
             </main>
           )}
