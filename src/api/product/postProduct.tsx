@@ -29,7 +29,7 @@ type AddProductRequest = {
 export const PostAddProduct = async (
   data: AddProductRequest,
   mainImage: File,
-  descriptionImages: File[]
+  descriptionImages=[]
 ): Promise<AxiosResponse<any>> => {
   const formData = new FormData();
 
