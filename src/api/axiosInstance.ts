@@ -16,16 +16,23 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-
-// ✅ 응답 에러 처리 (420 핸들링)
+// ✅ 응답 에러 처리 (420, 401, 419, 400 핸들링)
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+    const status = error.response?.status ?? -1;
 
-    const shouldRetry = [420, 401, 419].includes(error.response?.status ?? -1);
+    // ✅ 400 에러 시: 세션 만료 alert + 로그인 페이지 이동
+    if (status === 400) {
+      alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
 
-      if (shouldRetry && !originalRequest._retry) {
+    const shouldRetry = [420, 401, 419].includes(status);
+
+    if (shouldRetry && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -33,7 +40,7 @@ axiosInstance.interceptors.response.use(
         if (!refreshToken) throw new Error('No refresh token found');
 
         const newTokens = await PostRefresh(refreshToken);
-        console.log('새토큰',newTokens);
+        console.log('새토큰', newTokens);
 
         // ✅ 로컬 스토리지에 새 토큰 저장
         setTokens(newTokens.data.accessToken, newTokens.data.refreshToken);
@@ -41,7 +48,7 @@ axiosInstance.interceptors.response.use(
         // ✅ Authorization 헤더 교체
         originalRequest.headers = {
           ...originalRequest.headers,
-          Authorization: `Bearer ${newTokens.accessToken}`,
+          Authorization: `Bearer ${newTokens.data.accessToken}`,
         };
 
         // ✅ 원래 요청 재시도

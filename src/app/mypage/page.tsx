@@ -100,18 +100,10 @@ export default function MyPage() {
                 </div>
               </div>
 
-              {/* 나의 활동 */}
-              <div>
-                <p className="text-[14px] text-[#9F9F9F] font-semibold mb-3">나의 활동</p>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-6 text-[16px] text-[#222222] font-semibold">
-                  <span>댓글 내역</span>
-                  <span>문의 내역</span>
-                  
-                </div>
-              </div>
+         
 
               {/* 입점 신청 */}
-              {userInfo?.isSeller && (
+              {!userInfo?.isSeller && (
                 <div className="text-[16px] font-semibold text-[#222222] border-t-8 border-[#F6F3EE] pt-3">
                   <div className="pt-3" onClick={() => router.push('/sale-apply')}>
                     입점 신청

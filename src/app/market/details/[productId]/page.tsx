@@ -202,7 +202,7 @@ export default function ProductDetailPage() {
                 </div>
 
 
-            <ProductTabs reviews={product.reviews} rating={product.rating} descriptionImageUrls={product.descriptionImageUrls}/>    
+            <ProductTabs reviews={product.reviews} rating={product.rating} descriptionImageUrls={product.descriptionImageUrls} productId={productId}/>    
 
             <ProductSection
                 titleAccent=''

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Review from '@/components/market/Review';
 import InquirySection from './InquirySection';
 import { RawReview } from '@/types/Review';
+import { ParamValue } from 'next/dist/server/request/params';
 
 const tabs = ['상품설명', '상품후기', '문의'];
 
@@ -11,12 +12,14 @@ type ProductTabsProps = {
   descriptionImageUrls: string[];
   reviews?: RawReview[];
   rating?: number;
+  productId: ParamValue;
 };
 
 export default function ProductTabs({
   reviews = [],
   rating,
-  descriptionImageUrls
+  descriptionImageUrls,
+  productId
 }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState('상품설명');
   const [showAllImages, setShowAllImages] = useState(false);
@@ -85,7 +88,7 @@ export default function ProductTabs({
 
         {activeTab === '문의' && (
           <div>
-            <InquirySection />
+            <InquirySection productId={productId} />
           </div>
         )}
       </div>

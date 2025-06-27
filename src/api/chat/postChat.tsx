@@ -1,27 +1,25 @@
-import { ParamValue } from "next/dist/server/request/params";
-import axiosInstance from "@/api/axiosInstance";
 import axios, { AxiosResponse } from "axios";
 
+const apiUrl = 'http://13.209.42.199:5002';
 
-export const PostRefresh = async (
-  refreshToken: string
+export const PostChat = async (
+    message: string,
 ): Promise<any> => {
-  console.log("전송 데이터", refreshToken);
+  console.log("전송 데이터", message);
+  axios.defaults.withCredentials = true;
 
   try {
-    const accessToken = localStorage.getItem('accessToken'); // 또는 쿠키 등에서 꺼낼 수도 있음
-
-    const response: AxiosResponse<any> = await axiosInstance.post(
-      `api/auth/refresh`,
-      {
-        refreshToken: refreshToken
+    const response: AxiosResponse<any> = await axios.post(
+        `${apiUrl}/chat`,
+        {
+            message: message,
         }
-     
     );
 
     console.log(response.data);
     console.log(response.headers);
 
+  
     return response;
   } catch (error: any) {
     if (error.response) {

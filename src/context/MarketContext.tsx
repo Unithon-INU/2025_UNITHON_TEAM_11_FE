@@ -1,23 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { MarketInfo } from '@/types/MarketInfo';
 
-type MarketInfo = {
-  name: string;
-  phone: string;
-  marketName: string;
-  postalAddress: string;
-  defaultAddress: string;
-  restAddress: string;
-  RegistNum: string;
-  RegistFile: File | null;
-  Passbook: File | null;
-  certifidoc: File | null;
-  bankNum: string;
-  bank: string;
-  intro: string;
-  profile: File | null;
-
-};
 
 type MarketContextType = {
   marketInfo: MarketInfo;
@@ -34,7 +18,7 @@ export function MarketProvider({ children }: { children: ReactNode }) {
     postalAddress: '',
     defaultAddress: '',
     restAddress: '',
-    RegistNum: '',
+    registNum: '',
     RegistFile: null,
     Passbook: null ,
     certifidoc: null,

@@ -5,6 +5,8 @@ import CommonButton from '@/components/CommonButton';
 import DefaultBody from '@/components/defaultBody';
 import DefaultInput from '@/components/DefaultInput';
 import { useRouter } from 'next/navigation';
+import { PostApply } from '@/api/mypage/postApply';
+import { useMarket } from '@/context/MarketContext';
 
 export default function ApplyIntroPage() {
   const router = useRouter();
@@ -13,7 +15,8 @@ export default function ApplyIntroPage() {
   const [nickname, setNickname] = useState('');
   const [intro, setIntro] = useState('');
   const isFilled = intro && nickname;
-
+  const { marketInfo, setMarketInfo } = useMarket();
+  
    useEffect(() => {
     return () => {
       if (imgPrev) {
@@ -35,18 +38,27 @@ export default function ApplyIntroPage() {
     }
   };
 
-//   const handleSignup = async() => {
-//     try {
-//       const response = await PostSignup(userInfo.email, userInfo.id, userInfo.password, nickname, intro, profileImg);
-//       console.log('회원가입 결과:', response);
-//         alert('회원가입 완료! 다시 로그인해주세요');
-//         router.push('/login');
-//     } catch (error: any) {
-//       console.error("회원가입 실패", error);
-//       const message = error.response?.data?.message || "회원가입 실패";
-//       alert(message);
-//     }
-//   }
+   const handleApply = async() => {
+    setMarketInfo( prev=> ({ 
+      ...prev,
+      profile:profile,
+      imgPrev: imgPrev,
+      nickname:nickname,
+      intro:intro,
+    })   
+    );
+    console.log('업데이트됨');
+     try {
+       const response = await PostApply(marketInfo);
+       console.log('회원가입 결과:', response);
+         alert('회원가입 완료! 다시 로그인해주세요');
+         router.push('/login');
+     } catch (error: any) {
+      console.error("회원가입 실패", error);
+       const message = error.response?.data?.message || "회원가입 실패";
+       alert(message);
+     }
+   }
 
   return (
     <>
@@ -100,7 +112,7 @@ export default function ApplyIntroPage() {
                 <CommonButton
                     type="button"
                     disabled={!isFilled}    
-                    
+                    onClick={handleApply}
                     
                     >
                         다음

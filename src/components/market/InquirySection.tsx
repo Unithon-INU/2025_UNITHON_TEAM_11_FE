@@ -1,8 +1,18 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { ParamValue } from 'next/dist/server/request/params';
 
-const InquirySection = () => {
+type InquirySectionProps = {
+  
+  productId: ParamValue;
+};
+
+const InquirySection = ({productId}:InquirySectionProps) => {
+
+  const router = useRouter();
+
   return (
     <div className="text-center px-6 pt-14 pb-8 bg-white border-b-8 border-[#F6F3EE]">
       {/* 상단 질문 문구 */}
@@ -18,7 +28,8 @@ const InquirySection = () => {
 
       {/* 버튼 영역 */}
       <div className="flex flex-col gap-3 items-center">
-        <button className="w-full max-w-[350px] h-[44px] border border-[#D9D9D9] rounded-full text-[#222] text-[14px]">
+        <button className="w-full max-w-[350px] h-[44px] border border-[#D9D9D9] rounded-full text-[#222] text-[14px]"
+                onClick={() => router.push(`/chat/${productId}`)}>
           문의하기
         </button>
       </div>

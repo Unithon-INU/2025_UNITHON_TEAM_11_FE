@@ -184,7 +184,7 @@ export default function UserProfilePage() {
         </DefaultBody>
 
         {/* 하단 고정 버튼 */}
-              <div className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-2 bg-white border-t border-[#EEE] z-50">
+              <div className="fixed  bottom-0 left-0 right-0 bg-white border-t border-[#EEE] z-50 flex flex-row justify-center">
                 <button className="flex flex-row justify-center items-center px-8 py-4 gap-[10px] w-[168px] h-[50px] absolute left-1/2 -translate-x-[calc(168px/2+8.5px)] 
                                     bottom-[53px]  bg-[#817468] shadow-[0_0_16px_rgba(255,255,255,0.25)] rounded-full text-[14px] text-[#FFFDFB] font-medium" 
                         onClick={()=> {activeTab === '레시피' ? (router.push('/recipe/write')) : (router.push('/product/write')) }}>
