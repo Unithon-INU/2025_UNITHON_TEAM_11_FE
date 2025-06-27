@@ -184,6 +184,7 @@ export default function UserProfilePage() {
           ImgUrl={selectedOrder.imageUrl}
           purchase_option={selectedOrder.productOption}
           type="product"
+          purchaseId={selectedOrder.id} // 구매 ID 전달
         />
       )}
     </>

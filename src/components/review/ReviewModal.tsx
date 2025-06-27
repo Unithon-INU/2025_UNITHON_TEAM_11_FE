@@ -14,6 +14,7 @@ type Props = {
   recipeId: number;
   ImgUrl: string;
   type: 'recipe' | 'product';
+  purchaseId?: number; // ✅ 추가: 구매 ID
   purchase_option?: string;
 
 };
@@ -26,6 +27,7 @@ export default function ReviewModal({
   recipeId,
   ImgUrl,
   type,
+  purchaseId,
   purchase_option // ✅ props destructure
 }: Props) {
   const [rating, setRating] = useState(0);
@@ -69,7 +71,7 @@ export default function ReviewModal({
         await PostRecipeReview(recipeId, rating, comment, imageFile);
         
       } else if (type === 'product') {
-        await PostProductReview(recipeId,  rating, comment, imageFile, purchase_option);
+        await PostProductReview(recipeId,  rating, comment, imageFile, purchaseId, purchase_option);
 
       }
 

@@ -6,9 +6,11 @@ export const PostProductReview = async (
  rating: number,
  content: string,
  Image: File | null,
+ purchaseId?: number,
  purchase_option?: string,
+ 
 ): Promise<any> => {
-  console.log("전송 데이터",productId,rating,content, purchase_option);
+  console.log("전송 데이터",productId,rating,content, purchase_option, purchaseId);
   axios.defaults.withCredentials = true;
   try {
     const formData = new FormData();
@@ -17,7 +19,7 @@ export const PostProductReview = async (
       rating: rating,
       content: content,
       purchase_option:  purchase_option,
-
+      purchaseId:purchaseId
     };
 
    // Blob 대신 JSON 문자열 직접 사용
