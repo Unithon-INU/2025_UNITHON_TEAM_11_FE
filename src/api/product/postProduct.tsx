@@ -33,6 +33,7 @@ export const PostAddProduct = async (
 ): Promise<AxiosResponse<any>> => {
   const formData = new FormData();
 
+  console.log('전송 데이터', data, mainImage, descriptionImages);
   // dto JSON 문자열로 변환 후 append
   const jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   formData.append('addProductRequestDto', jsonBlob);
