@@ -159,7 +159,7 @@ export default function RecipeTabs({
                   후기 남기기
                 </button>
               </div>
-              <Review reviews={reviews} />
+              <Review reviews={reviews} averageRating={rating}/>
             </div>
           )}
 

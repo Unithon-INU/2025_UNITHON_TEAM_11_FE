@@ -87,9 +87,9 @@ export default function ReviewList({ reviews }: Props) {
       {reviews.map((review) => (
         <div
           key={review.reviewId}
-          className="py-6 border-t-8 border-[#F0F0F0] bg-white"
+          className="py-6 bg-white"
         >
-          <div className="px-4">
+          <div className="px-5">
             {/* 유저 정보 */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
