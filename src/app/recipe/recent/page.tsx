@@ -7,7 +7,7 @@ import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
 import { useUser } from '@/context/UserContext';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { GetRecipeList } from '@/api/recipe/getRecipelist';
+import { GetRecentRecipe } from '@/api/recipe/getRecentRecipe';
 
 export default function RecentRecipePage() {
   const { userInfo } = useUser();
@@ -21,7 +21,7 @@ export default function RecentRecipePage() {
     if (isFetching) return;
     setIsFetching(true);
     try {
-      const res = await GetRecipeList(pageNumber);
+      const res = await GetRecentRecipe(pageNumber);
 
       // ✅ 이미 불러온 id와 중복 제거
       setRecipes(prev => {
