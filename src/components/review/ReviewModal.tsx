@@ -111,7 +111,7 @@ export default function ReviewModal({
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} onClick={() => setRating(n)}>
                 <Image
-                  src={rating >= n ? '/asset/star1.svg' : '/asset/Star2.svg'}
+                  src={rating >= n ? '/asset/Star1.svg' : '/asset/Star2.svg'}
                   alt={`${n} star`}
                   width={28}
                   height={28}

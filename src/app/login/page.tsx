@@ -51,7 +51,7 @@ export default function LoginPage() {
         <img src="asset/logo.svg" alt="로고" className="w-[146px] mb-[24px]" />
 
         {/* 로그인 폼 */}
-        <form className="flex w-full max-w-[350px] flex flex-col gap-2">
+        <form className=" w-full max-w-[350px] flex flex-col gap-2">
           <DefaultInput
             type="text"
             value={id}

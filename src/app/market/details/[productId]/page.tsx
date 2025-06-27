@@ -161,7 +161,7 @@ export default function ProductDetailPage() {
                     className="flex flex-col items-center justify-center"
                 >
                     <Image
-                    src={liked ? '/asset/star1.svg' : '/asset/star0.svg'}
+                    src={liked ? '/asset/Star1.svg' : '/asset/Star0.svg'}
                     alt="좋아요"
                     width={24}
                     height={24}

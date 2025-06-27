@@ -118,7 +118,7 @@ const RecipeSection = ({
                 <LuClock3 className="text-[13px]" />
                 <span>{recipe.time}</span>
               </div>
-              {recipe.rating && (
+              
                 <div className="flex items-center gap-[4px]">
                   <p className="text-[#FFD600] text-[13px]">⭐</p>
                   <span className="text-[13px] font-semibold text-[#333333]">
@@ -128,7 +128,7 @@ const RecipeSection = ({
                     ({recipe.comment})
                   </span>
                 </div>
-              )}
+              
             </div>
           </div>
         ))}
