@@ -59,7 +59,7 @@ export default function SaleApplyBankPage() {
                 placeholder="계좌번호 입력"
                 value={bankNum}
                 onChange={e => setBankNum(e.target.value)}
-                showCheckButton={true}
+                showCheckButton={false}
                 />
             <div className='mt-2'></div>
             <button className={`flex flex-row justify-between items-center w-full h-12 px-4  rounded-[8px] border border-[#DFD7CF] bg-white text-start font-pretendard font-medium text-[14px] leading-[100%] tracking-[-0.03em] focus:outline-none ${selectedBank? 'text-[#222]' :' text-[#bdbdbd]'}`}>

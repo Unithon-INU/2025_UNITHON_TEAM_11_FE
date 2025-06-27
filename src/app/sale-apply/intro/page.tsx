@@ -38,27 +38,29 @@ export default function ApplyIntroPage() {
     }
   };
 
-   const handleApply = async() => {
-    setMarketInfo( prev=> ({ 
-      ...prev,
-      profile:profile,
-      imgPrev: imgPrev,
-      nickname:nickname,
-      intro:intro,
-    })   
-    );
-    console.log('업데이트됨');
-     try {
-       const response = await PostApply(marketInfo);
-       console.log('회원가입 결과:', response);
-         alert('회원가입 완료! 다시 로그인해주세요');
-         router.push('/login');
-     } catch (error: any) {
-      console.error("회원가입 실패", error);
-       const message = error.response?.data?.message || "회원가입 실패";
-       alert(message);
-     }
-   }
+   const handleApply = async () => {
+  const updatedMarketInfo = {
+    ...marketInfo,
+    profile: profile,
+    imgPrev: imgPrev,
+    nickname: nickname,
+    intro: intro,
+  };
+
+  // 상태 동기화를 유지하되, 직접 최신 값 전달
+  setMarketInfo(updatedMarketInfo);
+  console.log('업데이트됨', updatedMarketInfo);
+
+  try {
+    const response = await PostApply(updatedMarketInfo); // 최신 값 전달
+    console.log('회원가입 결과:', response);
+    router.push('/sale-apply/success');
+  } catch (error: any) {
+    console.error("회원가입 실패", error);
+    const message = error.response?.data?.message || "회원가입 실패";
+    alert(message);
+  }
+};
 
   return (
     <>
@@ -84,7 +86,7 @@ export default function ApplyIntroPage() {
 
           <div className='w-[80px] h-[80px] bg-[#F2EEE9] flex justify-center items-center rounded-[8px]'>
             <label htmlFor='profileImgBtn1'>
-                <img  className=' w-[20px] h-[20px]' src={imgPrev ? imgPrev : "/asset/camera.svg"} alt='프로필 이미지'></img>
+                <img  className=' w-[80px] h-[80px]' src={imgPrev ? imgPrev : "/asset/camera.svg"} alt='프로필 이미지'></img>
                 <input id='profileImgBtn1' type='file' className="hidden" accept='image/*' onChange={handleImageChange} />
             </label>
           </div>

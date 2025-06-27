@@ -7,6 +7,7 @@ import DefaultInput from '@/components/DefaultInput';
 import { useMarket } from '@/context/MarketContext';
 import { useRouter } from 'next/navigation';
 import DefaultFileInput from '@/components/DefaultFileInput';
+import { GetRegistNum } from '@/api/mypage/getRegistNum';
 
 export default function SaleApplyInfoPage() {
  
@@ -15,16 +16,27 @@ export default function SaleApplyInfoPage() {
   const [RegistFile, setRegistFile] = useState<File | null>(null);
   const [Passbook, setPassbook] = useState<File | null>(null);
   const [certifidoc, setCertifidoc] = useState<File | null>(null);
-  const isFilled = (RegistNum || RegistFile) && Passbook && certifidoc;
+  const [ registNumOk, setRegistNumOk] = useState(false)
+  const [ registNumCheckMessage, setRegistNumCheckMessage] = useState('');
+  const isFilled = RegistNum  && Passbook && certifidoc;
   const { setMarketInfo } = useMarket();
 
  
- 
+  const handleRegistNumCheck = async () => {
+     try {
+       await GetRegistNum(RegistNum);
+       setRegistNumOk(true);
+       setRegistNumCheckMessage('사용가능한 번호입니다');
+     } catch (error) {
+       setRegistNumOk(false);
+       setRegistNumCheckMessage('등록된 번호입니다');
+     }
+   };
 
   const handleSave = () => {
     setMarketInfo( prev=> ({ 
       ...prev,
-      RegistNum:RegistNum,
+      registNum:RegistNum,
       RegistFile: RegistFile,
       Passbook:Passbook,
       certifidoc:certifidoc,
@@ -60,7 +72,12 @@ export default function SaleApplyInfoPage() {
                 value={RegistNum}
                 onChange={e => setRegistNum(e.target.value)}
                 showCheckButton={true}
-                />
+                onCheck={handleRegistNumCheck}
+                />{registNumCheckMessage && (
+                            <p className={`mt-2 font-pretendard text-[13px] leading-[135%] tracking-[-0.03em] ${registNumOk ? 'text-[#4BE42C]' : 'text-[#FF6B2C]'}`}>
+                                {registNumCheckMessage}
+                            </p>
+                            )}
             <div className='mt-2'></div>
             <DefaultFileInput
                 id="regist-file"

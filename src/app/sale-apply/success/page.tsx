@@ -29,7 +29,7 @@ export default function ApplySuccessPage() {
              <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[372px] bg-[#FFFDFB]  p-4 [box-shadow:0px_-1px_4px_0px_#00000008] rounded-[12px]">
                 <CommonButton
                     type="button"
-                    onClick={()=>router.push('/main')}
+                    onClick={()=>{alert('다시 로그인 해주세요!'); router.push('/login')}}
                     >
                         확인
                 </CommonButton>
