@@ -8,4 +8,6 @@ export type OrderItem = {
   price: number;
   imageUrl: string;
   purchaseDate: string;
+  productId: number;
+  isReviewed: boolean;
 };

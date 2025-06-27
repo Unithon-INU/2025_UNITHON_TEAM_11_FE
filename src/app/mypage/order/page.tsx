@@ -149,6 +149,7 @@ export default function UserProfilePage() {
                         <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">
                           교환, 반품하기
                         </button>
+                         {!order?.isReviewed && (
                         <button
                           className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]"
                           onClick={() => {
@@ -157,7 +158,7 @@ export default function UserProfilePage() {
                           }}
                         >
                           리뷰쓰기
-                        </button>
+                        </button>)}
                       </>
                     )}
                     {(order.status === '상품 준비중' || order.status === '배송 중') && (
@@ -181,7 +182,7 @@ export default function UserProfilePage() {
           onClose={() => setIsModalOpen(false)}
           writer={selectedOrder.sellerNickname}
           recipeName={selectedOrder.productName}
-          recipeId={selectedOrder.id}
+          recipeId={selectedOrder.productId}
           ImgUrl={selectedOrder.imageUrl}
           purchase_option={selectedOrder.productOption}
           type="product"
