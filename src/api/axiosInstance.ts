@@ -24,11 +24,11 @@ axiosInstance.interceptors.response.use(
     const status = error.response?.status ?? -1;
 
     // ✅ 400 에러 시: 세션 만료 alert + 로그인 페이지 이동
-    if (status === 400) {
-      alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
-      window.location.href = '/login';
-      return Promise.reject(error);
-    }
+    // if (status === 400) {
+    //   alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
+    //   window.location.href = '/login';
+    //   return Promise.reject(error);
+    // }
 
     const shouldRetry = [420, 401, 419].includes(status);
 

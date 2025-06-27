@@ -76,13 +76,13 @@ export default function MyReviewPage() {
     <>
       <Header>
         <Header.BackButton />
-        <Header.Title>검색 결과</Header.Title>
+        <Header.Title>나의 리뷰</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
         <div className="flex flex-col">
           <main className="flex flex-col items-start mt-[24px] px-4">
              
-            <ProductGridList products={products} />
+            
             {hasMore && <div ref={observerRef} className="h-10" />}
           </main>
         </div>
