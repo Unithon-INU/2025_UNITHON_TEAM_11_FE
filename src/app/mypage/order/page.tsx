@@ -1,53 +1,102 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Header from '@/components/header/Header'
-import DefaultBody from '@/components/defaultBody'
-import SearchBar from '@/components/home/SearchBar'
-import RecipeGridList from '@/components/detail/RecipeGridList'
-import ProductGridList from '@/components/detail/ProductGridList'
-import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect'
-import { GetMember } from '@/api/member/getMember'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
+import Header from '@/components/header/Header';
+import DefaultBody from '@/components/defaultBody';
+import SearchBar from '@/components/home/SearchBar';
+import { checkAuthAndRedirect } from '@/utils/checkAuthAndRedirect';
+import { useRouter } from 'next/navigation';
 import { getAccessToken } from '@/utils/tokenStorage';
+import { GetMyOrder } from '@/api/mypage/getMyOrder';
+
+type OrderItem = {
+  id: number;
+  status: string;
+  sellerNickname: string;
+  productName: string;
+  productOption: string;
+  quantity: number;
+  price: number;
+  imageUrl: string;
+  purchaseDate: string;
+};
 
 export default function UserProfilePage() {
-  const [userData, setUserData] = useState<any>(null)
-  const [isLiked, setLiked] = useState(false)
-  const [count, setCount] = useState(0)
-  const [activeTab, setActiveTab] = useState<'레시피' | '판매 농수산물'>('레시피')
-  const requireAuth = checkAuthAndRedirect()
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const requireAuth = checkAuthAndRedirect();
   const router = useRouter();
   const [hasAccessToken, setHasAccessToken] = useState(true);
 
   useEffect(() => {
-     const token = getAccessToken();
-                if (!token) {
-                  setHasAccessToken(false);
-                  return;
-                }
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) return;
-
-    const fetchProfile = async () => {
-      try {
-        const res = await GetMember(userId, 0)
-        setUserData(res)
-        setCount(res.likeCount || 0)
-        setLiked(res.isLiked)
-      } catch (error) {
-        console.error('사용자 데이터 로딩 실패:', error)
-      }
+    const token = getAccessToken();
+    if (!token) {
+      setHasAccessToken(false);
+      return;
     }
-    fetchProfile()
-  }, [])
+    fetchOrders(0); // 초기 page=0으로 로드
+  }, []);
 
+  const fetchOrders = async (pageNumber: number) => {
+    try {
+      if (isFetching) return; // 중복 호출 방지
+      setIsFetching(true);
+      const res = await GetMyOrder(pageNumber);
+      if (res.length < 4) {
+        setHasMore(false);
+      }
+      setOrders(prev => [...prev, ...res]);
+      setPage(prev => prev + 1);
+    } catch (error) {
+      console.error('주문 목록 불러오기 실패:', error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
-  if (!userData) return null
+  const handleIntersect = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMore && !isFetching) {
+        fetchOrders(page);
+      }
+    },
+    [hasMore, isFetching, page]
+  );
 
-  const isSeller = userData.isSeller
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersect, {
+      root: null,
+      threshold: 0.5,
+    });
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+    return () => {
+      if (observerRef.current) observer.unobserve(observerRef.current);
+    };
+  }, [handleIntersect]);
+
+  if (!hasAccessToken) {
+    return (
+      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center gap-6 px-4">
+        <div className="text-center text-[#888] text-[16px] font-medium">
+          로그인 후 이용가능한 기능입니다.
+        </div>
+        <button
+          onClick={() => router.push('/login')}
+          className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-[#333] transition-all"
+        >
+          로그인하러 가기
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -59,39 +108,55 @@ export default function UserProfilePage() {
       <div className="relative pb-[80px]">
         <DefaultBody hasHeader={1}>
           <main className="flex flex-col">
-             {!hasAccessToken ? (
-            
-              
-              <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center gap-6 px-4">
-                <div className="text-center text-[#888] text-[16px] font-medium">
-                  로그인 후 이용가능한 기능입니다.
-                </div>
-                <button
-                  onClick={() => router.push('/login')}
-                  className="bg-black text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-[#333] transition-all"
-                >
-                  로그인하러 가기
-                </button>
-              </div>
+            <SearchBar showCartButton={false} />
 
-            ) : (
-            <div className="pb-[40px] px-2">
-                <SearchBar showCartButton={false}></SearchBar>
-             
+            {/* 주문 리스트 */}
+            <div className="flex flex-col gap-4 mt-4">
+              {orders.map((order, idx) => (
+                <div key={`${order.id}-${idx}`} className="border-b-8 border-[#F6F3EE] pb-6">
+                  <div className="flex justify-between items-center px-4">
+                    <span className={`text-[14px] font-medium ${order.status.includes('취소') ? 'text-[#FF6B2C]' : 'text-[#4BE42C]'}`}>
+                      {order.status}
+                    </span>
+                    <button className="text-[13px] text-[#999]" onClick={() => router.push(`/order/${order.id}`)}>
+                      {order.status.includes('취소') ? '취소상세 >' : '주문상세 >'}
+                    </button>
+                  </div>
+
+                  <div className="flex gap-3 mt-4 px-4">
+                    <div className="w-[80px] h-[80px] rounded-md overflow-hidden flex-shrink-0">
+                      <img src={order.imageUrl} alt="order-img" className="object-cover w-20 h-20" />
+                    </div>
+                    <div className="flex flex-col justify-between flex-1">
+                      <div>
+                        <p className="text-[13px] text-[#999]">{order.purchaseDate} 주문</p>
+                        <p className="text-[15px] font-medium">{order.sellerNickname} {order.productName}</p>
+                        {order.productOption && (
+                          <p className="text-[13px] text-[#999]">{order.productOption} 외 {order.quantity}개</p>
+                        )}
+                      </div>
+                      <p className="text-[15px] font-semibold ">{order.price.toLocaleString()}원</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex gap-2 px-4">
+                    {order.status === '배송 완료' && (
+                      <>
+                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">교환, 반품하기</button>
+                        <button className="flex-1 h-[40px] rounded-lg border border-[#DDD] text-[14px]">리뷰쓰기</button>
+                      </>
+                    )}
+                    {(order.status === '상품 준비중' || order.status === '배송 중') && (
+                      <button className="w-full h-[40px] rounded-lg border border-[#DDD] text-[14px]">주문 취소</button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {hasMore && <div ref={observerRef} className="h-10" />}
             </div>
-            )}
           </main>
         </DefaultBody>
-
-        {/* 하단 고정 버튼 */}
-              <div className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-2 bg-white border-t border-[#EEE] z-50">
-                <button className="flex flex-row justify-center items-center px-8 py-4 gap-[10px] w-[168px] h-[50px] absolute left-1/2 -translate-x-[calc(168px/2+8.5px)] 
-                                    bottom-[53px]  bg-[#817468] shadow-[0_0_16px_rgba(255,255,255,0.25)] rounded-full text-[14px] text-[#FFFDFB] font-medium" 
-                        onClick={()=> {activeTab === '레시피' ? (router.push('/recipe/write')) : (router.push('/product/write')) }}>
-                     {activeTab === '레시피' ? ('레시피 업로드하기') : ('상품 업로드하기') }
-                </button>
-              </div>
       </div>
     </>
-  )
+  );
 }
