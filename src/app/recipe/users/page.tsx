@@ -42,7 +42,7 @@ export default function RecipeUsersPage() {
       <DefaultBody hasHeader={1}>
         <div className="flex flex-col">
           <main className="flex flex-col items-start">
-            <SearchBar showCartButton={false} />
+            <SearchBar showCartButton={false} type='user'/>
             <InfluencerRankingSection
               title='레시피 유저 랭킹'
               influencers={influencers.slice(0, 5)}

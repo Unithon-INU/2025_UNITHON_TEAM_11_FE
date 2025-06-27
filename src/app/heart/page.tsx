@@ -118,7 +118,7 @@ export default function FavoritePage() {
                   </div>
 
                   <div className="w-full mx-[-10] mt-4">
-                    <SearchBar showCartButton={false} />
+                    <SearchBar showCartButton={false} type='recipe'/>
                   </div>
 
                   <div className="w-full px-2">
@@ -159,7 +159,7 @@ export default function FavoritePage() {
                   </div>
 
                   <div className="w-full mx-[-10] mt-4">
-                    <SearchBar showCartButton={false} />
+                    <SearchBar showCartButton={false} type='product'/>
                   </div>
 
                   <div className="w-full px-2">

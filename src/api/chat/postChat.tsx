@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const apiUrl = 'http://13.209.42.199:5002';
+const apiUrl = 'https://13.209.42.199.nip.io';
 
 export const PostChat = async (
     message: string,

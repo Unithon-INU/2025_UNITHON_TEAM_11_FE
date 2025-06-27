@@ -1,30 +1,27 @@
 import axios, { AxiosResponse } from "axios";
+import { ParamValue } from "next/dist/server/request/params";
+import axiosInstance from "@/api/axiosInstance";
 
-const apiUrl = 'https://13.209.42.199.nip.io';
 
-export const PostChatFirst = async (
-    message: any,
+export const GetSearchMember = async (
+    keyword : ParamValue,
+    page: number
+   
 ): Promise<any> => {
-  console.log("전송 데이터", message);
   axios.defaults.withCredentials = true;
 
+
   try {
-    const response: AxiosResponse<any> = await axios.post(
-        `${apiUrl}/chatbot-init`,
-        {
-            description: message,
-        }
+    const response: AxiosResponse<any> = await axiosInstance.get(
+      `/api/members/search?keyword=${keyword}&page=${page}`,
     );
-
     console.log(response.data);
-    console.log(response.headers);
-
-  
-    return response;
+    return response.data;
   } catch (error: any) {
     if (error.response) {
       const { status, data } = error.response;
       console.error("Error response:", status, data);
+      
     } else if (error.request) {
       console.error("No response received:", error.request);
     } else {

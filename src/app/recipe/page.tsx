@@ -57,7 +57,7 @@ export default function MarketPage() {
     <DefaultBody hasHeader={0} >
       <div className="flex flex-col items-center justify-center  w-full h-full bg-[#FFFDFB] ">
         {/* 검색창 */}
-          <SearchBar />
+          <SearchBar type='recipe'/>
 
           {/* 캐러셀 */}
           <RecipeCarousel />

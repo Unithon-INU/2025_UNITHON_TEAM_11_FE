@@ -124,7 +124,7 @@ export default function UserProfilePage() {
 
               {/* 검색창 */}
               <div className="mx-[-10] mt-4">
-                <SearchBar showCartButton={false} />
+                <SearchBar showCartButton={false} type={activeTab === '레시피'? 'recipe' : 'product'}/>
               </div>
 
               {/* 콘텐츠 */}
