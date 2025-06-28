@@ -95,7 +95,6 @@ export default function SaleApplyPage() {
                             onChange={e => setPostalAddress(e.target.value)}
                             />
                     </div>
-                    <button className='w-[25%] bg-[#817468] h-11 rounded-[8px] text-[#FFFFFF] text-[13px] px-4 py-[14px]'>주소 검색</button>
                 </div>
                 <DefaultInput
                     type="text"
