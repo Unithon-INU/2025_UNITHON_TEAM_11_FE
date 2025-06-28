@@ -4,9 +4,6 @@ import Header from '@/components/header/Header';
 import DefaultBody from '@/components/defaultBody';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { GetMyReview } from '@/api/mypage/getMyReview';
-import RecipeReviewList from '@/components/recipe/RecipeReviewList';
-import ReviewList from '@/components/market/RewiewList';
-import { Review } from '@/components/recipe/RecipeReviewList';
 
 export default function MyReviewPage() {
   const [activeTab, setActiveTab] = useState<'레시피' | '상품'>('레시피');
@@ -17,31 +14,28 @@ export default function MyReviewPage() {
   const [hasMore, setHasMore] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const observerRef = useRef<HTMLDivElement | null>(null);
-
+  
   const fetchReviews = async (pageNumber: number) => {
     if (isFetching) return;
+    
     setIsFetching(true);
     try {
       const res = await GetMyReview(pageNumber);
 
-     setRecipeReviews(prev => {
-  const existingIds = new Set(prev.map((item: { reviewId: number }) => item.reviewId));
-  const filtered = res.recipeReviews.filter((item: { reviewId: number }) => !existingIds.has(item.reviewId));
-  return [...prev, ...filtered];
-});
+      setRecipeReviews(prev => {
+        const existingIds = new Set(prev.map((item: { reviewId: number }) => item.reviewId));
+        const filtered = res.recipeReviews.filter((item: { reviewId: number }) => !existingIds.has(item.reviewId));
+        return [...prev, ...filtered];
+        });
 
-setProductReviews(prev => {
-  const existingIds = new Set(prev.map((item: { reviewId: number }) => item.reviewId));
-  const filtered = res.productReviews.filter((item: { reviewId: number }) => !existingIds.has(item.reviewId));
-  return [...prev, ...filtered];
-});
+        setProductReviews(prev => {
+        const existingIds = new Set(prev.map((item: { reviewId: number }) => item.reviewId));
+        const filtered = res.productReviews.filter((item: { reviewId: number }) => !existingIds.has(item.reviewId));
+        return [...prev, ...filtered];
+        });
 
 
-      // 페이지당 5개이므로 5개 미만 수신 시 끝
-      if (
-        res.recipeReviews.length < 5 &&
-        res.productReviews.length < 5
-      ) {
+      if (res.recipeReviews.length < 5 && res.productReviews.length < 5) {
         setHasMore(false);
       } else {
         setPage(prev => prev + 1);
@@ -80,6 +74,47 @@ setProductReviews(prev => {
     };
   }, [handleIntersect]);
 
+  const renderReviewCard = (review: any) => (
+    <div
+      key={review.reviewId}
+      className="bg-white rounded-xl shadow-sm p-4 mb-3 w-full"
+    >
+      <div className="flex items-center gap-3 mb-2">
+        {review.imageUrls?.[0] && (
+        <img
+          src={review.imageUrls?.[0]}
+          alt="리뷰 이미지"
+          className="w-16 h-16 rounded-md object-cover"
+        />
+        )}
+        <div className="flex-1">
+          
+          <div className="text-[#9F9F9F] text-[13px]">
+            {review.createdAt || '날짜 없음'}
+          </div>
+          <div className="mt-1 text-[#FFD600] text-[14px]">
+            {'★'.repeat(review.rating)}
+            {'☆'.repeat(5 - review.rating)}
+          </div>
+        </div>
+        <div className="text-[#9F9F9F] text-sm flex items-center gap-1">
+          ♡ {review.likeCount ?? 0}
+        </div>
+      </div>
+      <div className="text-[14px] text-[#333] mb-3 whitespace-pre-wrap leading-[1.4]">
+        {review.content}
+      </div>
+      {/*<div className="flex gap-2">
+        <button className="flex-1 py-2 rounded-md border text-sm font-medium text-[#333]">
+          리뷰 수정
+        </button>
+        <button className="flex-1 py-2 rounded-md border text-sm font-medium text-[#333]">
+          리뷰 삭제
+        </button>
+      </div>*/}
+    </div>
+  );
+
   return (
     <>
       <Header>
@@ -107,11 +142,9 @@ setProductReviews(prev => {
           </div>
 
           <main className="flex flex-col items-start mt-4 px-4">
-            {activeTab === '레시피' ? (
-              <RecipeReviewList reviews={recipeReviews} />
-            ) : (
-              <ReviewList reviews={productReviews} />
-            )}
+            {activeTab === '레시피'
+              ? recipeReviews.map(review => renderReviewCard(review))
+              : productReviews.map(review => renderReviewCard(review))}
             {hasMore && <div ref={observerRef} className="h-10" />}
           </main>
         </div>

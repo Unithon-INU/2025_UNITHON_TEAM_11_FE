@@ -117,7 +117,8 @@ export default function MyPage() {
                   <img src="/asset/eye.svg" className="w-6 h-6" />
                   <span>최근 본 상품</span>
                 </div>
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2"
+                onClick={()=> router.push('/mypage/review')}>
                   <img src="/asset/review.svg" className="w-6 h-6" />
                   <span>리뷰</span>
                 </div>
