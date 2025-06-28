@@ -98,7 +98,7 @@ export default function RegisterProductPage() {
       );
 
       alert('상품이 성공적으로 등록되었습니다!');
-      router.push('/sale/complete');
+      router.push('/main');
     } catch (error) {
       console.error('상품 등록 실패', error);
       alert('상품 등록에 실패했습니다.');
