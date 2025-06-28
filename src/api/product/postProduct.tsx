@@ -29,26 +29,26 @@ type AddProductRequest = {
 export const PostAddProduct = async (
   data: AddProductRequest,
   mainImage: File,
-  descriptionImages=[]
+  descriptionImages: File[]
 ): Promise<AxiosResponse<any>> => {
   const formData = new FormData();
 
   console.log('전송 데이터', data, mainImage, descriptionImages);
-  // dto JSON 문자열로 변환 후 append
+
+  // ✅ Blob으로 감싸 JSON으로 인식되게 처리
   const jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   formData.append('addProductRequestDto', jsonBlob);
 
-  // 대표 이미지
+  // ✅ 정확한 키명, 공백 제거
   formData.append('mainImage', mainImage);
 
-  // 상세 이미지 배열
-  descriptionImages.forEach((img) => {
-    formData.append('descriptionImages', img);
+  // ✅ 배열 처리: 같은 key로 여러 파일 append
+  descriptionImages.forEach((file) => {
+    formData.append('descriptionImages', file);
   });
 
   try {
-    const response = await axiosInstance.post('/api/products', formData, 
-    );
+    const response = await axiosInstance.post('/api/products', formData);
 
     console.log('상품 등록 완료:', response.data);
     return response;
